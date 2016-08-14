@@ -1,0 +1,26 @@
+{
+  "name": "skirmish",
+  "authors": [
+    "Jeffrey Zhao <jezhao1999@gmail.com>"
+  ],
+  "description": "A portable and lightweight online judge written in PHP with the Fat-Free Framework.",
+  "main": "public/index.php",
+  "keywords": [
+    "online",
+    "judge",
+    "skirmish"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "spectre.css": "^0.1.23"
+  }
+}
