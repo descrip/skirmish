@@ -12,6 +12,6 @@
 			<a href="#">problems</a>
 			<a href="#">leaderboard</a>
 		</div>
-		<!---->
+		<?php echo $this->render($content,$this->mime,get_defined_vars(),0); ?>
 	</body>
 </html>

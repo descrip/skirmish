@@ -24,8 +24,3 @@ $f3->route('GET /', function($f3) {
 });
 
 $f3->run();
-
-$mapper = new \DB\Jig\Mapper(new \DB\Jig('app/database/'), 'users.json');
-$mapper->username = "descrip";
-$mapper->password = sha1("secret");
-$mapper->save();

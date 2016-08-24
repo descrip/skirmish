@@ -12,6 +12,6 @@
 			<a href="#">problems</a>
 			<a href="#">leaderboard</a>
 		</div>
-		<?php echo $this->render(Base::instance()->get('content')); ?>
+		<include href="{{ @content }}" />
 	</body>
 </html>
