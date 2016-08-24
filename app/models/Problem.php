@@ -1,6 +1,6 @@
 <?php
 
-namespace models;
+namespace Models;
 
 class Problem extends \DB\Jig\Mapper {
 	public function __construct() {

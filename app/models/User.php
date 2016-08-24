@@ -1,6 +1,6 @@
 <?php
 
-namespace models;
+namespace Models;
 
 class User extends \DB\Jig\Mapper {
 	public function __construct() {
