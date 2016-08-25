@@ -8,22 +8,17 @@ if ((float)PCRE_VERSION < 7.9)
 	trigger_error('PCRE version is out of date');
 
 // Load configuration
-// TODO: Move everything to config.ini
 $f3->config('config.ini');
 
-$f3->set('CACHE', true);
-$f3->set('AUTOLOAD', 'app/');
-// Load Jig NoSQL
-$f3->set('DB', new DB\Jig('app/database/'));
+// Load Jig local NoSQL
+$f3->set('DB', new DB\Jig('database/'));
 
 $f3->route('GET /', function($f3) {
 	$f3->set('title', 'Home');
-	$f3->set('content', 'app/views/home.htm');
-	echo(\Template::instance()->render('app/views/layout.htm'));
+	$f3->set('content', 'home.html');
+	echo(\Template::instance()->render('layout.html'));
 });
 
-$user = new \Models\User();
-
-$f3->route('GET /problems/@problem', '\Controllers\ProblemController::show');
+$f3->route('GET /problems/@slug', '\Controllers\ProblemController::show');
 
 $f3->run();
