@@ -1,7 +1,12 @@
 {
-    "57bd1860822a05.05530848": {
+    "1": {
         "name": "A Plus B",
-		"body": "# A Plus B\nIt's adding two numbers together damnit.",
-		"slug": "aplusb"
+        "body": "# A Plus B\nIt's adding two numbers together damnit.",
+        "slug": "aplusb"
+    },
+    "2": {
+        "name": "A Times B",
+		"body": "# A Times B\nOkay, this one is significantly harder.",
+		"slug": "atimesb"
     }
 }

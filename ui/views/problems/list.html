@@ -1,0 +1,16 @@
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Slug</th>
+		</tr>
+	</thead>
+	<tbody>
+		<repeat group="{{ @problems }}" value="{{ @problem }}">
+			<tr>
+				<td>{{ @problem->name }}</td>
+				<td>{{ @problem->slug }}</td>
+			</tr>
+		</repeat>
+	</tbody>
+</table>
