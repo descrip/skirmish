@@ -21,6 +21,7 @@ $f3->route('GET /', function($f3) {
 
 $f3->route('GET /problems/@slug', '\Controllers\ProblemController::show');
 $f3->route('GET /problems', '\Controllers\ProblemController::list');
-$f3->route('GET /submit', '\Controllers\UserController::submit');
+$f3->route('GET /submit', '\Controllers\SubmissionController::create');
+$f3->route('POST /submit', '\Controllers\SubmissionController::store');
 
 $f3->run();
