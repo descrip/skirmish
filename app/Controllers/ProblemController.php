@@ -7,9 +7,9 @@ use Models\Problem;
 class ProblemController {
 
 	public static function list($f3, $params) {
-		$problems = new Problem();
+		$problem = new Problem();
 		$f3->set('title', 'Problem List');
-		$f3->set('problems', $problems->find(NULL, ['order' => '_id SORT_ASC']));
+		$f3->set('problems', $problem->find(NULL, ['order' => '_id SORT_ASC']));
 		$f3->set('content', 'problems/list.html');
 		$f3->set('loadKatex', true);
 		echo(\Template::instance()->render('layout.html'));

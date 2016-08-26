@@ -15,6 +15,7 @@
 			<b>skirmish online judge</b> :::
 			<a href="/">home</a>
 			<a href="/problems">problems</a>
+			<a href="/submit{{ (isset(@problem) ? ('?problem-slug='.@problem->slug) : '') }}">submit</a>
 			<a href="/leaderboard">leaderboard</a>
 		</div>
 
