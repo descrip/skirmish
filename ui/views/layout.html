@@ -17,6 +17,8 @@
 			<a href="/problems">problems</a>
 			<a href="/submit{{ (isset(@problem) ? ('?problem-slug='.@problem->slug) : '') }}">submit</a>
 			<a href="/leaderboard">leaderboard</a>
+			<a href="/login">login</a>
+			<a href="/register">register</a>
 		</div>
 
 		<include href="{{ @content }}" />
