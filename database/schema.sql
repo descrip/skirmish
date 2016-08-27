@@ -27,9 +27,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE problems (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	name VARCHAR UNIQUE NOT NULL,
-	slug VARCHAR UNIQUE NOT NULL,
+	slug VARCHAR PRIMARY KEY NOT NULL,
 	body TEXT NOT NULL
 );
 
@@ -38,18 +37,18 @@ CREATE TABLE testcases (
 	input TEXT NOT NULL,
 	output TEXT NOT NULL,		-- TODO: Support for program-based checking?
 	subtask_number INTEGER,		-- TODO: If NULL, no subtask grouping.
-	problem_id INTEGER NOT NULL,
-	FOREIGN KEY(problem_id) REFERENCES problems(id) ON UPDATE CASCADE ON DELETE CASCADE
+	problem_slug VARCHAR NOT NULL,
+	FOREIGN KEY(problem_slug) REFERENCES problems(slug) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE submissions (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	points INTEGER NOT NULL
-	problem_id INTEGER NOT NULL,
+	problem_slug VARCHAR NOT NULL,
 	user_id INTEGER NOT NULL,
 	verdict_id INTEGER NOT NULL,
 	language_id INTEGER NOT NULL,
-	FOREIGN KEY(problem_id) REFERENCES problems(id) ON UPDATE CASCADE,
+	FOREIGN KEY(problem_slug) REFERENCES problems(slug) ON UPDATE CASCADE,
 	FOREIGN KEY(user_id) REFERENCES users(id) ON UPDATE CASCADE,
 	FOREIGN KEY(verdict_id) REFERENCES verdicts(id) ON UPDATE CASCADE,
 	FOREIGN KEY(language_id) REFERENCES languages(id) ON UPDATE CASCADE
