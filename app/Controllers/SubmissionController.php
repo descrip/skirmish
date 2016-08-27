@@ -11,7 +11,7 @@ class SubmissionController {
 		$f3->set('title', 'Submit');
 		$f3->set('content', 'submit.html');
 		$problem = new Problem();
-		$f3->set('problems',$problem->find(NULL, ['order' => '_id SORT_ASC']));
+		$f3->set('problems', $problem->select('id, name, slug', NULL, ['order' => 'id ASC']));
 		echo(\Template::instance()->render('layout.html'));
 	}
 

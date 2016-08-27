@@ -2,10 +2,10 @@
 
 namespace Models;
 
-class Problem extends \DB\Jig\Mapper {
+class Problem extends \DB\SQL\Mapper {
 
 	public function __construct() {
-		parent::__construct(\Base::instance()->get('DB'), 'problems.json');
+		parent::__construct(\Base::instance()->get('DB'), 'problems');
 	}
 
 }
