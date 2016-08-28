@@ -18,8 +18,13 @@
 			<a href="{{ (isset(@problem) ? ('/submit?problem-slug='.@problem->slug) : '/submit') }}">submit</a>
 			<a href="/leaderboard">leaderboard</a>
 			<check if="{{ !isset(@SESSION.user) }}">
-				<a href="/login">login</a>
-				<a href="/register">register</a>
+				<true>
+					<a href="/login">login</a>
+					<a href="/register">register</a>
+				</true>
+				<false>
+					<a href="/logout">logout</a>
+				</false>
 			</check>
 		</div>
 

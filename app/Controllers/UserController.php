@@ -47,4 +47,10 @@ class UserController extends Controller {
 		$user->save();
 		$f3->reroute('/');
 	}
+
+	public function logout($f3, $params) {
+		$this->checkIfAuthenticated($f3, $params);
+		$f3->clear('SESSION');
+		$f3->reroute('/');
+	}
 }

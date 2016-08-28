@@ -35,5 +35,6 @@ $f3->route('GET /login', '\Controllers\UserController->login');
 $f3->route('POST /login', '\Controllers\UserController->authenticate');
 $f3->route('GET /register', '\Controllers\UserController->new');
 $f3->route('POST /register', '\Controllers\UserController->create');
+$f3->route('GET /logout', '\Controllers\UserController->logout');
 
 $f3->run();
