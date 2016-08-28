@@ -15,10 +15,12 @@
 			<b>skirmish online judge</b> :::
 			<a href="/">home</a>
 			<a href="/problems">problems</a>
-			<a href="/submit{{ (isset(@problem) ? ('?problem-slug='.@problem->slug) : '') }}">submit</a>
+			<a href="{{ (isset(@problem) ? ('/submit?problem-slug='.@problem->slug) : '/submit') }}">submit</a>
 			<a href="/leaderboard">leaderboard</a>
-			<a href="/login">login</a>
-			<a href="/register">register</a>
+			<check if="{{ !isset(@SESSION.user) }}">
+				<a href="/login">login</a>
+				<a href="/register">register</a>
+			</check>
 		</div>
 
 		<include href="{{ @content }}" />

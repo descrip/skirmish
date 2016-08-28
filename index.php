@@ -25,10 +25,13 @@ $f3->route('GET /', function($f3) {
 	echo(\Template::instance()->render('layout.html'));
 });
 
-$f3->route('GET /problems/@slug', '\Controllers\ProblemController::show');
-$f3->route('GET /problems', '\Controllers\ProblemController::list');
-$f3->route('GET /submit', '\Controllers\SubmissionController::create');
-$f3->route('POST /submit', '\Controllers\SubmissionController::store');
-$f3->route('GET /login', '\Controllers\SubmissionController::store');
+$f3->route('GET /problems', '\Controllers\ProblemController->index');
+$f3->route('GET /problems/@slug', '\Controllers\ProblemController->show');
+$f3->route('GET /submit', '\Controllers\SubmissionController->new');
+$f3->route('POST /submit', '\Controllers\SubmissionController->create');
+$f3->route('GET /login', '\Controllers\UserController->login');
+$f3->route('POST /login', '\Controllers\UserController->authenticate');
+$f3->route('GET /register', '\Controllers\UserController->new');
+$f3->route('POST /register', '\Controllers\UserController->create');
 
 $f3->run();

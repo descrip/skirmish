@@ -6,9 +6,9 @@ namespace Controllers;
 use Models\Problem;
 use Models\Language;
 
-class SubmissionController {
+class SubmissionController extends Controller {
 
-	public static function create($f3, $params) {
+	public function new($f3, $params) {
 		$f3->set('title', 'Submit');
 		$f3->set('content', 'submit.html');
 		$problem = new Problem();
@@ -18,8 +18,7 @@ class SubmissionController {
 		echo(\Template::instance()->render('layout.html'));
 	}
 
-	public static function store($f3, $params) {
-		var_dump($_POST);
+	public function create($f3, $params) {
 	}
 
 }

@@ -4,9 +4,9 @@ namespace Controllers;
 
 use Models\Problem;
 
-class ProblemController {
+class ProblemController extends Controller {
 
-	public static function list($f3, $params) {
+	public function index($f3, $params) {
 		$problem = new Problem();
 		$f3->set('title', 'Problem List');
 		$f3->set('problems', $problem->select("id, name, slug", NULL, [ 'order' => 'id ASC' ]));
@@ -15,7 +15,7 @@ class ProblemController {
 		echo(\Template::instance()->render('layout.html'));
 	}
 
-	public static function show($f3, $params) {
+	public function show($f3, $params) {
 		$problem = new Problem();
 		$problem->load(['slug = ?', $params['slug']]);
 		$f3->set('title', $problem->name);

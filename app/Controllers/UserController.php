@@ -5,7 +5,38 @@ namespace Controllers;
 use Models\User;
 use Models\Problem;
 
-class UserController {
+class UserController extends Controller {
+	
+	public function login($f3, $params) {
+		$f3->set('title', 'Login');
+		$f3->set('content', 'users/login.html');
+		echo(\Template::instance()->render('layout.html'));
+	}
 
+	public function authenticate($f3, $params) {
+		$username = $f3->get('POST.username');
+		$password = $f3->get('POST.password');
+		$user = new User();
+		$user->load(['username = ?', $username]);
+		if ($user->dry())
+			$f3->reroute('/login');
+		else if (password_verify($password, $user->password)) {
+			$f3->set('SESSION.user', $user->username);
+			$f3->reroute('/');
+		}
+		else
+			$f3->reroute('/login');
+	}
 
+	public function new($f3, $params) {
+		$f3->set('title', 'Register');
+		$f3->set('content', 'users/register.html');
+		echo(\Template::instance()->render('layout.html'));
+	}
+
+	public function create($f3, $params) {
+		$user = new User();
+		$user->username = $f3->get('POST.username');
+		$user->password = password_hash($f3->get('POST.password'));
+	}
 }
