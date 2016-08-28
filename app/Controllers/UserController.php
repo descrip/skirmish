@@ -10,6 +10,7 @@ class UserController extends Controller {
 	public function login($f3, $params) {
 		$f3->set('title', 'Login');
 		$f3->set('content', 'users/login.html');
+		$f3->set('loadKatex', false);
 		echo(\Template::instance()->render('layout.html'));
 	}
 
@@ -32,12 +33,16 @@ class UserController extends Controller {
 	public function new($f3, $params) {
 		$f3->set('title', 'Register');
 		$f3->set('content', 'users/register.html');
+		$f3->set('loadKatex', false);
 		echo(\Template::instance()->render('layout.html'));
 	}
 
 	public function create($f3, $params) {
 		$user = new User();
 		$user->username = $f3->get('POST.username');
+		$user->email = $f3->get('POST.email');
 		$user->password = password_hash($f3->get('POST.password'));
+		$user->save();
+		$f3->reroute('/');
 	}
 }

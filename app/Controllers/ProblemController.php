@@ -10,10 +10,9 @@ class ProblemController extends Controller {
 		$f3->set('title', 'Problem List');
 
 		$problem = new Problem();
-		$f3->set('problems', $problem->select("id, name, slug", NULL, [ 'order' => 'id ASC' ]));
+		$f3->set('problems', $problem->select("name, slug", NULL, [ 'order' => 'id ASC' ]));
 
 		$f3->set('content', 'problems/list.html');
-		$f3->set('loadKatex', true);
 
 		echo(\Template::instance()->render('layout.html'));
 	}
@@ -28,6 +27,7 @@ class ProblemController extends Controller {
 		$f3->set('title', $problem->name);
 		$f3->set('problem', $problem);
 		$f3->set('content', 'problems/show.html');
+		$f3->set('loadKatex', true);
 
 		echo(\Template::instance()->render('layout.html'));
 	}

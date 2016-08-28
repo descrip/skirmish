@@ -12,9 +12,10 @@ class SubmissionController extends Controller {
 		$this->checkIfAuthenticated($f3, $params);
 		$f3->set('title', 'Submit');
 		$f3->set('content', 'submit.html');
+		$f3->set('loadKatex', false);
 
 		$problem = new Problem();
-		$f3->set('problems', $problem->select('id, name, slug'));
+		$f3->set('problems', $problem->select('name, slug'));
 
 		$language = new Language();
 		$f3->set('languages', $language->select('id, name, version'));
