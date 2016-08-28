@@ -13,10 +13,10 @@ $f3->config('config.ini');
 // Load SQLite Database
 $f3->set('DB', new DB\SQL('sqlite:database/skirmish.sqlite3'));
 
-if ($f3->get('CREATESCHEMA'))
+if ($f3->get('createSchema'))
 	shell_exec('sqlite3 database/skirmish.sqlite3 < database/schema.sql');
-if ($f3->get('SEEDDATABASE'))
-	foreach($f3->get('SEEDERS') as $seeder)
+if ($f3->get('seedDatabase'))
+	foreach($f3->get('seeders') as $seeder)
 		$seeder::seed($f3);
 
 $f3->route('GET /', function($f3) {
