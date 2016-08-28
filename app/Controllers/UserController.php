@@ -15,11 +15,11 @@ class UserController extends Controller {
 	}
 
 	public function authenticate($f3, $params) {
-		$username = $f3->get('POST.username');
+		$email = $f3->get('POST.email');
 		$password = $f3->get('POST.password');
 
 		$user = new User();
-		$user->load(['username = ?', $username]);
+		$user->load(['email = ?', $email]);
 
 		if ($user->dry())
 			$f3->reroute('/login');
@@ -41,7 +41,7 @@ class UserController extends Controller {
 		$user = new User();
 		$user->username = $f3->get('POST.username');
 		$user->email = $f3->get('POST.email');
-		$user->password = password_hash($f3->get('POST.password'));
+		$user->password = password_hash($f3->get('POST.password'), PASSWORD_DEFAULT);
 		$user->save();
 		$f3->reroute('/');
 	}
