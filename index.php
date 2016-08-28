@@ -20,8 +20,10 @@ if ($f3->get('SEEDDATABASE'))
 		$seeder::seed($f3);
 
 $f3->route('GET /', function($f3) {
-	$f3->set('title', 'Home');
-	$f3->set('content', 'home.html');
+	$f3->mset([
+		'title' => 'Home',
+		'content' => 'home.html'
+	]);
 	echo(\Template::instance()->render('layout.html'));
 });
 

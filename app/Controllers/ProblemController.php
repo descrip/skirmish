@@ -7,12 +7,13 @@ use Models\Problem;
 class ProblemController extends Controller {
 
 	public function index($f3, $params) {
-		$f3->set('title', 'Problem List');
-
 		$problem = new Problem();
-		$f3->set('problems', $problem->select("name, slug", NULL, [ 'order' => 'id ASC' ]));
 
-		$f3->set('content', 'problems/list.html');
+		$f3->mset([
+			'problems' => $problem->select('name, slug'),
+			'title' => 'Problem List',
+			'content' => 'problems/list.html'
+		]);
 
 		echo(\Template::instance()->render('layout.html'));
 	}
@@ -24,10 +25,12 @@ class ProblemController extends Controller {
 		if ($problem->dry())
 			$f3->error(404);
 
-		$f3->set('title', $problem->name);
-		$f3->set('problem', $problem);
-		$f3->set('content', 'problems/show.html');
-		$f3->set('loadKatex', true);
+		$f3->mset([
+			'title' => $problem->name,
+			'problem' => $problem,
+			'content' => 'problems/show.html',
+			'loadKatex' => true
+		]);
 
 		echo(\Template::instance()->render('layout.html'));
 	}

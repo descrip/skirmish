@@ -8,9 +8,10 @@ use Models\Problem;
 class UserController extends Controller {
 	
 	public function login($f3, $params) {
-		$f3->set('title', 'Login');
-		$f3->set('content', 'users/login.html');
-		$f3->set('loadKatex', false);
+		$f3->mset([
+			'title' => 'Login',
+			'content' => 'users/login.html'
+		]);
 		echo(\Template::instance()->render('layout.html'));
 	}
 
@@ -31,9 +32,10 @@ class UserController extends Controller {
 	}
 
 	public function new($f3, $params) {
-		$f3->set('title', 'Register');
-		$f3->set('content', 'users/register.html');
-		$f3->set('loadKatex', false);
+		$f3->mset([
+			'title' => 'Register',
+			'content' => 'users/register.html'
+		]);
 		echo(\Template::instance()->render('layout.html'));
 	}
 
