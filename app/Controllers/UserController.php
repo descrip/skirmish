@@ -16,16 +16,17 @@ class UserController extends Controller {
 	public function authenticate($f3, $params) {
 		$username = $f3->get('POST.username');
 		$password = $f3->get('POST.password');
+
 		$user = new User();
 		$user->load(['username = ?', $username]);
+
 		if ($user->dry())
 			$f3->reroute('/login');
 		else if (password_verify($password, $user->password)) {
 			$f3->set('SESSION.user', $user->username);
 			$f3->reroute('/');
 		}
-		else
-			$f3->reroute('/login');
+		else $f3->reroute('/login');
 	}
 
 	public function new($f3, $params) {
