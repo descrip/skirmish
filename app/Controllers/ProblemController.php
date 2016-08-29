@@ -8,13 +8,11 @@ class ProblemController extends Controller {
 
 	public function index($f3, $params) {
 		$problem = new Problem();
-
 		$f3->mset([
 			'problems' => $problem->select('name, slug'),
 			'title' => 'Problem List',
-			'content' => 'problems/list.html'
+			'content' => 'problems/index.html'
 		]);
-
 		echo(\Template::instance()->render('layout.html'));
 	}
 

@@ -39,7 +39,7 @@ class UserController extends Controller {
 		$this->generateCsrf($f3, $params);
 		$f3->mset([
 			'title' => 'Register',
-			'content' => 'users/register.html'
+			'content' => 'users/new.html'
 		]);
 		echo(\Template::instance()->render('layout.html'));
 	}
