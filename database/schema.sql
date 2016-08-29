@@ -36,7 +36,7 @@ CREATE TABLE testcases (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	input TEXT NOT NULL,
 	output TEXT NOT NULL,		-- TODO: Support for program-based checking?
-	subtask_number INTEGER,		-- TODO: If NULL, no subtask grouping.
+	subtask_number INTEGER NOT NULL,
 	problem_slug VARCHAR NOT NULL,
 	FOREIGN KEY(problem_slug) REFERENCES problems(slug) ON UPDATE CASCADE ON DELETE CASCADE
 );
