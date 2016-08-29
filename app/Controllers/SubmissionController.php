@@ -10,6 +10,7 @@ class SubmissionController extends Controller {
 
 	public function new($f3, $params) {
 		$this->checkIfAuthenticated($f3, $params);
+		$this->generateCsrf($f3, $params);
 		$problem = new Problem();
 		$language = new Language();
 
@@ -24,6 +25,9 @@ class SubmissionController extends Controller {
 	}
 
 	public function create($f3, $params) {
+		if (!$this->checkCsrf($f3, $params))
+			$f3->error(403);
+
 	}
 
 }

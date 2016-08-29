@@ -8,6 +8,7 @@ use Models\Problem;
 class UserController extends Controller {
 	
 	public function login($f3, $params) {
+		$this->generateCsrf($f3, $params);
 		$f3->mset([
 			'title' => 'Login',
 			'content' => 'users/login.html'
@@ -16,6 +17,9 @@ class UserController extends Controller {
 	}
 
 	public function authenticate($f3, $params) {
+		if (!$this->checkCsrf($f3, $params))
+			$f3->error(403);
+
 		$email = $f3->get('POST.email');
 		$password = $f3->get('POST.password');
 
@@ -32,6 +36,7 @@ class UserController extends Controller {
 	}
 
 	public function new($f3, $params) {
+		$this->generateCsrf($f3, $params);
 		$f3->mset([
 			'title' => 'Register',
 			'content' => 'users/register.html'
@@ -40,6 +45,9 @@ class UserController extends Controller {
 	}
 
 	public function create($f3, $params) {
+		if (!$this->checkCsrf($f3, $params))
+			$f3->error(403);
+
 		$user = new User();
 		$user->username = $f3->get('POST.username');
 		$user->email = $f3->get('POST.email');
