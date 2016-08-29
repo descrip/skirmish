@@ -37,4 +37,7 @@ $f3->route('GET /register', '\Controllers\UserController->new');
 $f3->route('POST /register', '\Controllers\UserController->create');
 $f3->route('GET /logout', '\Controllers\UserController->logout');
 
+// Create a session for the user.
+new \Session();
+
 $f3->run();
