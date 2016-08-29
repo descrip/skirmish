@@ -3,6 +3,8 @@
 namespace Seeders;
 
 use \Models\Problem;
+use \Models\Testcase;
+use \Models\Subtask;
 
 class ProblemSeeder {
 
@@ -28,14 +30,21 @@ Print a single line with the value of \$A+B\$.
 MARKER;
 		$aplusb->save();
 
+		$aplusb1 = new Subtask();
+		$aplusb1->problem_id = $aplusb->id;
+
+			$aplusb1_1 = new Testcase();
+			$aplusb1_1->input = '3 4\\n';
+			$aplusb1_1->output = '7\\n';
+			$aplusb1_1->subtask_id = $aplusb1->id;
+			$aplusb1_1->save();
+
 		$atimesb = new Problem();
 		$atimesb->name = 'A Times B';
 		$atimesb->slug = 'atimesb';
 		$atimesb->body = <<<MARKER
 # A Times B
-
 quack
-
 MARKER;
 		$atimesb->save();
 	}

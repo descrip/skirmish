@@ -11,10 +11,6 @@ class Problem extends \DB\SQL\Mapper {
 		parent::__construct(\Base::instance()->get('DB'), 'problems');
 	}
 
-	public function getTestcases() {
-		return (new Testcase())->find(['problem_slug = ?', $this->slug]);
-	}
-
 	public function getSubmissions() {
 		return (new Submission())->find(['problem_slug = ?', $this->slug]);
 	}
