@@ -31,7 +31,24 @@ class SubmissionController extends Controller {
 		if (!$this->checkCsrf($f3, $params))
 			$f3->error(403);
 
-		$submission = new Submission();
+		ob_end_clean();
+		header("Connection: close");
+		ignore_user_abort(true);
+
+		//$f3->reroute('/');
+		echo('okay');
+
+		$size = ob_get_length();
+		header("Content-Length: $size");
+		ob_end_flush();                   // Strange behavior; this will not work unless..
+		flush();                          // both functions are called !
+
+		sleep(5);
+
+		$problem = new Problem();
+		$problem->load(['slug = ?', 'aplusb']);
+		$problem->name = "A Plus BBBB";
+		$problem->save();
 	}
 
 }
