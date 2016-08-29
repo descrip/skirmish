@@ -6,6 +6,7 @@ use \Models\Submission;
 use \Models\Result;
 use \Models\Problem;
 use \Models\Language;
+use \Controllers\ProblemController;
 
 class SubmissionController extends Controller {
 
@@ -31,24 +32,29 @@ class SubmissionController extends Controller {
 		if (!$this->checkCsrf($f3, $params))
 			$f3->error(403);
 
+		/* 
+		 * Hacky client detach to make this function run as a background process from here on.
+		 * Taken from http://www.php.net/manual/en/features.connection-handling.php#71172.
+		 */
 		ob_end_clean();
 		header("Connection: close");
 		ignore_user_abort(true);
 
-		//$f3->reroute('/');
-		echo('okay');
+		// TODO: Add submission view here.
 
 		$size = ob_get_length();
 		header("Content-Length: $size");
-		ob_end_flush();                   // Strange behavior; this will not work unless..
-		flush();                          // both functions are called !
+		ob_end_flush();                   // Strange behavior; this will not work unless...
+		flush();                          // Both functions are called !
 
 		sleep(5);
 
+		/*
 		$problem = new Problem();
 		$problem->load(['slug = ?', 'aplusb']);
-		$problem->name = "A Plus BBBB";
+		$problem->name = "A Plus B";
 		$problem->save();
+		*/
 	}
 
 }
