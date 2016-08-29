@@ -19,7 +19,7 @@ class SubmissionController extends Controller {
 
 		$f3->mset([
 			'title' => 'Submit',
-			'content' => 'submit.html',
+			'content' => 'submissions/new.html',
 			'problems' => $problem->select('name, slug'),
 			'languages' => $language->select('id, name, version')
 		]);
