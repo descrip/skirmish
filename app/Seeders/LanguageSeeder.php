@@ -2,7 +2,7 @@
 
 namespace Seeders;
 
-use Models\Language;
+use \Models\Language;
 
 class LanguageSeeder {
 

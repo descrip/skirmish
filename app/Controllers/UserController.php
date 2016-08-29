@@ -2,8 +2,8 @@
 
 namespace Controllers;
 
-use Models\User;
-use Models\Problem;
+use \Models\User;
+use \Models\Problem;
 
 class UserController extends Controller {
 	

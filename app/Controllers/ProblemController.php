@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-use Models\Problem;
+use \Models\Problem;
 
 class ProblemController extends Controller {
 

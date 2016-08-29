@@ -2,9 +2,10 @@
 
 namespace Controllers;
 
-//use Models\Submission;
-use Models\Problem;
-use Models\Language;
+use \Models\Submission;
+use \Models\Result;
+use \Models\Problem;
+use \Models\Language;
 
 class SubmissionController extends Controller {
 
@@ -29,6 +30,8 @@ class SubmissionController extends Controller {
 		$this->checkIfAuthenticated($f3, $params);
 		if (!$this->checkCsrf($f3, $params))
 			$f3->error(403);
+
+		$submission = new Submission();
 	}
 
 }

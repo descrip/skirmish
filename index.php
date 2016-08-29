@@ -11,7 +11,7 @@ if ((float)PCRE_VERSION < 7.9)
 $f3->config('config.ini');
 
 // Load SQLite Database
-$f3->set('DB', new DB\SQL('sqlite:database/skirmish.sqlite3'));
+$f3->set('DB', new \DB\SQL('sqlite:database/skirmish.sqlite3'));
 
 if ($f3->get('createSchema'))
 	shell_exec('sqlite3 database/skirmish.sqlite3 < database/schema.sql');

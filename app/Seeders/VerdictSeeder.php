@@ -2,7 +2,7 @@
 
 namespace Seeders;
 
-use Models\Verdict;
+use \Models\Verdict;
 
 class VerdictSeeder {
 

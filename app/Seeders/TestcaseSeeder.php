@@ -4,6 +4,7 @@ namespace Seeders;
 
 use \Models\Problem;
 use \Models\Testcase; 
+
 class TestcaseSeeder {
 
 	public static function seed($f3) {
@@ -16,6 +17,7 @@ class TestcaseSeeder {
 		$aplusb1_1->subtask_number = 1;
 		$aplusb1_1->input = '3 4\\n';
 		$aplusb1_1->output = '7\\n';
+		$aplusb1_1->save();
 	}
 
 }
