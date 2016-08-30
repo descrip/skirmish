@@ -19,8 +19,6 @@ class ProblemController extends Controller {
 	public function show($f3, $params) {
 		$problem = new Problem();
 		$problem->load(['slug = ?', $params['slug']]);
-		$problem->name = 'lel';
-		$problem->save();
 
 		if ($problem->dry())
 			$f3->error(404);
