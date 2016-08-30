@@ -42,7 +42,8 @@ class SubmissionController extends Controller {
 
 		$f3->mset([
 			'headPartials' => ['partials/meta-refresh.html'],
-			'metaRefreshUrl' => '/problems/aplusb'
+			'metaRefreshUrl' => '/problems/aplusb',
+			'content' => 'submissions/redirect.html'
 		]);
 		echo(\Template::instance()->render('layout.html'));
 
