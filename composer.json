@@ -1,0 +1,6 @@
+{
+    "name": "descrip/skirmish",
+    "require": {
+        "bcosca/fatfree-core": "^3.5"
+    }
+}
