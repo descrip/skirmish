@@ -1,0 +1,9 @@
+<p>Problem: <a href="{{ '/problem/'.@problem->slug }}">{{ @problem->name }}</a></p>
+<p>User: {{ @user->username }}</p>
+<p>Submission: @submission->id</p>
+<repeat group="{{ @subtask_results }}" value="{{ @subtask_result }}">
+	<p>Subtask {{ @subtask->id }}:</p>
+	<repeat group="{{ @subtask_result->testcase_results }}" value="{{ @testcase_result }}">
+	<p>Testcase {{ @testcase->id }}: {{ @testcase->getVerdict()->name }}</p>
+	</repeat>
+</repeat>

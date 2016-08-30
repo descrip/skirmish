@@ -26,7 +26,9 @@
 			</check>
 		</div>
 
-		<include href="{{ @content }}" />
+		<check if="{{ isset(@content) }}">
+			<include href="{{ @content }}" />
+		</check>
 
 		<p class="stats"><code>{{ Base::instance()->format('Page rendered in {0} ms using {1} kb', round(1e3*(microtime(TRUE)-$TIME), 2), round(memory_get_usage(TRUE)/1e3, 1)); }}</code></p>
 
