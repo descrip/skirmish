@@ -13,7 +13,7 @@ class Controller {
 	}
 
 	public function afterRoute($f3, $params) {
-		$f3->clear('loadKatex');
+		//
 	}
 
 	public function generateCsrf($f3, $params) {
