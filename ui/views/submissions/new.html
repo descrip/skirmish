@@ -1,8 +1,8 @@
 <form action="/submit" method="POST">
 	<include href="partials/csrf.html" />
 	<div>
-		<label for="problem-slug">Problem:</label>
-		<select id="problem-slug" name="slug">
+		<label for="problem">Problem:</label>
+		<select id="problem" name="problemSlug">
 			<repeat group="{{ @problems }}" value="{{ @problem }}">
 				<option value="{{ @problem->slug }}" <check if="{{ @problem->slug == $_GET['problem-slug'] }}">selected</check>>{{ @problem->name }}</option>
 			</repeat>
@@ -10,7 +10,7 @@
 	</div>
 	<div>
 		<label for="language">Language:</label>
-		<select id="language" name="language">
+		<select id="language" name="languageId">
 			<repeat group="{{ @languages }}" value="{{ @language }}">
 				<option value="{{ @language->id }}">{{ @language->name.' ('.@language->version.')' }}</option>
 			</repeat>

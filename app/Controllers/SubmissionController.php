@@ -6,6 +6,7 @@ use \Models\Submission;
 use \Models\Result;
 use \Models\Problem;
 use \Models\Language;
+use \Models\Verdict;
 use \Controllers\ProblemController;
 
 class SubmissionController extends Controller {
@@ -32,6 +33,9 @@ class SubmissionController extends Controller {
 		if (!$this->checkCsrf($f3, $params))
 			$f3->error(403);
 
+		$problem = new Problem();
+		$problem->load(['slug = ?', $f3->get('POST.problemSlug')]);
+
 		/* 
 		 * Hacky client detach to run this in the background.
 		 * http://www.php.net/manual/en/features.connection-handling.php#71172.
@@ -51,9 +55,6 @@ class SubmissionController extends Controller {
 		header("Content-Length: $size");
 		ob_end_flush();
 		flush();
-
-		sleep(5);
-
 	}
 
 	public function show($f3, $params) {
