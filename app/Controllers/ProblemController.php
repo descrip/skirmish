@@ -27,7 +27,8 @@ class ProblemController extends Controller {
 			'title' => $problem->name,
 			'problem' => $problem,
 			'content' => 'problems/show.html',
-			'loadKatex' => true
+			'headPartials' => ['partials/katex-head.html'],
+			'bodyPartials' => ['partials/katex-body.html']
 		]);
 
 		echo(\Template::instance()->render('layout.html'));

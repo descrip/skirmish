@@ -4,11 +4,9 @@
 		<meta charset=UTF-8>
 		<title>{{ @title }} - Skirmish Online Judge</title>
 
-		<check if="{{ @loadKatex }}">
-			<link rel="stylesheet" href="{{ @BASE }}/ui/css/katex.min.css">
-			<script src="{{ @BASE }}/ui/js/katex.min.js"></script>
-			<script src="{{ @BASE }}/ui/js/auto-render.min.js"></script>
-		</check>
+		<repeat group="{{ @headPartials }}" value="{{ @partial }}">
+			<include href="{{ @partial }}" />
+		</repeat>
 	</head>
 	<body>
 		<div class="navbar">
@@ -32,15 +30,8 @@
 
 		<p class="stats"><code>{{ Base::instance()->format('Page rendered in {0} ms using {1} kb', round(1e3*(microtime(TRUE)-$TIME), 2), round(memory_get_usage(TRUE)/1e3, 1)); }}</code></p>
 
-		<check if="{{ @loadKatex }}">
-			<script>
-				renderMathInElement(document.body, {
-					"delimiters": [
-						{left: "$$$", right: "$$$", display: true},
-						{left: "$", right: "$", display: false}
-					]
-				});
-			</script>
-		</check>
+		<repeat group="{{ @bodyPartials }}" value="{{ @partial }}">
+			<include href="{{ @partial }}" />
+		</repeat>
 	</body>
 </html>
