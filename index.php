@@ -1,6 +1,8 @@
 <?php
 
-// Kickstart the framework
+use Pheanstalk\Pheanstalk;
+
+// Kickstart F3
 $f3 = require('vendor/bcosca/fatfree-core/base.php');
 
 $f3->set('DEBUG',1);
@@ -13,11 +15,16 @@ $f3->config('config.ini');
 // Load SQLite Database
 $f3->set('DB', new \DB\SQL('sqlite:database/skirmish.sqlite3'));
 
+// Creating and seeding databases
 if ($f3->get('createSchema'))
 	shell_exec('sqlite3 database/skirmish.sqlite3 < database/schema.sql');
 if ($f3->get('seedDatabase'))
 	foreach($f3->get('seeders') as $seeder)
 		$seeder::seed($f3);
+
+// Start pheanstalk (beanstalkd client)
+$pheanstalk = new Pheanstalk('127.0.0.1');
+$f3->set('PHEANSTALK', $pheanstalk);
 
 $f3->route('GET /', function($f3) {
 	$f3->mset([

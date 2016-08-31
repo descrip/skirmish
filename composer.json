@@ -1,6 +1,7 @@
 {
     "name": "descrip/skirmish",
     "require": {
-        "bcosca/fatfree-core": "^3.5"
+        "bcosca/fatfree-core": "^3.5",
+        "pda/pheanstalk": "^3.1"
     }
 }
