@@ -10,15 +10,21 @@ class VerdictSeeder {
 		$db = $f3->get('DB');
 		$db->exec('DELETE FROM verdicts');
 
+		$qu = new Verdict();
+		$qu->name = 'In Queue';
+		$qu->code = 'QU';
+		$qu->save();
+
 		$wa = new Verdict();
-		$wa->name = "Wrong Answer";
-		$wa->code = "WA";
-		$wa->accepted = 0;
+		$wa->name = 'Wrong Answer';
+		$wa->code = 'WA';
+		$wa->save();
 
 		$ac = new Verdict();
-		$ac->name = "Accepted";
-		$ac->code = "AC";
+		$ac->name = 'Accepted';
+		$ac->code = 'AC';
 		$ac->accepted = 1;
+		$ac->save();
 	}
 
 }
