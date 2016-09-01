@@ -3,7 +3,7 @@
 namespace Models;
 
 use \Models\Problem;
-use \Models\Tescases;
+use \Models\Testcases;
 
 class Subtask extends \DB\SQL\Mapper {
 

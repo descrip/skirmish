@@ -2,18 +2,16 @@
 
 namespace Models;
 
-use \Models\Submission;
-use \Models\Testcase;
-use \Models\Verdict;
+use \Models\SubtaskResult;
 
-class Result extends \DB\SQL\Mapper {
+class TestcaseResult extends \DB\SQL\Mapper {
 
 	public function __construct() {
-		parent::__construct(\Base::instance()->get('DB'), 'results');
+		parent::__construct(\Base::instance()->get('DB'), 'testcase_results');
 	}
 
-	public function getSubmission() {
-		return (new Submission())->findone(['id = ?', $this->submission_id]);
+	public function getSubtaskResult() {
+		return (new SubtaskResult())->findone(['id = ?', $this->subtask_result_id]);
 	}
 
 	public function getTestcase() {

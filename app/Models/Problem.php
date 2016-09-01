@@ -2,7 +2,7 @@
 
 namespace Models;
 
-use \Models\Testcase;
+use \Models\Subtask;
 use \Models\Submission;
 
 class Problem extends \DB\SQL\Mapper {
@@ -12,7 +12,11 @@ class Problem extends \DB\SQL\Mapper {
 	}
 
 	public function getSubmissions() {
-		return (new Submission())->find(['problem_slug = ?', $this->slug]);
+		return (new Submission())->find(['problem_id = ?', $this->id]);
+	}
+
+	public function getSubtasks() {
+		return (new Subtask())->find(['problem_id = ?', $this->id]);
 	}
 
 }
