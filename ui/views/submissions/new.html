@@ -2,9 +2,9 @@
 	<include href="partials/csrf.html" />
 	<div>
 		<label for="problem">Problem:</label>
-		<select id="problem" name="problemSlug">
+		<select id="problem" name="problemId">
 			<repeat group="{{ @problems }}" value="{{ @problem }}">
-				<option value="{{ @problem->slug }}" <check if="{{ @problem->slug == $_GET['problem-slug'] }}">selected</check>>{{ @problem->name }}</option>
+				<option value="{{ @problem->id }}" <check if="{{ @problem->id == $_GET['problem'] }}">selected</check>>{{ @problem->name }}</option>
 			</repeat>
 		</select>
 	</div>

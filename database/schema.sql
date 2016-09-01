@@ -45,7 +45,7 @@ CREATE TABLE submissions (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	problem_id INTEGER NOT NULL,
 	user_id INTEGER NOT NULL,
-	verdict_id INTEGER NOT NULL,
+	verdict_id INTEGER NOT NULL DEFAULT 1,
 	language_id INTEGER NOT NULL,
 	FOREIGN KEY(problem_id) REFERENCES problems(id) ON UPDATE CASCADE,
 	FOREIGN KEY(user_id) REFERENCES users(id) ON UPDATE CASCADE,
@@ -61,7 +61,7 @@ CREATE TABLE subtask_results (
 	FOREIGN KEY(subtask_id) REFERENCES subtasks(id) ON UPDATE CASCADE
 );
 
-CREATE TABLE tescase_results (
+CREATE TABLE testcase_results (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	subtask_result_id INTEGER NOT NULL,
 	testcase_id INTEGER NOT NULL,

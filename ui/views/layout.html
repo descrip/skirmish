@@ -13,7 +13,7 @@
 			<b>skirmish online judge</b> :::
 			<a href="/">home</a>
 			<a href="/problems">problems</a>
-			<a href="{{ (isset(@problem) ? ('/submit?problem-slug='.@problem->slug) : '/submit') }}">submit</a>
+			<a href="{{ (isset(@problem) ? ('/submit?problem='.@problem->id) : '/submit') }}">submit</a>
 			<a href="/leaderboard">leaderboard</a>
 			<check if="{{ !isset(@SESSION.user) }}">
 				<true>
