@@ -17,8 +17,7 @@ class Controller {
 	}
 
 	public function generateCsrf($f3, $params) {
-		$sess = new \DB\SQL\Session($f3->get('DB'));
-		$f3->set('SESSION.csrf', $sess->csrf());
+		$f3->set('SESSION.csrf', (new \DB\SQL\Session($f3->get('DB')))->csrf());
 	}
 
 	public function checkCsrf($f3, $params) {

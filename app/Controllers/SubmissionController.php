@@ -61,7 +61,8 @@ class SubmissionController extends Controller {
 		echo('<pre>');
 		var_dump($_POST);
 		echo('</pre>');
-
+		
+		/*
 		foreach ($problem->getSubtasks() as $subtask) {
 			$subtaskResult = new SubtaskResult();
 			$subtaskResult->submission_id = $submission->id;
@@ -69,7 +70,7 @@ class SubmissionController extends Controller {
 			$subtaskResult->save();
 
 			foreach ($subtask->getTestcases() as $testcase) {
-				$f3->get('PHEANSTALK')
+				$f3->get('pheanstalk')
 					->useTube('run-testcase')
 					->put(json_encode([
 						'input' => $testcase->input,
@@ -82,6 +83,7 @@ class SubmissionController extends Controller {
 					]));
 			}
 		}
+		 */
 	}
 
 	public function show($f3, $params) {
