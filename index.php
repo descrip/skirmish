@@ -35,15 +35,7 @@ $f3->route('GET /', function($f3) {
 	echo(\Template::instance()->render('layout.html'));
 });
 
-$f3->route('GET /seedDatabase', function($f3) {
-	if(php_sapi_name() == 'cli') {
-		foreach($f3->get('seeders') as $seeder)
-			$seeder::seed($f3);
-		echo('Database seeded.\\n');
-	}
-	else echo('You are not allowed to execute this operation.');
-});
-
+$f3->route('GET /seedDatabase', '\Controllers\CommandController->seedDatabase');
 $f3->route('GET /problems', '\Controllers\ProblemController->index');
 $f3->route('GET /problems/@slug', '\Controllers\ProblemController->show');
 $f3->route('GET /submit', '\Controllers\SubmissionController->new');
