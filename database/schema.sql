@@ -9,8 +9,8 @@ CREATE TABLE languages (
 CREATE TABLE verdicts (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(255) NOT NULL,
-	code VARCHAR(255) NOT NULL,
-	is_accepted INTEGER NOT NULL	-- Meant to be boolean
+	code VARCHAR(255) UNIQUE NOT NULL,
+	is_accepted BOOLEAN NOT NULL DEFAULT 0
 );
 
 CREATE TABLE users (
@@ -43,7 +43,6 @@ CREATE TABLE testcases (
 
 CREATE TABLE submissions (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
-	points INTEGER NOT NULL,
 	problem_id INTEGER NOT NULL,
 	user_id INTEGER NOT NULL,
 	verdict_id INTEGER NOT NULL,
