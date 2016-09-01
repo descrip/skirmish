@@ -1,9 +1,10 @@
 <?php
 
-//use Pheanstalk\Pheanstalk;
+require_once(__DIR__ . '/vendor/autoload.php');
+use Pheanstalk\Pheanstalk;
 
 // Kickstart F3
-$f3 = require('vendor/bcosca/fatfree-core/base.php');
+$f3 = Base::instance();
 
 $f3->set('DEBUG',1);
 if ((float)PCRE_VERSION < 7.9)
@@ -21,11 +22,9 @@ $f3->set('DB', new \DB\SQL(
 ));
 
 // Start Pheanstalk (beanstalkd client)
-/*
 $f3->set('PHEANSTALK', new Pheanstalk(
-	$f3.get('beanstalkd.host') . ":" . $f3->get('beanstalkd.port')
+	$f3->get('beanstalkd.host') . ":" . $f3->get('beanstalkd.port')
 ));
- */
 
 $f3->route('GET /', function($f3) {
 	$f3->mset([
