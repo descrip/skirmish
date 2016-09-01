@@ -51,7 +51,10 @@ class UserController extends Controller {
 		$user = new User();
 		$user->username = $f3->get('POST.username');
 		$user->email = $f3->get('POST.email');
-		$user->password = password_hash($f3->get('POST.password'), PASSWORD_DEFAULT);
+		$user->password = password_hash(
+			$f3->get('POST.password'),
+			PASSWORD_DEFAULT
+		);
 		$user->save();
 		$f3->reroute('/');
 	}

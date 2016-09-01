@@ -11,7 +11,6 @@ class ProblemSeeder {
 	public static function seed($f3) {
 		$db = $f3->get('DB');
 		$db->exec('DELETE FROM problems');
-		$db->exec('VACUUM');
 
 		$aplusb = new Problem();
 		$aplusb->name = 'A Plus B';
@@ -32,6 +31,7 @@ MARKER;
 
 		$aplusb1 = new Subtask();
 		$aplusb1->problem_id = $aplusb->id;
+		$aplusb1->save();
 
 			$aplusb1_1 = new Testcase();
 			$aplusb1_1->input = '3 4\\n';

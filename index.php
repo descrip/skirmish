@@ -1,6 +1,6 @@
 <?php
 
-use Pheanstalk\Pheanstalk;
+//use Pheanstalk\Pheanstalk;
 
 // Kickstart F3
 $f3 = require('vendor/bcosca/fatfree-core/base.php');
@@ -12,19 +12,20 @@ if ((float)PCRE_VERSION < 7.9)
 // Load configuration
 $f3->config('config.ini');
 
-// Load SQLite Database
-$f3->set('DB', new \DB\SQL('sqlite:database/skirmish.sqlite3'));
+// Load MySQL Database
+$f3->set('DB', new \DB\SQL(
+	'mysql:host=' . $f3->get('mysql.host') . ';port=' . $f3->get('mysql.port')
+		.';dbname=' . $f3->get('mysql.dbname'),
+	$f3->get('mysql.user'),
+	$f3->get('mysql.password')
+));
 
-// Creating and seeding databases
-if ($f3->get('createSchema'))
-	shell_exec('sqlite3 database/skirmish.sqlite3 < database/schema.sql');
-if ($f3->get('seedDatabase'))
-	foreach($f3->get('seeders') as $seeder)
-		$seeder::seed($f3);
-
-// Start pheanstalk (beanstalkd client)
-$pheanstalk = new Pheanstalk('127.0.0.1');
-$f3->set('PHEANSTALK', $pheanstalk);
+// Start Pheanstalk (beanstalkd client)
+/*
+$f3->set('PHEANSTALK', new Pheanstalk(
+	$f3.get('beanstalkd.host') . ":" . $f3->get('beanstalkd.port')
+));
+ */
 
 $f3->route('GET /', function($f3) {
 	$f3->mset([
@@ -32,6 +33,15 @@ $f3->route('GET /', function($f3) {
 		'content' => 'home.html'
 	]);
 	echo(\Template::instance()->render('layout.html'));
+});
+
+$f3->route('GET /seedDatabase', function($f3) {
+	if(php_sapi_name() == 'cli') {
+		foreach($f3->get('seeders') as $seeder)
+			$seeder::seed($f3);
+		echo('Database seeded.\\n');
+	}
+	else echo('You are not allowed to execute this operation.');
 });
 
 $f3->route('GET /problems', '\Controllers\ProblemController->index');

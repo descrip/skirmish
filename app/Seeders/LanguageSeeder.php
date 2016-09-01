@@ -9,7 +9,6 @@ class LanguageSeeder {
 	public static function seed($f3) {
 		$db = $f3->get('DB');
 		$db->exec('DELETE FROM languages');
-		$db->exec('VACUUM');
 
 		$cpp11 = new Language();
 		$cpp11->name = "C++11";
