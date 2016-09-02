@@ -2,8 +2,9 @@ CREATE TABLE languages (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(255) UNIQUE NOT NULL,
 	version VARCHAR(255) NOT NULL,
+	extension VARCHAR(255) NOT NULL,
 	compile_command VARCHAR(255),
-	execute_command VARCHAR(255)
+	execute_command VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE verdicts (

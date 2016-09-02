@@ -1,4 +1,4 @@
-<form action="/submit" method="POST">
+<form action="/submit" method="POST" enctype="multipart/form-data">
 	<include href="partials/csrf.html" />
 	<div>
 		<label for="problem">Problem:</label>
@@ -17,8 +17,8 @@
 		</select>
 	</div>
 	<div>
-		<label for="solution" name="solution">Solution:</label>
-		<input type="file" id="solution">
+		<label for="solution">Solution:</label>
+		<input type="file" id="solution" name="solution">
 	</div>
 	<div>
 		<button type="submit">Submit</button>

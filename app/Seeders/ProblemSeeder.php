@@ -34,8 +34,8 @@ MARKER;
 		$aplusb1->save();
 
 			$aplusb1_1 = new Testcase();
-			$aplusb1_1->input = '3 4\\n';
-			$aplusb1_1->output = '7\\n';
+			$aplusb1_1->input = "3 4\n";
+			$aplusb1_1->output = "7\n";
 			$aplusb1_1->subtask_id = $aplusb1->id;
 			$aplusb1_1->save();
 

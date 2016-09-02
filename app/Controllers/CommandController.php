@@ -24,6 +24,7 @@ class CommandController extends Controller {
 	}
 
 	public function seedDatabase($f3, $params) {
+		$this->createSchema($f3, $params);
 		foreach ($f3->get('seeders') as $seeder)
 			$seeder::seed($f3);
 		echo("Database seeded.\n");

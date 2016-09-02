@@ -33,8 +33,8 @@ $f3->route('GET /', function($f3) {
 	echo(\Template::instance()->render('layout.html'));
 });
 
-$f3->route('GET /createSchema', '\Controllers\CommandController->createSchema');
-$f3->route('GET /seedDatabase', '\Controllers\CommandController->seedDatabase');
+$f3->route('GET create-schema', '\Controllers\CommandController->createSchema');
+$f3->route('GET seed-database', '\Controllers\CommandController->seedDatabase');
 $f3->route('GET /problems', '\Controllers\ProblemController->index');
 $f3->route('GET /problems/@slug', '\Controllers\ProblemController->show');
 $f3->route('GET /submit', '\Controllers\SubmissionController->new');

@@ -58,32 +58,25 @@ class SubmissionController extends Controller {
 		$submission->language_id = $language->id;
 		$submission->save();
 
-		echo('<pre>');
-		var_dump($_POST);
-		echo('</pre>');
-		
-		/*
-		foreach ($problem->getSubtasks() as $subtask) {
-			$subtaskResult = new SubtaskResult();
-			$subtaskResult->submission_id = $submission->id;
-			$subtaskResult->subtask_id = $subtask->id;
-			$subtaskResult->save();
+		// Query subtasks with raw SQL so no ORM classes are used.
+		$subtasks = $f3->get('DB')->exec(
+			'SELECT id FROM subtasks WHERE problem_id = ?',
+			$problem->id
+		);
+		for ($i = 0; $i < count($subtasks); $i++)
+			$subtasks[$i]['testcases'] = $f3->get('DB')->exec(
+				'SELECT id, input, output FROM testcases WHERE subtask_id = ?',
+				$subtasks[$i]['id']
+			);
 
-			foreach ($subtask->getTestcases() as $testcase) {
-				$f3->get('pheanstalk')
-					->useTube('run-testcase')
-					->put(json_encode([
-						'input' => $testcase->input,
-						'output' => $testcase->output,
-						'compile_command' => $language->compile_command,
-						'execute_command' => $language->execute_command,
-						'code' => 'print("Hello World!")',
-						'subtask_result_id' => $subtaskResult->id,
-						'testcase_id' => $testcase->id
-					]));
-			}
-		}
-		 */
+		$f3->get('pheanstalk')->useTube('run-submission')->put(json_encode([
+			'submission_id' => $submission->id,
+			'compile_command' => $language->compile_command,
+			'execute_command' => $language->execute_command,
+			'extension' => $language->extension,
+			'subtasks' => $subtasks,
+			'code' => file_get_contents($f3->get('FILES.solution.tmp_name'))
+		]));
 	}
 
 	public function show($f3, $params) {
