@@ -27,6 +27,8 @@ Print a single line with the value of \$A+B\$.
 ### Sample Output
 `7`
 MARKER;
+		$aplusb->time_limit = 1;
+		$aplusb->memory_limit = 64000;
 		$aplusb->save();
 
 		$aplusb1 = new Subtask();
@@ -39,6 +41,7 @@ MARKER;
 			$aplusb1_1->subtask_id = $aplusb1->id;
 			$aplusb1_1->save();
 
+		/*
 		$atimesb = new Problem();
 		$atimesb->name = 'A Times B';
 		$atimesb->slug = 'atimesb';
@@ -47,6 +50,7 @@ MARKER;
 quack
 MARKER;
 		$atimesb->save();
+		 */
 	}
 
 }

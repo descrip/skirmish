@@ -15,7 +15,7 @@ $f3->config('config.ini');
 // Load MySQL Database
 $f3->set('DB', new \DB\SQL(
 	'mysql:host=' . $f3->get('mysql.host') . ';port=' . $f3->get('mysql.port')
-		.';dbname=' . $f3->get('mysql.database'),
+		. ';dbname=' . $f3->get('mysql.database'),
 	$f3->get('mysql.user'),
 	$f3->get('mysql.password')
 ));

@@ -75,7 +75,10 @@ class SubmissionController extends Controller {
 			'execute_command' => $language->execute_command,
 			'extension' => $language->extension,
 			'subtasks' => $subtasks,
-			'code' => file_get_contents($f3->get('FILES.solution.tmp_name'))
+			'code' => file_get_contents($f3->get('FILES.solution.tmp_name')),
+			'execution_time_limit' => $problem->time_limit,
+			'execution_memory_limit' => $problem->memory_limit,
+			'problem_slug' => $problem->slug
 		]));
 	}
 

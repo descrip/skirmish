@@ -68,7 +68,8 @@ while ($job = $queue->reserve()) {
 	foreach ($data['subtasks'] as $subtask) {
 
 		$db->exec(sprintf(
-			'INSERT INTO subtask_results(submission_id, subtask_id) VALUES (%d, %d)',
+			'INSERT INTO subtask_results(submission_id, subtask_id)
+			VALUES (%d, %d)',
 			$data['submission_id'],
 			$subtask['id']
 		));
@@ -118,8 +119,8 @@ while ($job = $queue->reserve()) {
 			/*
 			 * TLE check.
 			 * 124: bash/timeout status code if TLE (real time).
-			 * 142: 128+SIGALRM (not sure).
-			 * $limitData[0] == 'TIMEOUT' (cpu+sys timeout, rarely happens without real).
+			 * 142: 128+SIGALRM.
+			 * $limitData[0] == 'TIMEOUT' (cpu+sys timeout).
 			 */
 			if ($exitCode == 124 || $exitCode == 142
 			   	|| $limitData[0] == 'TIMEOUT')

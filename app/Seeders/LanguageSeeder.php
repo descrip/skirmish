@@ -21,7 +21,7 @@ class LanguageSeeder {
 		$py3->name = 'Python 3';
 		$py3->extension = 'py';
 		$py3->version = 'python3 3.5.2';
-		$py3->execute_command = 'mbox -n -i -r {{ directory }} -C {{ directory }} -- python3 {{ filename }}.py';
+		$py3->execute_command = 'python3 {{ filename }}.py';
 		$py3->save();
 	}
 
