@@ -1,0 +1,6 @@
+{
+    "name": "descrip/skirmish-submission-runner",
+    "require": {
+        "pda/pheanstalk": "^3.1"
+    }
+}
