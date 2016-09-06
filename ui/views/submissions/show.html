@@ -5,7 +5,7 @@
 	<p>Subtask {{ @subtask_result['id'] }}:</p>
 	<ul>
 		<repeat group="{{ @subtask_result['testcase_results'] }}" value="{{ @testcase_result }}">
-		<li>Testcase {{ @testcase_result['id'] }}: {{ @verdicts[@testcase_result['verdict_id']-1]->code }}</li>
+			<li>Testcase {{ @testcase_result['id'] }}: {{ @verdicts[@testcase_result['verdict_id']-1]->code }}</li>
 		</repeat>
 	</ul>
 </repeat>

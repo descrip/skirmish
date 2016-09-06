@@ -52,9 +52,10 @@ while ($job = $queue->reserve()) {
 	@file_put_contents(
 		$context['filename'] . '.sh',
 		contextify(
-			sprintf("%s %s 2>&1\n%s",
+			sprintf("%s %s %s 2>&1\n%s",
 				$config['timeout_command'], 
 				$data['execute_command'],
+				contextify('< {{ filename }}.in', $context),
 				'echo $?'
 			),
 			$context
@@ -120,12 +121,19 @@ while ($job = $queue->reserve()) {
 			$limitData = explode(' ', array_pop($output));
 			$output = implode("\n", $output);
 
+			/*
+			echo($exitCode);
+			var_dump($limitData);
+			echo($output);
+			echo('-------------------');
+			 */
+
 			/* TLE check.
 			 * 124: bash/timeout status code if TLE (real time).
 			 * 142: 128+SIGALRM.
 			 * $limitData[0] == 'TIMEOUT' (cpu+sys timeout).
 			 */
-			if (in_array($exitCode, [124, 142]) || $limitData[0] == 'TIMEOUT')
+			if (in_array($exitCode, [124, 142, 143]) || $limitData[0] == 'TIMEOUT')
 				$verdict_id = 4;
 			// MLE check.
 			else if ($limitData[0] == 'MEM')
@@ -134,7 +142,7 @@ while ($job = $queue->reserve()) {
 			else if ($exitCode != 0)
 				$verdict_id = 3;
 			// WA check.
-			else if (trim_output($output) == trim_output($data['output']))
+			else if (trim_output($output) == trim_output($testcase['output']))
 				$verdict_id = 6;
 			// Therefore AC.
 			else $verdict_id = 7;
@@ -143,6 +151,7 @@ while ($job = $queue->reserve()) {
 		}
 	}
 
+	//echo('done');
 	$queue->delete($job);
 
 }

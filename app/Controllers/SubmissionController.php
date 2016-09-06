@@ -102,22 +102,24 @@ class SubmissionController extends Controller {
 			$problem = $problem[0];
 		else $f3->error(500);
 
-		$subtasks = $f3->get('DB')->exec('
-			SELECT subtasks.id, COUNT(testcases.id) AS testcase_count
+		$subtasks = $f3->get('DB')->exec(
+			'SELECT subtasks.id, COUNT(testcases.id) AS testcase_count
 			FROM subtasks
-			LEFT JOIN testcases
+			INNER JOIN testcases
 			ON subtasks.id = testcases.subtask_id
-			AND subtasks.problem_id = 1
-			GROUP BY subtasks.id
-		');
+			AND subtasks.problem_id = ?
+			GROUP BY subtasks.id',
+			$problem['id']
+		);
 
-		$tmp = $f3->get('DB')->exec('
-			SELECT subtask_results.id, testcase_results.verdict_id
+		$tmp = $f3->get('DB')->exec(
+			'SELECT subtask_results.id, testcase_results.verdict_id
 			FROM subtask_results
-			LEFT JOIN testcase_results
+			INNER JOIN testcase_results
 			ON subtask_results.id = testcase_results.subtask_result_id
-			AND subtask_results.submission_id = 1
-		');
+			AND subtask_results.submission_id = ?',
+			$submission->id
+		);
 
 		$subtask_results = [];
 		for ($i = 0; $i < count($tmp); $i++) {
@@ -125,9 +127,9 @@ class SubmissionController extends Controller {
 
 			if ($i == 0 || $tmp[$i]['id'] != $tmp[$i-1]['id']) {
 				if ($i != 0)
-					while (count($subtask_results[$lastIndex]) < $subtasks[$lastIndex]['testcase_count'])
+					while (count($subtask_results[$lastIndex]['testcase_results']) < $subtasks[$lastIndex]['testcase_count'])
 						array_push($subtask_results[$lastIndex]['testcase_results'], [
-							'id' => count(subtask_results[$lastIndex])+1,
+							'id' => count(subtask_results[$lastIndex]['testcase_results'])+1,
 							'verdict_id' => 1
 						]);
 
@@ -139,10 +141,14 @@ class SubmissionController extends Controller {
 			}
 
 			array_push($subtask_results[$lastIndex]['testcase_results'], [
-				'id' => count($subtask_results[$lastIndex]),
+				'id' => count($subtask_results[$lastIndex]['testcase_results'])+1,
 				'verdict_id' => $tmp[$i]['verdict_id']
 			]);
 		}
+
+		echo('<pre>');
+		var_dump($subtask_results);
+		echo('</pre>');
 
 		$verdicts = (new Verdict())->find();
 
