@@ -13,6 +13,10 @@ function contextify($str, $arr) {
 	return $str;
 }
 
+function trim_output($str) {
+	return trim(preg_replace('/\r\n|\n|\r/', '\n', $str));
+}
+
 $config = parse_ini_file(__DIR__ . '/config.ini', true);
 
 $db = new PDO(
@@ -112,7 +116,7 @@ while ($job = $queue->reserve()) {
 				fclose($pipes[2]);
 			}
 
-			$exitCode = array_pop($output);
+			$exitCode = intval(array_pop($output));
 			$limitData = explode(' ', array_pop($output));
 			$output = implode("\n", $output);
 
@@ -122,19 +126,24 @@ while ($job = $queue->reserve()) {
 			 * 142: 128+SIGALRM.
 			 * $limitData[0] == 'TIMEOUT' (cpu+sys timeout).
 			 */
-			if ($exitCode == 124 || $exitCode == 142
-			   	|| $limitData[0] == 'TIMEOUT')
+			if (in_array($exitCode, [124, 142]) || $limitData[0] == 'TIMEOUT')
 				$verdict_id = 4;
+			// MLE check.
+			else if ($limitData[0] == 'MEM')
+				$verdict_id = 5;
+			// RE check.
 			else if ($exitCode != 0)
 				$verdict_id = 3;
-			else {
-				if (trim(preg_replace('/\r\n|\n|\r/', '\n', $output)) ==
-					trim(preg_replace('/\r\n|\n|\r/', '\n', $data['output'])))
-					$verdict_id = 6;
-				else $verdict_id = 7;
-			}
+			// WA check.
+			else if (trim_output($output) == trim_output($data['output']))
+				$verdict_id = 6;
+			// Therefore AC.
+			else $verdict_id = 7;
 
 			$stmt->execute();
 		}
 	}
+
+	$queue->delete($job);
+
 }
