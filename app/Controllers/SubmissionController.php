@@ -82,16 +82,76 @@ class SubmissionController extends Controller {
 		]));
 	}
 
+	/* FIXME: Break a couple of HMVC rules here.
+	 * Subtasks, testcases don't have their own modular show.
+	 * Should be fine, I'm not planning to use them again. Hopefully.
+	 */
 	public function show($f3, $params) {
 		$submission = new Submission();
 		$submission->load(['id = ?', $params['id']]);
-
 		if ($submission->dry())
 			$f3->error(404);
 
+		$problem = $f3->get('DB')->exec(
+			'SELECT id, name, slug FROM problems WHERE id = ?',
+			$submission->problem_id
+		);
+		if (count($problem) == 0)
+			$f3->error(404);
+		else if (count($problem) == 1)
+			$problem = $problem[0];
+		else $f3->error(500);
+
+		$subtasks = $f3->get('DB')->exec('
+			SELECT subtasks.id, COUNT(testcases.id) AS testcase_count
+			FROM subtasks
+			LEFT JOIN testcases
+			ON subtasks.id = testcases.subtask_id
+			AND subtasks.problem_id = 1
+			GROUP BY subtasks.id
+		');
+
+		$tmp = $f3->get('DB')->exec('
+			SELECT subtask_results.id, testcase_results.verdict_id
+			FROM subtask_results
+			LEFT JOIN testcase_results
+			ON subtask_results.id = testcase_results.subtask_result_id
+			AND subtask_results.submission_id = 1
+		');
+
+		$subtask_results = [];
+		for ($i = 0; $i < count($tmp); $i++) {
+			$lastIndex = count($subtask_results)-1;
+
+			if ($i == 0 || $tmp[$i]['id'] != $tmp[$i-1]['id']) {
+				if ($i != 0)
+					while (count($subtask_results[$lastIndex]) < $subtasks[$lastIndex]['testcase_count'])
+						array_push($subtask_results[$lastIndex]['testcase_results'], [
+							'id' => count(subtask_results[$lastIndex])+1,
+							'verdict_id' => 1
+						]);
+
+				array_push($subtask_results, [
+					'id' => count($subtask_results)+1,
+					'testcase_results' => []
+				]);
+				$lastIndex++;
+			}
+
+			array_push($subtask_results[$lastIndex]['testcase_results'], [
+				'id' => count($subtask_results[$lastIndex]),
+				'verdict_id' => $tmp[$i]['verdict_id']
+			]);
+		}
+
+		$verdicts = (new Verdict())->find();
+
 		$f3->mset([
-			'title' => 'Submission #'.$params['id'],
+			'title' => 'Submission #' . $params['id'],
+			'problem' => $problem,
 			'submission' => $submission,
+			'subtask_results' => $subtask_results,
+			'verdicts' => $verdicts,
 			'content' => 'submissions/show.html'
 		]);
 

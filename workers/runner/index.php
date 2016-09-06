@@ -120,8 +120,7 @@ while ($job = $queue->reserve()) {
 			$limitData = explode(' ', array_pop($output));
 			$output = implode("\n", $output);
 
-			/*
-			 * TLE check.
+			/* TLE check.
 			 * 124: bash/timeout status code if TLE (real time).
 			 * 142: 128+SIGALRM.
 			 * $limitData[0] == 'TIMEOUT' (cpu+sys timeout).

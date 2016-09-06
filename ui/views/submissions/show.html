@@ -1,9 +1,11 @@
-<p>Problem: <a href="{{ '/problem/'.@problem->slug }}">{{ @problem->name }}</a></p>
-<p>User: {{ @user->username }}</p>
-<p>Submission: @submission->id</p>
+<p>Problem: <a href="{{ '/problems/'.@problem['slug'] }}">{{ @problem['name'] }}</a></p>
+<p>User: {{ @SESSION.user }}</p>
+<p>Submission: {{ @submission->id }}</p>
 <repeat group="{{ @subtask_results }}" value="{{ @subtask_result }}">
-	<p>Subtask {{ @subtask->id }}:</p>
-	<repeat group="{{ @subtask_result->testcase_results }}" value="{{ @testcase_result }}">
-	<p>Testcase {{ @testcase->id }}: {{ @testcase->getVerdict()->name }}</p>
-	</repeat>
+	<p>Subtask {{ @subtask_result['id'] }}:</p>
+	<ul>
+		<repeat group="{{ @subtask_result['testcase_results'] }}" value="{{ @testcase_result }}">
+		<li>Testcase {{ @testcase_result['id'] }}: {{ @verdicts[@testcase_result['verdict_id']-1]->code }}</li>
+		</repeat>
+	</ul>
 </repeat>
