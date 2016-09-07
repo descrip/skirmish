@@ -148,10 +148,6 @@ class SubmissionController extends Controller {
 			]);
 		}
 
-		echo('<pre>');
-		var_dump($subtask_results);
-		echo('</pre>');
-
 		$verdicts = (new Verdict())->find();
 
 		$f3->mset([

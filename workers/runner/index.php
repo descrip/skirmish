@@ -38,7 +38,6 @@ while ($job = $queue->reserve()) {
 	$context = [
 		'cwd' => __DIR__,
 		'sandbox_dir' => $config['sandbox_directory'],
-		'pshved_timeout' => $config['path_to_pshved_timeout_script'],
 		'filename' => $config['sandbox_directory'] . $data['problem_slug'],
 	];
 
@@ -53,7 +52,7 @@ while ($job = $queue->reserve()) {
 		$context['filename'] . '.sh',
 		contextify(
 			sprintf("%s %s %s 2>&1\n%s",
-				$config['timeout_command'], 
+				$config['limit_command'], 
 				$data['execute_command'],
 				contextify('< {{ filename }}.in', $context),
 				'echo $?'
@@ -105,9 +104,10 @@ while ($job = $queue->reserve()) {
 			$error = '';
 
 			if (is_resource($process)) {
+				/*
 				fputs($pipes[0], $testcase['input']);
 				fclose($pipes[0]);
-
+				 */
 				while ($f = fgets($pipes[1]))
 					array_push($output, $f);
 				fclose($pipes[1]);
@@ -118,40 +118,31 @@ while ($job = $queue->reserve()) {
 			}
 
 			$exitCode = intval(array_pop($output));
-			$limitData = explode(' ', array_pop($output));
 			$output = implode("\n", $output);
 
 			/*
-			echo($exitCode);
-			var_dump($limitData);
-			echo($output);
+			echo($exitCode . "\n");
+			echo($output . "\n");
 			echo('-------------------');
 			 */
 
 			/* TLE check.
 			 * 124: bash/timeout status code if TLE (real time).
-			 * 142: 128+SIGALRM.
-			 * $limitData[0] == 'TIMEOUT' (cpu+sys timeout).
 			 */
-			if (in_array($exitCode, [124, 142, 143]) || $limitData[0] == 'TIMEOUT')
-				$verdict_id = 4;
-			// MLE check.
-			else if ($limitData[0] == 'MEM')
-				$verdict_id = 5;
+			if ($exitCode == 124) $verdict_id = 4;
 			// RE check.
-			else if ($exitCode != 0)
-				$verdict_id = 3;
+			else if ($exitCode != 0) $verdict_id = 3;
 			// WA check.
 			else if (trim_output($output) != trim_output($testcase['output']))
-				$verdict_id = 6;
+				$verdict_id = 5;
 			// Therefore AC.
-			else $verdict_id = 7;
+			else $verdict_id = 6;
 
 			$stmt->execute();
 		}
 	}
 
-	//echo('done');
-	//$queue->delete($job);
+	//echo("done\n");
+	$queue->delete($job);
 
 }

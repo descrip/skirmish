@@ -35,18 +35,12 @@ class VerdictSeeder {
 		$tle->save();
 
 		// 5
-		$mle = new Verdict();
-		$mle->name = 'Memory Limit Exceeded';
-		$mle->code = 'MLE';
-		$mle->save();
-
-		// 6
 		$wa = new Verdict();
 		$wa->name = 'Wrong Answer';
 		$wa->code = 'WA';
 		$wa->save();
 
-		// 7
+		// 6
 		$ac = new Verdict();
 		$ac->name = 'Accepted';
 		$ac->code = 'AC';
