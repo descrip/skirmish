@@ -142,7 +142,7 @@ while ($job = $queue->reserve()) {
 			else if ($exitCode != 0)
 				$verdict_id = 3;
 			// WA check.
-			else if (trim_output($output) == trim_output($testcase['output']))
+			else if (trim_output($output) != trim_output($testcase['output']))
 				$verdict_id = 6;
 			// Therefore AC.
 			else $verdict_id = 7;
@@ -152,6 +152,6 @@ while ($job = $queue->reserve()) {
 	}
 
 	//echo('done');
-	$queue->delete($job);
+	//$queue->delete($job);
 
 }
