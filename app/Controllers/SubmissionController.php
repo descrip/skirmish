@@ -80,6 +80,8 @@ class SubmissionController extends Controller {
 			'execution_memory_limit' => $problem->memory_limit,
 			'problem_slug' => $problem->slug
 		]));
+
+		$f3->reroute('/submissions/' . $submission->id);
 	}
 
 	/* FIXME: Break a couple of HMVC rules here.
