@@ -27,7 +27,7 @@ CREATE TABLE users (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(255) UNIQUE NOT NULL,
 	email VARCHAR(255) UNIQUE NOT NULL,
-	password VARCHAR(255) NOT NULL
+	password VARCHAR(255) NOT NULL,
 );
 
 CREATE TABLE problems (
@@ -40,14 +40,14 @@ CREATE TABLE problems (
 	points INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
 	contest_id INTEGER,
-	FOREIGN KEY(contest_id) REFERENCES contests(id) ON UPDATE CASCADE ON DELETE CASCADE
+	FOREIGN KEY(contest_id) REFERENCES contests(id) ON DELETE CASCADE
 );
 
 CREATE TABLE subtasks (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	problem_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
-	FOREIGN KEY(problem_id) REFERENCES problems(id) ON UPDATE CASCADE ON DELETE CASCADE
+	FOREIGN KEY(problem_id) REFERENCES problems(id) ON DELETE CASCADE
 );
 
 CREATE TABLE testcases (
@@ -56,7 +56,7 @@ CREATE TABLE testcases (
 	output TEXT NOT NULL,	-- TODO: Support for program-based checking?
 	subtask_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL,
-	FOREIGN KEY(subtask_id) REFERENCES subtasks(id) ON UPDATE CASCADE ON DELETE CASCADE
+	FOREIGN KEY(subtask_id) REFERENCES subtasks(id) ON DELETE CASCADE
 );
 
 CREATE TABLE submissions (
@@ -67,10 +67,10 @@ CREATE TABLE submissions (
 	language_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
 	points INTEGER NOT NULL DEFAULT 0,
-	FOREIGN KEY(problem_id) REFERENCES problems(id) ON UPDATE CASCADE,
-	FOREIGN KEY(user_id) REFERENCES users(id) ON UPDATE CASCADE,
-	FOREIGN KEY(verdict_id) REFERENCES verdicts(id) ON UPDATE CASCADE,
-	FOREIGN KEY(language_id) REFERENCES languages(id) ON UPDATE CASCADE
+	FOREIGN KEY(problem_id) REFERENCES problems(id),
+	FOREIGN KEY(user_id) REFERENCES users(id),
+	FOREIGN KEY(verdict_id) REFERENCES verdicts(id),
+	FOREIGN KEY(language_id) REFERENCES languages(id)
 );
 
 CREATE TABLE subtask_results (
@@ -78,8 +78,8 @@ CREATE TABLE subtask_results (
 	submission_id INTEGER NOT NULL,
 	subtask_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
-	FOREIGN KEY(submission_id) REFERENCES submissions(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY(subtask_id) REFERENCES subtasks(id) ON UPDATE CASCADE
+	FOREIGN KEY(submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
+	FOREIGN KEY(subtask_id) REFERENCES subtasks(id)
 );
 
 CREATE TABLE testcase_results (
@@ -87,26 +87,26 @@ CREATE TABLE testcase_results (
 	subtask_result_id INTEGER NOT NULL,
 	testcase_id INTEGER NOT NULL,
 	verdict_id INTEGER NOT NULL,
-	FOREIGN KEY(subtask_result_id) REFERENCES subtask_results(id) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY(testcase_id) REFERENCES testcases(id) ON UPDATE CASCADE,
-	FOREIGN KEY(verdict_id) REFERENCES verdicts(id) ON UPDATE CASCADE
+	FOREIGN KEY(subtask_result_id) REFERENCES subtask_results(id) ON DELETE CASCADE,
+	FOREIGN KEY(testcase_id) REFERENCES testcases(id),
+	FOREIGN KEY(verdict_id) REFERENCES verdicts(id)
 );
 
 CREATE TABLE users_problems_pivot (
 	user_id INTEGER NOT NULL,
-	FOREIGN KEY(user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
 	problem_id INTEGER NOT NULL,
-	FOREIGN KEY(problem_id) REFERENCES problems(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY(problem_id) REFERENCES problems(id) ON DELETE CASCADE,
 	submission_id INTEGER NOT NULL,
-	FOREIGN KEY(submission_id) REFERENCES submissions(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY(submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
 	PRIMARY KEY(user_id, problem_id)
 );
 
 CREATE TABLE users_contests_pivot (
 	user_id INTEGER NOT NULL,
-	FOREIGN KEY(user_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
 	contest_id INTEGER NOT NULL,
-	FOREIGN KEY(contest_id) REFERENCES contests(id) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY(contest_id) REFERENCES contests(id) ON DELETE CASCADE,
 	PRIMARY KEY(user_id, contest_id)
 );
 
