@@ -11,7 +11,7 @@ class CommandController extends Controller {
 	}
 
 	public function createSchema($f3, $params) {
-		$f3->get('DB')->exec([
+		$result = $f3->get('DB')->exec([
 			// Empty the database by dropping it and making a new one.
 			// TODO: Any way to handle clearing a datbase with less privleges?
 			'DROP DATABASE '.$f3->get('mysql.database'),
@@ -20,7 +20,7 @@ class CommandController extends Controller {
 			// Run the commands within the schema SQL file.
 			file_get_contents('./database/schema.sql')
 		]);
-		echo("Schema created.\n");
+		echo("Schema created. Note that, if an error was encountered, this command cannot report it.\n");
 	}
 
 	public function seedDatabase($f3, $params) {
