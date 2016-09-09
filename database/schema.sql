@@ -136,17 +136,48 @@ END;
 CREATE TRIGGER update_marks_on_problems_on_delete BEFORE DELETE ON subtasks FOR EACH ROW
 UPDATE problems SET marks = marks - OLD.marks WHERE id = OLD.problem_id;
 
--- Create triggers on testcase_results to update mark on subtask_results on any C(R)UD.
--- CREATE TRIGGER update_marks_on_subtask_results_on_insert BEFORE INSERT ON testcase_results FOR EACH ROW
--- UPDATE subtask_results SET marks = marks + NEW.marks WHERE id = NEW.subtask_result_id;
--- 
--- DELIMITER //
--- CREATE TRIGGER update_marks_on_subtask_results_on_update BEFORE UPDATE ON testcase_results FOR EACH ROW
--- BEGIN
--- 	UPDATE subtask_results SET marks = marks - OLD.marks WHERE id = OLD.subtask_result_id;
--- 	UPDATE subtask_results SET marks = marks + NEW.marks WHERE id = NEW.subtask_result_id;
--- END;//
--- DELIMITER ;
--- 
--- CREATE TRIGGER update_marks_on_subtask_results_on_delete BEFORE DELETE ON testcase_results FOR EACH ROW
--- UPDATE subtask_results SET marks = marks - OLD.marks WHERE id = OLD.subtask_result_id;
+-- Create triggers on testcase_results to update mark on subtask_results on any C(R)UD if an accepted verdict was assigned.
+CREATE TRIGGER update_marks_on_subtask_results_on_insert BEFORE INSERT ON testcase_results FOR EACH ROW
+BEGIN
+	SELECT is_accepted INTO @is_accepted FROM verdicts WHERE id = NEW.verdict_id;
+	SELECT marks INTO @marks FROM testcases WHERE id = NEW.testcase_id;
+	IF @is_accepted THEN
+		UPDATE subtask_results SET marks = marks + @marks WHERE id = NEW.subtask_result_id;
+	END IF;
+END;
+
+CREATE TRIGGER update_marks_on_subtask_results_on_update BEFORE UPDATE ON testcase_results FOR EACH ROW
+BEGIN
+	SELECT is_accepted INTO @old_is_accepted FROM verdicts WHERE id = OLD.verdict_id;
+	SELECT marks INTO @old_marks FROM testcases WHERE id = OLD.testcase_id;
+	SELECT is_accepted INTO @new_is_accepted FROM verdicts WHERE id = NEW.verdict_id;
+	SELECT marks INTO @new_marks FROM testcases WHERE id = NEW.testcase_id;
+	IF @old_is_accepted THEN
+		UPDATE subtask_results SET marks = marks - @old_marks WHERE id = OLD.subtask_result_id;
+	END IF;
+	IF @new_is_accepted THEN
+		UPDATE subtask_results SET marks = marks + @new_marks WHERE id = NEW.subtask_result_id;
+	END IF;
+END;
+
+CREATE TRIGGER update_marks_on_subtask_results_on_delete BEFORE DELETE ON testcase_results FOR EACH ROW
+BEGIN
+	SELECT is_accepted INTO @is_accepted FROM verdicts WHERE id = OLD.verdict_id;
+	SELECT marks INTO @marks FROM testcases WHERE id = OLD.testcase_id;
+	IF @is_accepted THEN
+		UPDATE subtask_results SET marks = marks - @marks WHERE id = OLD.subtask_result_id;
+	END IF;
+END;
+
+-- Create triggers on subtask_results to relay information to submissions on any C(R)UD.
+CREATE TRIGGER update_marks_on_submissions_on_insert BEFORE INSERT ON subtask_results FOR EACH ROW
+UPDATE submissions SET marks = marks + NEW.marks WHERE id = NEW.submission_id;
+
+CREATE TRIGGER update_marks_on_submissions_on_update BEFORE UPDATE ON subtask_results FOR EACH ROW
+BEGIN
+	UPDATE submissions SET marks = marks - OLD.marks WHERE id = OLD.submission_id;
+	UPDATE submissions SET marks = marks + NEW.marks WHERE id = NEW.submission_id;
+END;
+
+CREATE TRIGGER update_marks_on_submissions_on_delete BEFORE DELETE ON subtask_results FOR EACH ROW
+UPDATE submissions SET marks = marks - OLD.marks WHERE id = OLD.submission_id;

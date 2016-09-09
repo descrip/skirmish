@@ -123,6 +123,7 @@ class SubmissionController extends Controller {
 			$submission->id
 		);
 
+		// Eighty character limit broken here for neatness.
 		$subtask_results = [];
 		for ($i = 0; $i < count($tmp); $i++) {
 			$lastIndex = count($subtask_results)-1;
