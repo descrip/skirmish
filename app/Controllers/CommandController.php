@@ -20,7 +20,7 @@ class CommandController extends Controller {
 			// Run the commands within the schema SQL file.
 			file_get_contents('./database/schema.sql')
 		]);
-		echo("Schema created. Note that, if an error was encountered, this command cannot report it.\n");
+		echo("Schema created. Note that this command cannot report any errors that may have occured.\n");
 	}
 
 	public function seedDatabase($f3, $params) {
