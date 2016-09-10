@@ -19,14 +19,11 @@ class SubmissionController extends Controller {
 		$this->checkIfAuthenticated($f3, $params);
 		$this->generateCsrf($f3, $params);
 
-		$problem = new Problem();
-		$language = new Language();
-
 		$f3->mset([
 			'title' => 'Submit',
 			'content' => 'submissions/new.html',
-			'problems' => $problem->select('id, name, slug'),
-			'languages' => $language->select('id, name, version')
+			'problems' => (new Problem())->('id, name, slug'),
+			'languages' => (new Language())->('id, name, version')
 		]);
 
 		echo(\Template::instance()->render('layout.html'));

@@ -45,5 +45,7 @@ $f3->route('GET /register', '\Controllers\UserController->new');
 $f3->route('POST /register', '\Controllers\UserController->create');
 $f3->route('GET /logout', '\Controllers\UserController->logout');
 $f3->route('GET /submissions/@id', '\Controllers\SubmissionController->show');
+$f3->route('GET /contests', '\Controllers\ContestController->index');
+$f3->route('GET /contests/slug', '\Controllers\ContestController->show');
 
 $f3->run();

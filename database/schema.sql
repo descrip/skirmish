@@ -19,6 +19,7 @@ CREATE TABLE contests (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(255) UNIQUE NOT NULL,
 	slug VARCHAR(255) UNIQUE NOT NULL,
+	body TEXT NOT NULL,
 	start_time TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:01',
 	end_time TIMESTAMP NOT NULL DEFAULT '1970-01-01 00:00:01'
 );
@@ -28,6 +29,8 @@ CREATE TABLE users (
 	username VARCHAR(255) UNIQUE NOT NULL,
 	email VARCHAR(255) UNIQUE NOT NULL,
 	password VARCHAR(255) NOT NULL,
+	current_contest_id INTEGER UNIQUE,
+	FOREIGN KEY(current_contest_id) REFERENCES contests(id)
 );
 
 CREATE TABLE problems (
@@ -92,7 +95,7 @@ CREATE TABLE testcase_results (
 	FOREIGN KEY(verdict_id) REFERENCES verdicts(id)
 );
 
-CREATE TABLE users_problems_pivot (
+CREATE TABLE users_solved_problems_pivot (
 	user_id INTEGER NOT NULL,
 	FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
 	problem_id INTEGER NOT NULL,
@@ -102,7 +105,7 @@ CREATE TABLE users_problems_pivot (
 	PRIMARY KEY(user_id, problem_id)
 );
 
-CREATE TABLE users_contests_pivot (
+CREATE TABLE users_entered_contests_pivot (
 	user_id INTEGER NOT NULL,
 	FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
 	contest_id INTEGER NOT NULL,

@@ -2,30 +2,30 @@
 
 namespace Controllers;
 
-use \Models\Problem;
+use \Models\Contest;
 
-class ProblemController extends Controller {
+class ContestController extends Controller {
 
 	public function index($f3, $params) {
 		$f3->mset([
-			'problems' => (new Problem())->select('name, slug'),
-			'title' => 'Problem List',
-			'content' => 'problems/index.html'
+			'contests' => (new Contest())->select('name, slug'),
+			'title' => 'Contest List',
+			'content' => 'contests/index.html'
 		]);
 		echo(\Template::instance()->render('layout.html'));
 	}
 
 	public function show($f3, $params) {
-		$problem = new Problem();
-		$problem->load(['slug = ?', $params['slug']]);
+		$contest = new Contest();
+		$contest->load(['slug = ?', $params['slug']]);
 
-		if ($problem->dry())
+		if ($contest->dry())
 			$f3->error(404);
 
 		$f3->mset([
-			'title' => $problem->name,
-			'problem' => $problem,
-			'content' => 'problems/show.html',
+			'title' => $contest->name,
+			'contest' => $contest,
+			'content' => 'contests/show.html',
 			'headPartials' => ['partials/katex-head.html'],
 			'bodyPartials' => ['partials/katex-body.html']
 		]);
