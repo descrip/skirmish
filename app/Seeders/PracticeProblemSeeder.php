@@ -6,7 +6,7 @@ use \Models\Problem;
 use \Models\Testcase;
 use \Models\Subtask;
 
-class ProblemSeeder {
+class PracticeProblemSeeder {
 
 	public static function seed($f3) {
 		$db = $f3->get('DB');
