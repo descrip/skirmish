@@ -14,7 +14,7 @@ class ProblemController extends Controller {
 			$contest = new Contest();
 			$contest->load(['slug = ?', $f3->get('SESSION.contest')]);
 			if ($contest->dry())
-				$f3->error(404);
+				$f3->error(404);	// FIXME: If contest is deleted?
 		}
 
 		$f3->mset([
@@ -34,21 +34,19 @@ class ProblemController extends Controller {
 	public function show($f3, $params) {
 		$problem = new Problem();
 		$problem->load(['slug = ?', $params['slug']]);
-		if ($problem->dry())
-			$f3->error(404);
 
-		// Make sure the problem that is being accessed is within the current contest.
-		if (!is_null($problem->contest_id)) {
+		if ($f3->exists('SESSION.contest')) {
 			$contest = new Contest();
-			$contest->load(['id = ?', $problem->contest_id]);
-
+			$contest->load(['slug = ?', $f3->get('SESSION.contest')]);
 			if ($contest->dry())
-				$f3->error(404);
-			else if (!$f3->exists('SESSION.contest') || $contest->slug != $f3->get('SESSION.contest'))
+				$f3->error(404);	// FIXME: If contest is deleted?
+			else if ($contest->id != $problem->contest_id)
 				$f3->error(403);
 		}
-		// If the problem does not belong to a contest but the user is in one, also deny access.
-		else if ($f3->exists('SESSION.contest')) $f3->error(403);
+
+
+		if ($problem->dry())
+			$f3->error(404);
 
 		$f3->mset([
 			'title' => $problem->name,
