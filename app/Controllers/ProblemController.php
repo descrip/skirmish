@@ -3,12 +3,28 @@
 namespace Controllers;
 
 use \Models\Problem;
+use \Models\Contest;
 
 class ProblemController extends Controller {
 
 	public function index($f3, $params) {
+		$isInContest = $f3->exists('SESSION.contest');
+
+		if ($isInContest) {
+			$contest = new Contest();
+			$contest->load(['slug = ?', $f3->get('SESSION.contest')]);
+			if ($contest->dry())
+				$f3->error(404);	// FIXME
+		}
+
 		$f3->mset([
-			'problems' => (new Problem())->select('name, slug'),
+			'problems' => (new Problem())->select(
+				'name, slug',
+				($isInContest ? 
+					['contest_id = ?', $contest->id] : 
+					'contest_id IS NULL'
+				)
+			),
 			'title' => 'Problem List',
 			'content' => 'problems/index.html'
 		]);

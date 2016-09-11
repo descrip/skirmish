@@ -1,3 +1,4 @@
 <div id="contest-body">
 	{{ \Markdown::instance()->convert(@contest->body) }}
 </div>
+<p><a href={{ "/contests/" . @contest->slug . "/enter" }}>Enter</a></p>

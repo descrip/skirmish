@@ -3,6 +3,7 @@
 namespace Controllers;
 
 use \Models\Contest;
+use \Models\User;
 
 class ContestController extends Controller {
 
@@ -31,6 +32,24 @@ class ContestController extends Controller {
 		]);
 
 		echo(\Template::instance()->render('layout.html'));
+	}
+
+	public function enter($f3, $params) {
+		$this->checkIfAuthenticated($f3, $params);
+
+		$contest = new Contest();
+		$contest->load(['slug = ?', $params['slug']]);
+		if ($contest->dry())
+			$f3->error(404);
+
+		$user = new User();
+		$user->load(['username = ?', $f3->get('SESSION.user')]);
+		if ($user->dry())
+			$f3->error(403);
+
+		$f3->set('SESSION.contest', $contest->slug);
+
+		$f3->reroute('/problems');
 	}
 
 }
