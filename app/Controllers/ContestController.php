@@ -47,7 +47,7 @@ class ContestController extends Controller {
 		if ($user->dry())
 			$f3->error(403);
 
-		$f3->set('SESSION.contest', $contest->slug);
+		$f3->set('SESSION.contest', $contest->name);
 
 		$f3->reroute('/problems');
 	}

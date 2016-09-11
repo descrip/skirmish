@@ -12,7 +12,7 @@ class ProblemController extends Controller {
 
 		if ($isInContest) {
 			$contest = new Contest();
-			$contest->load(['slug = ?', $f3->get('SESSION.contest')]);
+			$contest->load(['name = ?', $f3->get('SESSION.contest')]);
 			if ($contest->dry())
 				$f3->error(404);
 		}
@@ -44,7 +44,7 @@ class ProblemController extends Controller {
 
 			if ($contest->dry())
 				$f3->error(404);
-			else if (!$f3->exists('SESSION.contest') || $contest->slug != $f3->get('SESSION.contest'))
+			else if (!$f3->exists('SESSION.contest') || $contest->name != $f3->get('SESSION.contest'))
 				$f3->error(403);
 		}
 		// If the problem does not belong to a contest but the user is in one, also deny access.

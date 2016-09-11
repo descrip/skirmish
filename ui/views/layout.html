@@ -25,6 +25,10 @@
 					<a href="/logout">logout</a>
 				</false>
 			</check>
+			<br>
+			<check if="{{ isset(@SESSION.contest) }}">
+				{{ 'You are currently writing contest "' . @SESSION.contest . '". Click here to exit.'  }}
+			</check>
 		</div>
 
 		<check if="{{ isset(@content) }}">
