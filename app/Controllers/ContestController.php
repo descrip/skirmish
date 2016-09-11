@@ -42,14 +42,16 @@ class ContestController extends Controller {
 		if ($contest->dry())
 			$f3->error(404);
 
-		$user = new User();
-		$user->load(['username = ?', $f3->get('SESSION.user')]);
-		if ($user->dry())
-			$f3->error(403);
-
-		$f3->set('SESSION.contest', $contest->name);
-
+		$f3->set('SESSION.contest.id', $contest->id);
+		$f3->set('SESSION.contest.name', $contest->name);
+		$f3->set('SESSION.contest.slug', $contest->slug);
 		$f3->reroute('/problems');
+	}
+
+	public function leave($f3, $params) {
+		$this->checkIfAuthenticated($f3, $params);
+		$f3->clear('SESSION.contest');
+		$f3->reroute('/');
 	}
 
 }

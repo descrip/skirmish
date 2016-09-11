@@ -48,5 +48,10 @@ $f3->route('GET /submissions/@id', '\Controllers\SubmissionController->show');
 $f3->route('GET /contests', '\Controllers\ContestController->index');
 $f3->route('GET /contests/@slug', '\Controllers\ContestController->show');
 $f3->route('GET /contests/@slug/enter', '\Controllers\ContestController->enter');
+$f3->route('GET /contests/@slug/leave', '\Controllers\ContestController->leave');
+
+echo('<pre>');
+var_dump($f3->get('SESSION'));
+echo('</pre>');
 
 $f3->run();

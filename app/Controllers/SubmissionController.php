@@ -45,7 +45,7 @@ class SubmissionController extends Controller {
 			$f3->error(404);
 
 		$user = new User();
-		$user->load(['username = ?', $f3->get('SESSION.user')]);
+		$user->load(['id = ?', $f3->get('SESSION.user.id')]);
 		if ($user->dry())
 			$f3->error(403);
 

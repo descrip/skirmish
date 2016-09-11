@@ -28,9 +28,7 @@ CREATE TABLE users (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	username VARCHAR(255) UNIQUE NOT NULL,
 	email VARCHAR(255) UNIQUE NOT NULL,
-	password VARCHAR(255) NOT NULL,
-	current_contest_id INTEGER UNIQUE,
-	FOREIGN KEY(current_contest_id) REFERENCES contests(id)
+	password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE problems (

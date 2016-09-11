@@ -27,7 +27,8 @@
 			</check>
 			<br>
 			<check if="{{ isset(@SESSION.contest) }}">
-				{{ 'You are currently writing contest "' . @SESSION.contest . '". Click here to exit.'  }}
+				You are currently writing contest "{{ @SESSION.contest.name }}".
+				<a href={{ "/contests/" . @SESSION.contest.slug . "/leave" }}>Click here to leave.</a>
 			</check>
 		</div>
 

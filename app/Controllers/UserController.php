@@ -6,34 +6,6 @@ use \Models\User;
 use \Models\Problem;
 
 class UserController extends Controller {
-	
-	public function login($f3, $params) {
-		$this->generateCsrf($f3, $params);
-		$f3->mset([
-			'title' => 'Login',
-			'content' => 'users/login.html'
-		]);
-		echo(\Template::instance()->render('layout.html'));
-	}
-
-	public function authenticate($f3, $params) {
-		if (!$this->checkCsrf($f3, $params))
-			$f3->error(403);
-
-		$email = $f3->get('POST.email');
-		$password = $f3->get('POST.password');
-
-		$user = new User();
-		$user->load(['email = ?', $email]);
-
-		if ($user->dry())
-			$f3->reroute('/login');
-		else if (password_verify($password, $user->password)) {
-			$f3->set('SESSION.user', $user->username);
-			$f3->reroute('/');
-		}
-		else $f3->reroute('/login');
-	}
 
 	public function new($f3, $params) {
 		$this->generateCsrf($f3, $params);
@@ -57,6 +29,35 @@ class UserController extends Controller {
 		);
 		$user->save();
 		$f3->reroute('/');
+	}
+	
+	public function login($f3, $params) {
+		$this->generateCsrf($f3, $params);
+		$f3->mset([
+			'title' => 'Login',
+			'content' => 'users/login.html'
+		]);
+		echo(\Template::instance()->render('layout.html'));
+	}
+
+	public function authenticate($f3, $params) {
+		if (!$this->checkCsrf($f3, $params))
+			$f3->error(403);
+
+		$email = $f3->get('POST.email');
+		$password = $f3->get('POST.password');
+
+		$user = new User();
+		$user->load(['email = ?', $email]);
+
+		if ($user->dry())
+			$f3->reroute('/login');
+		else if (password_verify($password, $user->password)) {
+			$f3->set('SESSION.user.id', $user->id);
+			$f3->set('SESSION.user.username', $user->username);
+			$f3->reroute('/');
+		}
+		else $f3->reroute('/login');
 	}
 
 	public function logout($f3, $params) {
