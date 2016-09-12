@@ -65,4 +65,27 @@ class UserController extends Controller {
 		$f3->clear('SESSION');
 		$f3->reroute('/');
 	}
+
+	public function index($f3, $params) {
+		$users = new User();
+
+		if (!$f3->exists('SESSION.contest')) {
+			$users = $users->select(
+				'id, username, points',
+				NULL,
+				[ 'order' => 'points DESC' ]
+			);
+
+			$f3->mset([
+				'users' => $users,
+				'title' => 'User Leaderboards',
+				'content' => 'users/index.html'
+			]);
+
+			echo(\Template::instance()->render('layout.html'));
+		}
+		else {
+		}
+	}
+
 }

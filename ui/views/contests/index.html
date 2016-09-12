@@ -8,7 +8,7 @@
 	<tbody>
 		<repeat group="{{ @contests }}" value="{{ @contest }}">
 			<tr>
-				<td><a href="{{ '/contests/'.@contest->slug }}">{{ @contest->name }}</a></td>
+				<td><a href="{{ '/contests/' . @contest->slug }}">{{ @contest->name }}</a></td>
 				<td>{{ @contest->slug }}</td>
 			</tr>
 		</repeat>
