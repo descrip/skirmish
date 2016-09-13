@@ -22,8 +22,8 @@ class SubmissionController extends Controller {
 		$f3->mset([
 			'title' => 'Submit',
 			'content' => 'submissions/new.html',
-			'problems' => (new Problem())->('id, name, slug'),
-			'languages' => (new Language())->('id, name, version')
+			'problems' => (new Problem())->select('id, name, slug'),
+			'languages' => (new Language())->select('id, name, version')
 		]);
 
 		echo(\Template::instance()->render('layout.html'));
