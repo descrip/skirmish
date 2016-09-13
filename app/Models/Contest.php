@@ -16,14 +16,14 @@ class Contest extends \DB\SQL\Mapper {
 	}
 
 	public function addUser(User $user) {
-		$user->current_content_id = $this->id;
+		$db = \Base::instance()->get('DB');
 
-		$f3->get('DB')->exec(
-			'INSERT INTO users_entered_contests(user_id, contest_id)
+		$db->exec(
+			'INSERT IGNORE INTO users_entered_contests_pivot(user_id, contest_id)
 			VALUES(:user_id, :contest_id)',
 			[
 				':user_id' => $user->id, 
-				':contest_id' => $contest->id
+				':contest_id' => $this->id
 			]
 		);
 	}

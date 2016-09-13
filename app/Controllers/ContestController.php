@@ -42,6 +42,10 @@ class ContestController extends Controller {
 		if ($contest->dry())
 			$f3->error(404);
 
+		$user = new User();
+		$user->load(['id = ?', $f3->get('SESSION.user.id')]);
+		$contest->addUser($user);
+
 		$f3->set('SESSION.contest.id', $contest->id);
 		$f3->set('SESSION.contest.name', $contest->name);
 		$f3->set('SESSION.contest.slug', $contest->slug);
