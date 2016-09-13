@@ -61,10 +61,32 @@ class SubmissionController extends Controller {
 			$problem->id
 		);
 		for ($i = 0; $i < count($subtasks); $i++)
+			$subtasks[$i]['testcases'] = [];
+
+		$subtaskIdToIndex = [];
+		for ($i = 0; $i < count($subtasks); $i++)
+			$subtaskIdToIndex[$subtasks[$i]['id']] = $i;
+
+		$testcases = $f3->get('DB')->exec(
+			'SELECT testcases.* FROM subtasks
+			INNER JOIN testcases
+			ON subtasks.id = testcases.subtask_id
+			AND subtasks.problem_id = ?',
+			$problem->id
+		);
+
+		for ($i = 0; $i < count($testcases); $i++) {
+			$index = $subtaskIdToIndex[intval($testcases[$i]['subtask_id'])];
+			array_push($subtasks[$index]['testcases'], $testcases[$i]);
+		}
+
+		/*
+		for ($i = 0; $i < count($subtasks); $i++)
 			$subtasks[$i]['testcases'] = $f3->get('DB')->exec(
 				'SELECT id, input, output FROM testcases WHERE subtask_id = ?',
 				$subtasks[$i]['id']
 			);
+		*/
 
 		$f3->get('pheanstalk')->useTube('run-submission')->put(json_encode([
 			'submission_id' => $submission->id,
