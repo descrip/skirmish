@@ -55,8 +55,10 @@ class SubmissionController extends Controller {
 		$submission->language_id = $language->id;
 		$submission->save();
 
+		$db = $f3->get('DB');
+
 		// Query subtasks with raw SQL so no ORM classes are used.
-		$subtasks = $f3->get('DB')->exec(
+		$subtasks = $db->exec(
 			'SELECT id FROM subtasks WHERE problem_id = ?',
 			$problem->id
 		);
@@ -67,7 +69,7 @@ class SubmissionController extends Controller {
 		for ($i = 0; $i < count($subtasks); $i++)
 			$subtaskIdToIndex[$subtasks[$i]['id']] = $i;
 
-		$testcases = $f3->get('DB')->exec(
+		$testcases = $db->exec(
 			'SELECT testcases.* FROM subtasks
 			INNER JOIN testcases
 			ON subtasks.id = testcases.subtask_id
@@ -80,13 +82,27 @@ class SubmissionController extends Controller {
 			array_push($subtasks[$index]['testcases'], $testcases[$i]);
 		}
 
-		/*
-		for ($i = 0; $i < count($subtasks); $i++)
-			$subtasks[$i]['testcases'] = $f3->get('DB')->exec(
-				'SELECT id, input, output FROM testcases WHERE subtask_id = ?',
-				$subtasks[$i]['id']
+		$db->begin();
+		for ($i = 0; $i < count($subtasks); $i++) {
+			$db->exec(
+				'INSERT INTO subtask_results(submission_id, subtask_id)
+				VALUES(?, ?)',
+				[$submission->id, $subtasks[$i]['id']]
 			);
-		*/
+			$subtasks[$i]['subtask_result_id'] = $db->lastInsertId();
+
+			for ($j = 0; $j < count($subtasks[$i]['testcases']); $j++) {
+				$db->exec(
+					'INSERT INTO testcase_results(subtask_result_id, testcase_id)
+					VALUES(?, ?)',
+					[
+						$subtasks[$i]['subtask_result_id'],
+						$subtasks[$i]['testcases'][$j]['id']
+					]
+				);
+			}
+		}
+		$db->commit();
 
 		$f3->get('pheanstalk')->useTube('run-submission')->put(json_encode([
 			'submission_id' => $submission->id,

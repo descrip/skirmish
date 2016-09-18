@@ -16,9 +16,7 @@ class Contest extends \DB\SQL\Mapper {
 	}
 
 	public function addUser(User $user) {
-		$db = \Base::instance()->get('DB');
-
-		$db->exec(
+		\Base::instance()->get('DB')->exec(
 			'INSERT IGNORE INTO users_entered_contests_pivot(user_id, contest_id)
 			VALUES(:user_id, :contest_id)',
 			[

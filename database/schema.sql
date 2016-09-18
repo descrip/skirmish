@@ -88,7 +88,7 @@ CREATE TABLE testcase_results (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	subtask_result_id INTEGER NOT NULL,
 	testcase_id INTEGER NOT NULL,
-	verdict_id INTEGER NOT NULL,
+	verdict_id INTEGER NOT NULL DEFAULT 1,
 	FOREIGN KEY(subtask_result_id) REFERENCES subtask_results(id) ON DELETE CASCADE,
 	FOREIGN KEY(testcase_id) REFERENCES testcases(id),
 	FOREIGN KEY(verdict_id) REFERENCES verdicts(id)

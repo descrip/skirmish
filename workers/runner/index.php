@@ -62,22 +62,15 @@ while ($job = $queue->reserve()) {
 	);
 
 	$stmt = $db->prepare('
-		INSERT INTO testcase_results(subtask_result_id, testcase_id, verdict_id)
-		VALUES (:subtask_result_id, :testcase_id, :verdict_id)
+		UPDATE testcase_results SET verdict_id = :verdict_id
+		WHERE subtask_result_id = :subtask_result_id AND testcase_id = :testcase_id
 	');
 	$stmt->bindParam(':subtask_result_id', $subtask_result_id);
 	$stmt->bindParam(':testcase_id', $testcase_id);
 	$stmt->bindParam(':verdict_id', $verdict_id);
 
 	foreach ($data['subtasks'] as $subtask) {
-
-		$db->exec(sprintf(
-			'INSERT INTO subtask_results(submission_id, subtask_id)
-			VALUES (%d, %d)',
-			$data['submission_id'],
-			$subtask['id']
-		));
-		$subtask_result_id = $db->lastInsertId();
+		$subtask_result_id = $subtask['subtask_result_id'];
 
 		foreach ($subtask['testcases'] as $testcase) {
 			$testcase_id = $testcase['id'];

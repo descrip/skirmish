@@ -12,7 +12,7 @@
 		<label for="language">Language:</label>
 		<select id="language" name="languageId">
 			<repeat group="{{ @languages }}" value="{{ @language }}">
-				<option value="{{ @language->id }}">{{ @language->name.' ('.@language->version.')' }}</option>
+				<option value="{{ @language->id }}">{{ @language->name . ' (' . @language->version . ')' }}</option>
 			</repeat>
 		</select>
 	</div>
