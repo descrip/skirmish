@@ -14,9 +14,9 @@ class CommandController extends Controller {
 		$result = $f3->get('DB')->exec([
 			// Empty the database by dropping it and making a new one.
 			// TODO: Any way to handle clearing a datbase with less privleges?
-			'DROP DATABASE '.$f3->get('mysql.database'),
-			'CREATE DATABASE '.$f3->get('mysql.database'),
-			'USE '.$f3->get('mysql.database'),
+			'DROP DATABASE ' . $f3->get('mysql.database'),
+			'CREATE DATABASE ' . $f3->get('mysql.database'),
+			'USE ' . $f3->get('mysql.database'),
 			// Run the commands within the schema SQL file.
 			file_get_contents('./database/schema.sql')
 		]);

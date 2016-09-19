@@ -17,16 +17,17 @@ class VerdictSeeder {
 		$qu->save();
 
 		// 2
-		$ce = new Verdict();
-		$ce->name = 'Compile Error';
-		$ce->code = 'CE';
-		$ce->save();
+		$ac = new Verdict();
+		$ac->name = 'Accepted';
+		$ac->code = 'AC';
+		$ac->is_accepted = true;
+		$ac->save();
 
 		// 3
-		$re = new Verdict();
-		$re->name = 'Runtime Error';
-		$re->code = 'RE';
-		$re->save();
+		$wa = new Verdict();
+		$wa->name = 'Wrong Answer';
+		$wa->code = 'WA';
+		$wa->save();
 
 		// 4
 		$tle = new Verdict();
@@ -35,17 +36,16 @@ class VerdictSeeder {
 		$tle->save();
 
 		// 5
-		$wa = new Verdict();
-		$wa->name = 'Wrong Answer';
-		$wa->code = 'WA';
-		$wa->save();
+		$re = new Verdict();
+		$re->name = 'Runtime Error';
+		$re->code = 'RE';
+		$re->save();
 
 		// 6
-		$ac = new Verdict();
-		$ac->name = 'Accepted';
-		$ac->code = 'AC';
-		$ac->is_accepted = true;
-		$ac->save();
+		$ce = new Verdict();
+		$ce->name = 'Compile Error';
+		$ce->code = 'CE';
+		$ce->save();
 	}
 
 }

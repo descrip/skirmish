@@ -124,12 +124,12 @@ while ($job = $queue->reserve()) {
 			 */
 			if ($exitCode == 124) $verdict_id = 4;
 			// RE check.
-			else if ($exitCode != 0) $verdict_id = 3;
+			else if ($exitCode != 0) $verdict_id = 5;
 			// WA check.
 			else if (trim_output($output) != trim_output($testcase['output']))
-				$verdict_id = 5;
+				$verdict_id = 3;
 			// Therefore AC.
-			else $verdict_id = 6;
+			else $verdict_id = 2;
 
 			$stmt->execute();
 		}

@@ -69,6 +69,7 @@ CREATE TABLE submissions (
 	language_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
 	points INTEGER NOT NULL DEFAULT 0,
+	subtask_results_with_default_verdict_count INTEGER NOT NULL DEFAULT 0,
 	FOREIGN KEY(problem_id) REFERENCES problems(id),
 	FOREIGN KEY(user_id) REFERENCES users(id),
 	FOREIGN KEY(verdict_id) REFERENCES verdicts(id),
@@ -80,6 +81,9 @@ CREATE TABLE subtask_results (
 	submission_id INTEGER NOT NULL,
 	subtask_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
+	verdict_id INTEGER NOT NULL DEFAULT 1,
+	testcase_results_with_default_verdict_count INTEGER NOT NULL DEFAULT 0,
+	FOREIGN KEY(verdict_id) REFERENCES verdicts(id),
 	FOREIGN KEY(submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
 	FOREIGN KEY(subtask_id) REFERENCES subtasks(id)
 );
@@ -112,74 +116,119 @@ CREATE TABLE users_entered_contests_pivot (
 	PRIMARY KEY(user_id, contest_id)
 );
 
--- Create triggers on testcases to update mark on subtasks on any C(R)UD.
-CREATE TRIGGER update_marks_on_subtasks_on_insert BEFORE INSERT ON testcases FOR EACH ROW
+-- Create triggers on testcases to update subtasks on any C(R)UD.
+CREATE TRIGGER update_subtasks_on_insert BEFORE INSERT ON testcases FOR EACH ROW
 UPDATE subtasks SET marks = marks + NEW.marks WHERE id = NEW.subtask_id;
 
-CREATE TRIGGER update_marks_on_subtasks_on_update BEFORE UPDATE ON testcases FOR EACH ROW
+CREATE TRIGGER update_subtasks_on_update BEFORE UPDATE ON testcases FOR EACH ROW
 BEGIN
 	UPDATE subtasks SET marks = marks - OLD.marks WHERE id = OLD.subtask_id;
 	UPDATE subtasks SET marks = marks + NEW.marks WHERE id = NEW.subtask_id;
 END;
 
-CREATE TRIGGER update_marks_on_subtasks_on_delete BEFORE DELETE ON testcases FOR EACH ROW
+CREATE TRIGGER update_subtasks_on_delete BEFORE DELETE ON testcases FOR EACH ROW
 UPDATE subtasks SET marks = marks - OLD.marks WHERE id = OLD.subtask_id;
 
--- Create triggers on subtasks to relay that mark information to problems on C(R)UD.
-CREATE TRIGGER update_marks_on_problems_on_insert BEFORE INSERT ON subtasks FOR EACH ROW
+
+-- Create triggers on subtasks to relay that information to problems on C(R)UD.
+CREATE TRIGGER update_problems_on_insert BEFORE INSERT ON subtasks FOR EACH ROW
 UPDATE problems SET marks = marks + NEW.marks WHERE id = NEW.problem_id;
 
-CREATE TRIGGER update_marks_on_problems_on_update BEFORE UPDATE ON subtasks FOR EACH ROW
+CREATE TRIGGER update_problems_on_update BEFORE UPDATE ON subtasks FOR EACH ROW
 BEGIN
 	UPDATE problems SET marks = marks - OLD.marks WHERE id = OLD.problem_id;
 	UPDATE problems SET marks = marks + NEW.marks WHERE id = NEW.problem_id;
 END;
 
-CREATE TRIGGER update_marks_on_problems_on_delete BEFORE DELETE ON subtasks FOR EACH ROW
+CREATE TRIGGER update_problems_on_delete BEFORE DELETE ON subtasks FOR EACH ROW
 UPDATE problems SET marks = marks - OLD.marks WHERE id = OLD.problem_id;
 
--- Create triggers on testcase_results to update mark on subtask_results on any C(R)UD if an accepted verdict was assigned.
-CREATE TRIGGER update_marks_on_subtask_results_on_insert BEFORE INSERT ON testcase_results FOR EACH ROW
+
+-- Create triggers on testcase_results to update on subtask_results on any C(R)UD if an accepted verdict was assigned.
+CREATE TRIGGER update_subtask_results_on_insert BEFORE INSERT ON testcase_results FOR EACH ROW
 BEGIN
 	SELECT is_accepted INTO @is_accepted FROM verdicts WHERE id = NEW.verdict_id;
 	SELECT marks INTO @marks FROM testcases WHERE id = NEW.testcase_id;
-	IF @is_accepted THEN
-		UPDATE subtask_results SET marks = marks + @marks WHERE id = NEW.subtask_result_id;
-	END IF;
+
+	UPDATE subtask_results SET
+		marks = CASE
+			WHEN @is_accepted THEN marks + @marks
+			ELSE marks
+		END,
+		testcase_results_with_default_verdict_count = CASE
+			WHEN NEW.verdict_id = 1 THEN testcase_results_with_default_verdict_count + 1
+			ELSE testcase_results_with_default_verdict_count  
+		END,
+		verdict_id = CASE
+			WHEN NEW.verdict_id < verdict_id THEN NEW.verdict_id
+			ELSE verdict_id
+		END
+	WHERE id = NEW.subtask_result_id;
 END;
 
-CREATE TRIGGER update_marks_on_subtask_results_on_update BEFORE UPDATE ON testcase_results FOR EACH ROW
+CREATE TRIGGER update_subtask_results_on_update BEFORE UPDATE ON testcase_results FOR EACH ROW
 BEGIN
 	SELECT is_accepted INTO @old_is_accepted FROM verdicts WHERE id = OLD.verdict_id;
 	SELECT marks INTO @old_marks FROM testcases WHERE id = OLD.testcase_id;
 	SELECT is_accepted INTO @new_is_accepted FROM verdicts WHERE id = NEW.verdict_id;
 	SELECT marks INTO @new_marks FROM testcases WHERE id = NEW.testcase_id;
+
 	IF @old_is_accepted THEN
 		UPDATE subtask_results SET marks = marks - @old_marks WHERE id = OLD.subtask_result_id;
+	ELSEIF OLD.verdict_id = 1 THEN
+		UPDATE subtask_results SET testcase_results_with_default_verdict_count = testcase_results_with_default_verdict_count - 1 WHERE id = OLD.subtask_result_id;
 	END IF;
-	IF @new_is_accepted THEN
-		UPDATE subtask_results SET marks = marks + @new_marks WHERE id = NEW.subtask_result_id;
-	END IF;
+
+	UPDATE subtask_results SET
+		marks = CASE
+			WHEN @is_accepted THEN marks + @marks
+			ELSE marks
+		END,
+		testcase_results_with_default_verdict_count = CASE
+			WHEN NEW.verdict_id = 1 THEN testcase_results_with_default_verdict_count + 1
+			ELSE testcase_results_with_default_verdict_count  
+		END,
+		verdict_id = CASE
+			WHEN NEW.verdict_id < verdict_id THEN NEW.verdict_id
+			ELSE verdict_id
+		END
+	WHERE id = NEW.subtask_result_id;
 END;
 
-CREATE TRIGGER update_marks_on_subtask_results_on_delete BEFORE DELETE ON testcase_results FOR EACH ROW
+CREATE TRIGGER update_subtask_results_on_delete BEFORE DELETE ON testcase_results FOR EACH ROW
 BEGIN
 	SELECT is_accepted INTO @is_accepted FROM verdicts WHERE id = OLD.verdict_id;
 	SELECT marks INTO @marks FROM testcases WHERE id = OLD.testcase_id;
-	IF @is_accepted THEN
-		UPDATE subtask_results SET marks = marks - @marks WHERE id = OLD.subtask_result_id;
-	END IF;
+
+	UPDATE subtask_results SET
+		marks = CASE
+			WHEN @is_accepted THEN marks - @marks
+			ELSE marks
+		END,
+		testcase_results_with_default_verdict_count = CASE
+			WHEN OLD.verdict_id = 1 THEN testcase_results_with_default_verdict_count - 1
+			ELSE testcase_results_with_default_verdict_count  
+		END,
+		verdict_id = CASE
+			WHEN OLD.verdict_id < verdict_id THEN OLD.verdict_id
+			ELSE verdict_id
+		END
+	WHERE id = OLD.subtask_result_id;
 END;
 
 -- Create triggers on subtask_results to relay information to submissions on any C(R)UD.
-CREATE TRIGGER update_marks_on_submissions_on_insert BEFORE INSERT ON subtask_results FOR EACH ROW
-UPDATE submissions SET marks = marks + NEW.marks WHERE id = NEW.submission_id;
+CREATE TRIGGER update_submissions_on_insert BEFORE INSERT ON subtask_results FOR EACH ROW
+BEGIN
+	UPDATE submissions SET marks = marks + NEW.marks WHERE id = NEW.submission_id;
+	IF NEW.verdict_id = 1 THEN
+		UPDATE submissions 
+END;
 
-CREATE TRIGGER update_marks_on_submissions_on_update BEFORE UPDATE ON subtask_results FOR EACH ROW
+CREATE TRIGGER update_submissions_on_update BEFORE UPDATE ON subtask_results FOR EACH ROW
 BEGIN
 	UPDATE submissions SET marks = marks - OLD.marks WHERE id = OLD.submission_id;
 	UPDATE submissions SET marks = marks + NEW.marks WHERE id = NEW.submission_id;
 END;
 
-CREATE TRIGGER update_marks_on_submissions_on_delete BEFORE DELETE ON subtask_results FOR EACH ROW
+CREATE TRIGGER update_submissions_on_delete BEFORE DELETE ON subtask_results FOR EACH ROW
 UPDATE submissions SET marks = marks - OLD.marks WHERE id = OLD.submission_id;
