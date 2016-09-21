@@ -1,6 +1,7 @@
 <p>Problem: <a href="{{ '/problems/'.@problem['slug'] }}">{{ @problem['name'] }}</a></p>
-<p>User: {{ @SESSION.user }}</p>
+<p>User: {{ @SESSION.user.username }}</p>
 <p>Submission: {{ @submission->id }}</p>
+<p>Verdict: {{ @verdicts[@submission->verdict_id-1]->name }}<p/>
 <repeat group="{{ @subtask_results }}" value="{{ @subtask_result }}">
 	<p>Subtask {{ @subtask_result['id'] }}:</p>
 	<ul>
