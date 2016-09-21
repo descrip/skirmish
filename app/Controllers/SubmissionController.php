@@ -19,10 +19,18 @@ class SubmissionController extends Controller {
 		$this->checkIfAuthenticated($f3, $params);
 		$this->generateCsrf($f3, $params);
 
+		$problems = (new Problem())->select(
+			'id, name, slug',
+			($f3->exists('SESSION.contest') ?
+				['contest_id = ?', $f3->get('SESSION.contest.id')] :
+				'contest_id IS NULL'
+			)
+		);
+
 		$f3->mset([
 			'title' => 'Submit',
 			'content' => 'submissions/new.html',
-			'problems' => (new Problem())->select('id, name, slug'),
+			'problems' => $problems,
 			'languages' => (new Language())->select('id, name, version')
 		]);
 
