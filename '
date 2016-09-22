@@ -12,8 +12,7 @@ CREATE TABLE verdicts (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(255) NOT NULL,
 	code VARCHAR(255) UNIQUE NOT NULL,
-	is_accepted BOOLEAN NOT NULL DEFAULT 0
-);
+	is_accepted BOOLEAN NOT NULL DEFAULT 0);
 
 CREATE TABLE contests (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -154,15 +153,15 @@ BEGIN
 		marks = CASE
 			WHEN @is_accepted THEN marks + @marks
 			ELSE marks
-		END CASE,
+		END,
 		testcase_results_with_default_verdict_count = CASE
 			WHEN NEW.verdict_id = 1 THEN testcase_results_with_default_verdict_count + 1
 			ELSE testcase_results_with_default_verdict_count  
-		END CASE,
+		END,
 		verdict_id = CASE
 			WHEN NEW.verdict_id > verdict_id THEN NEW.verdict_id
 			ELSE verdict_id
-		END CASE
+		END
 	WHERE id = NEW.subtask_result_id;
 END;
 
@@ -177,26 +176,26 @@ BEGIN
 		marks = CASE
 			WHEN @old_is_accepted THEN marks + @marks
 			ELSE marks
-		END CASE,
+		END,
 		testcase_results_with_default_verdict_count = CASE
 			WHEN OLD.verdict_id = 1 THEN testcase_results_with_default_verdict_count - 1
 			ELSE testcase_results_with_default_verdict_count 
-		END CASE
+		END
 	WHERE id = OLD.subtask_result_id;
 
 	UPDATE subtask_results SET
 		marks = CASE
-			WHEN @new_is_accepted THEN marks + @marks
+			WHEN @is_accepted THEN marks + @marks
 			ELSE marks
-		END CASE,
+		END,
 		testcase_results_with_default_verdict_count = CASE
 			WHEN NEW.verdict_id = 1 THEN testcase_results_with_default_verdict_count + 1
 			ELSE testcase_results_with_default_verdict_count  
-		END CASE,
+		END,
 		verdict_id = CASE
 			WHEN NEW.verdict_id > verdict_id THEN NEW.verdict_id
 			ELSE verdict_id
-		END CASE
+		END
 	WHERE id = NEW.subtask_result_id;
 END;
 
@@ -208,11 +207,11 @@ BEGIN
 		subtask_results_with_default_verdict_count = CASE
 			WHEN NEW.verdict_id = 1 THEN subtask_results_with_default_verdict_count + 1
 			ELSE subtask_results_with_default_verdict_count
-		END CASE,
+		END,
 		verdict_id = CASE
 			WHEN NEW.verdict_id > verdict_id THEN NEW.verdict_id
 			ELSE verdict_id
-		END CASE
+		END
 	WHERE id = NEW.submission_id;
 END;
 
@@ -223,7 +222,7 @@ BEGIN
 		subtask_results_with_default_verdict_count = CASE
 			WHEN OLD.verdict_id = 1 THEN subtask_results_with_default_verdict_count - 1
 			ELSE subtask_results_with_default_verdict_count
-		END CASE
+		END
 	WHERE id = OLD.submission_id;
 
 	UPDATE submissions SET
@@ -231,22 +230,22 @@ BEGIN
 		subtask_results_with_default_verdict_count = CASE
 			WHEN NEW.verdict_id = 1 THEN subtask_results_with_default_verdict_count + 1
 			ELSE subtask_results_with_default_verdict_count
-		END CASE,
+		END,
 		verdict_id = CASE
 			WHEN NEW.verdict_id > verdict_id THEN NEW.verdict_id
 			ELSE verdict_id
-		END CASE
+		END
 	WHERE id = NEW.submission_id;
 END;
 
 -- Create a trigger such that when all subtasks have reported a result, calculate the points awarded.
-CREATE TRIGGER update_submissions_after_testing_finish BEFORE UPDATE ON submissions FOR EACH ROW
+CREATE TRIGGER update_submissions_after_finished_testing BEFORE UPDATE ON submissions FOR EACH ROW
 BEGIN
 	IF NEW.subtask_results_with_default_verdict_count = 0 THEN
 		SELECT marks, points INTO @total_marks, @total_points FROM problems WHERE id = NEW.problem_id;
 		SET NEW.points = ROUND(NEW.marks / @total_marks * @total_points, 2);
 
-		-- Update the best submission in the user_solved_problems_pivot we have if this one is better.
+		-- Update the best submission we have if this one is better.
 		IF EXISTS(SELECT 1 FROM users_solved_problems_pivot WHERE user_id = NEW.user_id AND problem_id = NEW.problem_id) THEN
 			SELECT submission_id INTO @best_submission_id FROM users_solved_problems_pivot 
 				WHERE problem_id = NEW.problem_id
@@ -255,29 +254,18 @@ BEGIN
 				WHERE id = @best_submission_id;
 
 			IF NEW.points > @best_points THEN
-				UPDATE users_solved_problems_pivot SET submission_id = NEW.id
+				UPDATE users_solved_problems_pivot SET submission_id = NEW.id WHERE
 					WHERE problem_id = NEW.problem_id
 					AND user_id = NEW.user_id;
-			END IF;
 		ELSE
 			INSERT INTO users_solved_problems_pivot(user_id, problem_id, submission_id)
 			VALUES(NEW.user_id, NEW.problem_id, NEW.id);
-		END IF;
+		END;
 
 	END IF;
 END;
 
--- Create triggers to relay point updates from the pivot table to users.
-CREATE TRIGGER update_users_on_insert BEFORE INSERT ON users_solved_problems_pivot FOR EACH ROW
+CREATE TRIGGER update_users_on_update BEFORE INSERT ON users_solved_problems_pivot FOR EACH ROW
 BEGIN
-	SELECT points INTO @points FROM submissions WHERE id = NEW.submission_id;
-	UPDATE users SET points = points + @points WHERE id = NEW.user_id;
-END;
-
-CREATE TRIGGER update_users_on_update BEFORE UPDATE ON users_solved_problems_pivot FOR EACH ROW
-BEGIN
-	SELECT points INTO @old_points FROM submissions WHERE id = OLD.submission_id;
-	UPDATE users SET points = points - @old_points WHERE id = OLD.user_id;
-	SELECT points INTO @new_points FROM submissions WHERE id = NEW.submission_id;
-	UPDATE users SET points = points + @new_points WHERE id = NEW.user_id;
-END;
+	
+END

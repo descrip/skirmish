@@ -5,3 +5,7 @@ An online judge designed to be portable, lightweight, and deployable anywhere, w
 In development.
 
 Seed database with `php index.php "/seedDatabase".
+
+## TODO
+
+- Create submission invalidation system on problem changes
