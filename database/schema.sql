@@ -29,7 +29,7 @@ CREATE TABLE users (
 	username VARCHAR(255) UNIQUE NOT NULL,
 	email VARCHAR(255) UNIQUE NOT NULL,
 	password VARCHAR(255) NOT NULL,
-	points INTEGER NOT NULL DEFAULT 0
+	points DECIMAL(32, 1) NOT NULL DEFAULT 0
 );
 
 CREATE TABLE problems (
@@ -39,7 +39,7 @@ CREATE TABLE problems (
 	body TEXT NOT NULL,
 	memory_limit INTEGER NOT NULL,
 	time_limit INTEGER NOT NULL,
-	points INTEGER NOT NULL,
+	points DECIMAL(32, 1) NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
 	contest_id INTEGER,
 	FOREIGN KEY(contest_id) REFERENCES contests(id) ON DELETE CASCADE
@@ -68,7 +68,7 @@ CREATE TABLE submissions (
 	verdict_id INTEGER NOT NULL DEFAULT 1,
 	language_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
-	points INTEGER NOT NULL DEFAULT 0,
+	points DECIMAL(32, 1) NOT NULL DEFAULT 0,
 	FOREIGN KEY(problem_id) REFERENCES problems(id),
 	FOREIGN KEY(user_id) REFERENCES users(id),
 	FOREIGN KEY(verdict_id) REFERENCES verdicts(id),
@@ -136,11 +136,20 @@ CREATE PROCEDURE update_subtask_result_status (IN subtask_result_id INTEGER)
     WHERE id = subtask_result_id//
 
 CREATE PROCEDURE update_submission_status (IN submission_id INTEGER)
+BEGIN
+    SET @marks = IFNULL((
+        SELECT SUM(marks) FROM subtask_results 
+        WHERE submission_id = submission_id
+    ), 0);
+
+    SELECT marks, points INTO @problem_marks, @problem_points FROM problems
+    WHERE id = (SELECT problem_id FROM submissions WHERE id = submission_id);
+
+    SET @points = ROUND(@marks / @problem_marks * @problem_points, 1);
+
     UPDATE submissions SET
-        marks = IFNULL((
-            SELECT SUM(marks) FROM subtask_results 
-            WHERE submission_id = submission_id
-        ), 0),
+        marks = @marks,
+        points = @points,
         verdict_id = IFNULL((
             SELECT verdicts.id FROM verdicts
             RIGHT JOIN subtask_results
@@ -149,7 +158,8 @@ CREATE PROCEDURE update_submission_status (IN submission_id INTEGER)
             ORDER BY verdicts.priority ASC
             LIMIT 1
         ), 1)
-    WHERE id = submission_id//
+    WHERE id = submission_id;
+END//
 
 CREATE PROCEDURE update_user_solved_problem_pivot (IN user_id INTEGER, IN problem_id INTEGER)
     BEGIN
@@ -177,7 +187,6 @@ CREATE TRIGGER update_subtask_result AFTER UPDATE ON testcase_results FOR EACH R
         CALL update_subtask_result_status(NEW.subtask_result_id);
     END//
 
--- TODO: untested
 CREATE TRIGGER update_submission AFTER UPDATE ON subtask_results FOR EACH ROW
     BEGIN
         IF NEW.verdict_id != 1 OR OLD.verdict_id != 1 THEN
@@ -189,7 +198,6 @@ CREATE TRIGGER update_submission AFTER UPDATE ON subtask_results FOR EACH ROW
         END IF;
     END//
 
--- TODO: untested
 CREATE TRIGGER update_user AFTER UPDATE ON submissions FOR EACH ROW
     BEGIN
         IF NEW.verdict_id != 1 OR OLD.verdict_id != 1 THEN
@@ -200,7 +208,7 @@ CREATE TRIGGER update_user AFTER UPDATE ON submissions FOR EACH ROW
             CALL update_user_solved_problem_pivot(NEW.user_id, NEW.problem_id);
 
             UPDATE users SET points = points + NEW.points - OLD.points
-            WHERE id = user_id;
+            WHERE id = NEW.user_id;
         END IF;
     END//
 
