@@ -101,8 +101,8 @@ CREATE TABLE users_solved_problems_pivot (
 	FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
 	problem_id INTEGER NOT NULL,
 	FOREIGN KEY(problem_id) REFERENCES problems(id) ON DELETE CASCADE,
-	submission_id INTEGER NOT NULL,
-	FOREIGN KEY(submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
+	best_submission_id INTEGER,
+	FOREIGN KEY(best_submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
 	PRIMARY KEY(user_id, problem_id)
 );
 
@@ -151,8 +151,25 @@ CREATE PROCEDURE update_submission_status (IN submission_id INTEGER)
         ), 1)
     WHERE id = submission_id//
 
-CREATE TRIGGER update_subtask_result AFTER UPDATE
-ON testcase_results FOR EACH ROW
+CREATE PROCEDURE update_user_solved_problem_pivot (IN user_id INTEGER, IN problem_id INTEGER)
+    BEGIN
+        SET @best_submission_id = (
+            SELECT id FROM submissions
+            WHERE problem_id = problem_id AND user_id = user_id
+            ORDER BY points ASC
+            LIMIT 1
+        );
+        IF ISNULL(@best_submission_id) THEN
+            DELETE FROM users_solved_problems_pivot 
+            WHERE user_id = user_id AND problem_id = problem_id;
+        ELSE 
+            INSERT INTO users_solved_problems_pivot
+            VALUES (user_id, problem_id, @best_submission_id)
+            ON DUPLICATE KEY UPDATE best_submission_id = @best_submission_id;
+        END IF;
+    END//
+
+CREATE TRIGGER update_subtask_result AFTER UPDATE ON testcase_results FOR EACH ROW
     BEGIN
         IF NEW.subtask_result_id != OLD.subtask_result_id THEN
             CALL update_subtask_result_status(OLD.subtask_result_id);
@@ -160,13 +177,55 @@ ON testcase_results FOR EACH ROW
         CALL update_subtask_result_status(NEW.subtask_result_id);
     END//
 
-CREATE TRIGGER update_submission AFTER UPDATE
-ON subtask_results FOR EACH ROW
+-- TODO: untested
+CREATE TRIGGER update_submission AFTER UPDATE ON subtask_results FOR EACH ROW
     BEGIN
-        IF NEW.submission_id != OLD.submission_id THEN
-            CALL update_submission_status(OLD.submission_id);
+        IF NEW.verdict_id != 1 OR OLD.verdict_id != 1 THEN
+            IF NEW.submission_id != OLD.submission_id THEN
+                CALL update_submission_status(OLD.submission_id);
+            END IF;
+
+            CALL update_submission_status(NEW.submission_id);
         END IF;
-        CALL update_submission_status(NEW.submission_id);
     END//
+
+-- TODO: untested
+CREATE TRIGGER update_user AFTER UPDATE ON submissions FOR EACH ROW
+    BEGIN
+        IF NEW.verdict_id != 1 OR OLD.verdict_id != 1 THEN
+            IF OLD.problem_id != NEW.problem_id OR OLD.user_id != NEW.user_id THEN
+                CALL update_user_solved_problem_pivot(OLD.user_id, OLD.problem_id);
+            END IF;
+
+            CALL update_user_solved_problem_pivot(NEW.user_id, NEW.problem_id);
+
+            UPDATE users SET points = points + NEW.points - OLD.points
+            WHERE id = user_id;
+        END IF;
+    END//
+
+CREATE TRIGGER update_subtasks_after_insert AFTER INSERT ON testcases FOR EACH ROW
+UPDATE subtasks SET marks = marks + NEW.marks WHERE id = NEW.subtask_id//
+
+CREATE TRIGGER update_subtasks_after_delete AFTER DELETE ON testcases FOR EACH ROW
+UPDATE subtasks SET marks = marks - OLD.marks WHERE id = OLD.subtask_id//
+
+CREATE TRIGGER update_subtasks_after_update AFTER UPDATE ON testcases FOR EACH ROW
+BEGIN
+    UPDATE subtasks SET marks = marks - OLD.marks WHERE id = OLD.subtask_id;
+    UPDATE subtasks SET marks = marks + NEW.marks WHERE id = NEW.subtask_id;
+END//
+
+CREATE TRIGGER update_problems_after_insert AFTER INSERT ON subtasks FOR EACH ROW
+UPDATE problems SET marks = marks + NEW.marks WHERE id = NEW.problem_id//
+
+CREATE TRIGGER update_problems_after_delete AFTER DELETE ON subtasks FOR EACH ROW
+UPDATE problems SET marks = marks - OLD.marks WHERE id = OLD.problem_id//
+
+CREATE TRIGGER update_problems_after_update AFTER UPDATE ON subtasks FOR EACH ROW
+BEGIN
+	UPDATE problems SET marks = marks - OLD.marks WHERE id = OLD.problem_id;
+	UPDATE problems SET marks = marks + NEW.marks WHERE id = NEW.problem_id;
+END//
 
 DELIMITER ;
