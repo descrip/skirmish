@@ -11,8 +11,7 @@ CREATE TABLE verdicts (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(255) NOT NULL,
 	code VARCHAR(255) UNIQUE NOT NULL,
-	is_accepted BOOLEAN NOT NULL DEFAULT 0,
-    priority INTEGER NOT NULL DEFAULT 0
+	is_accepted BOOLEAN NOT NULL DEFAULT 0
 );
 
 CREATE TABLE contests (
@@ -69,6 +68,7 @@ CREATE TABLE submissions (
 	language_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
 	points INTEGER NOT NULL DEFAULT 0,
+	subtask_results_with_default_verdict_count INTEGER NOT NULL DEFAULT 0,
 	FOREIGN KEY(problem_id) REFERENCES problems(id),
 	FOREIGN KEY(user_id) REFERENCES users(id),
 	FOREIGN KEY(verdict_id) REFERENCES verdicts(id),
@@ -81,6 +81,7 @@ CREATE TABLE subtask_results (
 	subtask_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
 	verdict_id INTEGER NOT NULL DEFAULT 1,
+	testcase_results_with_default_verdict_count INTEGER NOT NULL DEFAULT 0,
 	FOREIGN KEY(verdict_id) REFERENCES verdicts(id),
 	FOREIGN KEY(submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
 	FOREIGN KEY(subtask_id) REFERENCES subtasks(id)
@@ -114,35 +115,3 @@ CREATE TABLE users_entered_contests_pivot (
 	PRIMARY KEY(user_id, contest_id)
 );
 
-DELIMITER //
-
-CREATE PROCEDURE update_subtask_result_status (IN subtask_result_id INTEGER)
-    UPDATE subtask_results SET
-        marks = IFNULL((
-            SELECT SUM(testcases.marks) FROM testcase_results 
-            LEFT JOIN testcases 
-            ON testcases.id = testcase_results.testcase_id 
-            WHERE testcase_results.subtask_result_id = subtask_result_id
-        ), 0),
-        verdict_id = IFNULL((
-            SELECT verdicts.id FROM verdicts
-            RIGHT JOIN testcase_results
-            ON testcase_results.verdict_id = verdicts.id
-            WHERE testcase_results.subtask_result_id = subtask_result_id
-            ORDER BY verdicts.priority ASC
-            LIMIT 1
-        ), 1)
-    WHERE id = subtask_result_id//
-
-CREATE TRIGGER update_subtask_result_on_testcase_results BEFORE UPDATE
-ON testcase_results FOR EACH ROW
-BEGIN
-    IF NEW.subtask_result_id != OLD.subtask_result_id THEN
-        CALL update_subtask_result_status (OLD.subtask_result_id);
-    END IF;
-    CALL update_subtask_result_status (NEW.subtask_result_id);
-END//
-
--- CREATE PROCEDURE update_submission_on_subtask_results (IN 
-
-DELIMITER ;

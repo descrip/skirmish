@@ -10,6 +10,7 @@ class CommandController extends Controller {
 			$f3->error(403);
 	}
 
+    /*
 	public function createSchema($f3, $params) {
 		$result = $f3->get('DB')->exec([
 			// Empty the database by dropping it and making a new one.
@@ -22,9 +23,9 @@ class CommandController extends Controller {
 		]);
 		echo("Schema created. Note that this command cannot report any errors that may have occured.\n");
 	}
+*/
 
 	public function seedDatabase($f3, $params) {
-		$this->createSchema($f3, $params);
 		foreach ($f3->get('seeders') as $seeder)
 			$seeder::seed($f3);
 		echo("Database seeded.\n");
