@@ -120,9 +120,10 @@ CREATE PROCEDURE update_subtask_result_status (IN subtask_result_id INTEGER)
     UPDATE subtask_results SET
         marks = IFNULL((
             SELECT SUM(testcases.marks) FROM testcase_results 
-            LEFT JOIN testcases 
-            ON testcases.id = testcase_results.testcase_id 
+            LEFT JOIN testcases ON testcase_results.testcase_id = testcases.id 
+            LEFT JOIN verdicts ON testcase_results.verdict_id = verdicts.id
             WHERE testcase_results.subtask_result_id = subtask_result_id
+            AND verdicts.is_accepted
         ), 0),
         verdict_id = IFNULL((
             SELECT verdicts.id FROM verdicts
@@ -134,15 +135,38 @@ CREATE PROCEDURE update_subtask_result_status (IN subtask_result_id INTEGER)
         ), 1)
     WHERE id = subtask_result_id//
 
-CREATE TRIGGER update_subtask_result_on_testcase_results BEFORE UPDATE
-ON testcase_results FOR EACH ROW
-BEGIN
-    IF NEW.subtask_result_id != OLD.subtask_result_id THEN
-        CALL update_subtask_result_status (OLD.subtask_result_id);
-    END IF;
-    CALL update_subtask_result_status (NEW.subtask_result_id);
-END//
+CREATE PROCEDURE update_submission_status (IN submission_id INTEGER)
+    UPDATE submissions SET
+        marks = IFNULL((
+            SELECT SUM(marks) FROM subtask_results 
+            WHERE submission_id = submission_id
+        ), 0),
+        verdict_id = IFNULL((
+            SELECT verdicts.id FROM verdicts
+            RIGHT JOIN subtask_results
+            ON subtask_results.verdict_id = verdicts.id
+            WHERE subtask_results.submission_id = submission_id
+            ORDER BY verdicts.priority ASC
+            LIMIT 1
+        ), 1)
+    WHERE id = submission_id//
 
--- CREATE PROCEDURE update_submission_on_subtask_results (IN 
+CREATE TRIGGER update_subtask_result AFTER UPDATE
+ON testcase_results FOR EACH ROW
+    BEGIN
+        IF NEW.subtask_result_id != OLD.subtask_result_id THEN
+            CALL update_subtask_result_status(OLD.subtask_result_id);
+        END IF;
+        CALL update_subtask_result_status(NEW.subtask_result_id);
+    END//
+
+CREATE TRIGGER update_submission AFTER UPDATE
+ON subtask_results FOR EACH ROW
+    BEGIN
+        IF NEW.submission_id != OLD.submission_id THEN
+            CALL update_submission_status(OLD.submission_id);
+        END IF;
+        CALL update_submission_status(NEW.submission_id);
+    END//
 
 DELIMITER ;
