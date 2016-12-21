@@ -77,12 +77,14 @@ MARKER;
 				$aplusb2_2->marks = 1;
 				$aplusb2_2->save();
 
+                /*
         $sub = new Submission();
         $sub->problem_id = 1;
         $sub->user_id = 1;
         $sub->verdict_id = 1;
         $sub->language_id = 1;
         $sub->save();
+*/
 
 		/*
 		$atimesb = new Problem();

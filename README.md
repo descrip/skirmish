@@ -6,6 +6,8 @@ In development.
 
 Seed database with `php index.php "/seedDatabase".
 
+firejail, beanstalk
+
 ## TODO
 
 - Create submission invalidation system on problem changes

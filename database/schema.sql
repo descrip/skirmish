@@ -1,3 +1,5 @@
+-- TODO: Can probably optimise a lot of queries that use "LIMIT 1"
+
 CREATE TABLE languages (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(255) UNIQUE NOT NULL,
@@ -166,9 +168,10 @@ CREATE PROCEDURE update_user_solved_problem_pivot (IN user_id INTEGER, IN proble
         SET @best_submission_id = (
             SELECT id FROM submissions
             WHERE problem_id = problem_id AND user_id = user_id
-            ORDER BY points ASC
+            ORDER BY points DESC
             LIMIT 1
         );
+
         IF ISNULL(@best_submission_id) THEN
             DELETE FROM users_solved_problems_pivot 
             WHERE user_id = user_id AND problem_id = problem_id;
@@ -193,7 +196,6 @@ CREATE TRIGGER update_submission AFTER UPDATE ON subtask_results FOR EACH ROW
             IF NEW.submission_id != OLD.submission_id THEN
                 CALL update_submission_status(OLD.submission_id);
             END IF;
-
             CALL update_submission_status(NEW.submission_id);
         END IF;
     END//
@@ -207,8 +209,15 @@ CREATE TRIGGER update_user AFTER UPDATE ON submissions FOR EACH ROW
 
             CALL update_user_solved_problem_pivot(NEW.user_id, NEW.problem_id);
 
-            UPDATE users SET points = points + NEW.points - OLD.points
-            WHERE id = NEW.user_id;
+            IF OLD.verdict_id != 1 THEN
+                UPDATE users SET points = points - OLD.points
+                WHERE id = OLD.user_id;
+            END IF;
+
+            IF NEW.verdict_id != 1 THEN
+                UPDATE users SET points = points + NEW.points
+                WHERE id = NEW.user_id;
+            END IF;
         END IF;
     END//
 
