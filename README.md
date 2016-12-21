@@ -1,13 +1,12 @@
 # skirmish
 
-An online judge designed to be portable, lightweight, and deployable anywhere, whether it's on the web or just your local network.
-
 In development.
 
-Seed database with `php index.php "/seedDatabase".
+Seed database with `php index.php seed-database`.
 
 firejail, beanstalk
 
 ## TODO
 
 - Create submission invalidation system on problem changes
+- Add to schema.sql to be able to delete non-important submissions after set period of time
