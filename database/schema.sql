@@ -140,8 +140,8 @@ CREATE PROCEDURE update_subtask_result_status (IN subtask_result_id INTEGER)
 CREATE PROCEDURE update_submission_status (IN submission_id INTEGER)
 BEGIN
     SET @marks = IFNULL((
-        SELECT SUM(marks) FROM subtask_results 
-        WHERE submission_id = submission_id
+        SELECT SUM(subtask_results.marks) FROM subtask_results 
+        WHERE subtask_results.submission_id = submission_id
     ), 0);
 
     SELECT marks, points INTO @problem_marks, @problem_points FROM problems
@@ -166,15 +166,16 @@ END//
 CREATE PROCEDURE update_user_solved_problem_pivot (IN user_id INTEGER, IN problem_id INTEGER)
     BEGIN
         SET @best_submission_id = (
-            SELECT id FROM submissions
-            WHERE problem_id = problem_id AND user_id = user_id
+            SELECT submissions.id FROM submissions
+            WHERE submissions.problem_id = problem_id AND submissions.user_id = user_id
             ORDER BY points DESC
             LIMIT 1
         );
 
         IF ISNULL(@best_submission_id) THEN
             DELETE FROM users_solved_problems_pivot 
-            WHERE user_id = user_id AND problem_id = problem_id;
+            WHERE users_solved_problems_pivot.user_id = user_id 
+            AND users_solved_problems_pivot.problem_id = problem_id;
         ELSE 
             INSERT INTO users_solved_problems_pivot
             VALUES (user_id, problem_id, @best_submission_id)
@@ -200,25 +201,42 @@ CREATE TRIGGER update_submission AFTER UPDATE ON subtask_results FOR EACH ROW
         END IF;
     END//
 
-CREATE TRIGGER update_user AFTER UPDATE ON submissions FOR EACH ROW
+CREATE TRIGGER update_best_submission AFTER UPDATE ON submissions FOR EACH ROW
     BEGIN
         IF NEW.verdict_id != 1 OR OLD.verdict_id != 1 THEN
             IF OLD.problem_id != NEW.problem_id OR OLD.user_id != NEW.user_id THEN
                 CALL update_user_solved_problem_pivot(OLD.user_id, OLD.problem_id);
             END IF;
-
             CALL update_user_solved_problem_pivot(NEW.user_id, NEW.problem_id);
-
-            IF OLD.verdict_id != 1 THEN
-                UPDATE users SET points = points - OLD.points
-                WHERE id = OLD.user_id;
-            END IF;
-
-            IF NEW.verdict_id != 1 THEN
-                UPDATE users SET points = points + NEW.points
-                WHERE id = NEW.user_id;
-            END IF;
         END IF;
+    END//
+
+CREATE TRIGGER update_user_after_insert AFTER INSERT ON users_solved_problems_pivot FOR EACH ROW
+    BEGIN
+        SELECT points INTO @new_points FROM submissions
+        WHERE id = NEW.best_submission_id;
+        UPDATE users SET points = points + @new_points
+        WHERE id = NEW.user_id;
+    END//
+
+CREATE TRIGGER update_user_after_delete AFTER DELETE ON users_solved_problems_pivot FOR EACH ROW
+    BEGIN
+        SELECT points INTO @old_points FROM submissions
+        WHERE id = OLD.best_submission_id;
+        UPDATE users SET points = points - @old_points
+        WHERE id = OLD.user_id;
+    END//
+
+CREATE TRIGGER update_user_after_update AFTER UPDATE ON users_solved_problems_pivot FOR EACH ROW
+    BEGIN
+        SELECT points INTO @old_points FROM submissions
+        WHERE id = OLD.best_submission_id;
+        SELECT points INTO @new_points FROM submissions
+        WHERE id = NEW.best_submission_id;
+        UPDATE users SET points = points - @old_points
+        WHERE id = OLD.user_id;
+        UPDATE users SET points = points + @new_points
+        WHERE id = NEW.user_id;
     END//
 
 CREATE TRIGGER update_subtasks_after_insert AFTER INSERT ON testcases FOR EACH ROW
