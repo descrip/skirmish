@@ -28,9 +28,9 @@ $f3->set('pheanstalk', new Pheanstalk($f3->get('beanstalkd.host')));
 $f3->route('GET /', function($f3) {
 	$f3->mset([
 		'title' => 'Home',
-		'content' => 'home.html'
+		'content' => $f3->get('THEME') . '/views/home.html'
 	]);
-	echo(\Template::instance()->render('layout.html'));
+	echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 });
 
 //$f3->route('GET create-schema', '\Controllers\CommandController->createSchema');
@@ -42,7 +42,7 @@ $f3->route('POST /submit', '\Controllers\SubmissionController->create');
 $f3->route('GET /leaderboard', '\Controllers\UserController->index');
 $f3->route('GET /login', '\Controllers\UserController->login');
 $f3->route('POST /login', '\Controllers\UserController->authenticate');
-$f3->route('GET /register', '\Controllers\UserController->new');
+$f3->route('GET /register', '\Controllers\UserController->register');
 $f3->route('POST /register', '\Controllers\UserController->create');
 $f3->route('GET /logout', '\Controllers\UserController->logout');
 $f3->route('GET /submissions/@id', '\Controllers\SubmissionController->show');

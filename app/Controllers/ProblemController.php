@@ -26,9 +26,10 @@ class ProblemController extends Controller {
 				)
 			),
 			'title' => 'Problem List',
-			'content' => 'problems/index.html'
+			'content' => $f3->get('THEME') . '/views/problems/index.html'
 		]);
-		echo(\Template::instance()->render('layout.html'));
+
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 
 	public function show($f3, $params) {
@@ -53,12 +54,12 @@ class ProblemController extends Controller {
 		$f3->mset([
 			'title' => $problem->name,
 			'problem' => $problem,
-			'content' => 'problems/show.html',
-			'headPartials' => ['partials/katex-head.html'],
-			'bodyPartials' => ['partials/katex-body.html']
+			'content' => $f3->get('THEME') . '/views/problems/show.html',
+			'headPartials' => [$f3->get('THEME') . '/views/partials/katex-head.html'],
+			'bodyPartials' => [$f3->get('THEME') . '/views/partials/katex-body.html']
 		]);
 
-		echo(\Template::instance()->render('layout.html'));
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 
 }

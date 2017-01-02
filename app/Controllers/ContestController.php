@@ -11,9 +11,9 @@ class ContestController extends Controller {
 		$f3->mset([
 			'contests' => (new Contest())->select('name, slug'),
 			'title' => 'Contest List',
-			'content' => 'contests/index.html'
+			'content' => $f3->get('THEME') . '/views/contests/index.html'
 		]);
-		echo(\Template::instance()->render('layout.html'));
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 
 	public function show($f3, $params) {
@@ -26,12 +26,12 @@ class ContestController extends Controller {
 		$f3->mset([
 			'title' => $contest->name,
 			'contest' => $contest,
-			'content' => 'contests/show.html',
-			'headPartials' => ['partials/katex-head.html'],
-			'bodyPartials' => ['partials/katex-body.html']
+			'content' => $f3->get('THEME') . '/views/contests/show.html',
+			'headPartials' => [$f3->get('THEME') . '/views/partials/katex-head.html'],
+			'bodyPartials' => [$f3->get('THEME') . '/views/partials/katex-body.html']
 		]);
 
-		echo(\Template::instance()->render('layout.html'));
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 
 	public function enter($f3, $params) {

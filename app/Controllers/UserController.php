@@ -7,13 +7,13 @@ use \Models\Problem;
 
 class UserController extends Controller {
 
-	public function new($f3, $params) {
+	public function register($f3, $params) {
 		$this->generateCsrf($f3, $params);
 		$f3->mset([
 			'title' => 'Register',
-			'content' => 'users/new.html'
+			'content' => $f3->get('THEME') . '/views/users/register.html'
 		]);
-		echo(\Template::instance()->render('layout.html'));
+		echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 
 	public function create($f3, $params) {
@@ -35,9 +35,9 @@ class UserController extends Controller {
 		$this->generateCsrf($f3, $params);
 		$f3->mset([
 			'title' => 'Login',
-			'content' => 'users/login.html'
+			'content' => $f3->get('THEME') . '/views/users/login.html'
 		]);
-		echo(\Template::instance()->render('layout.html'));
+		echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 
 	public function authenticate($f3, $params) {
@@ -79,10 +79,10 @@ class UserController extends Controller {
 			$f3->mset([
 				'users' => $users,
 				'title' => 'User Leaderboards',
-				'content' => 'users/index.html'
+				'content' => $f3->get('THEME') . '/views/users/index.html'
 			]);
 
-			echo(\Template::instance()->render('layout.html'));
+			echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 		}
 		else {
 		}

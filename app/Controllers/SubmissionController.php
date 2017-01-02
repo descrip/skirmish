@@ -29,12 +29,12 @@ class SubmissionController extends Controller {
 
 		$f3->mset([
 			'title' => 'Submit',
-			'content' => 'submissions/new.html',
+			'content' => $f3->get('THEME') . '/views/submissions/new.html',
 			'problems' => $problems,
 			'languages' => (new Language())->select('id, name, version')
 		]);
 
-		echo(\Template::instance()->render('layout.html'));
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 
 	public function create($f3, $params) {
@@ -200,10 +200,10 @@ class SubmissionController extends Controller {
 			'submission' => $submission,
 			'subtask_results' => $subtask_results,
 			'verdicts' => $verdicts,
-			'content' => 'submissions/show.html'
+			'content' => $f3->get('THEME') . '/views/submissions/show.html'
 		]);
 
-		echo(\Template::instance()->render('layout.html'));
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 
 }

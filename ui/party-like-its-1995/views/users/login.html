@@ -1,0 +1,7 @@
+<form action="/login" method="POST">
+    <include href="{{ @THEME . '/views/partials/csrf.html' }}" />
+    <include href="{{ @THEME . '/views/users/partials/form.html' }}" />
+	<div>
+		<button type="submit">Login</button>
+	</div>
+</form>

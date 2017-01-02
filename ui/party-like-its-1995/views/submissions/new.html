@@ -1,5 +1,5 @@
 <form action="/submit" method="POST" enctype="multipart/form-data">
-	<include href="partials/csrf.html" />
+    <include href="{{ @THEME . '/views/partials/csrf.html' }}" />
 	<div>
 		<label for="problem">Problem:</label>
 		<select id="problem" name="problemId">

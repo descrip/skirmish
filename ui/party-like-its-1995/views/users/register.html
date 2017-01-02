@@ -1,10 +1,10 @@
 <form action="/register" method="POST">
-	<include href="partials/csrf.html" />
+    <include href="{{ @THEME . '/views/partials/csrf.html' }}" />
 	<div>
 		<label for="username">Username:</label>
 		<input type="text" id="username" name="username" />
 	</div>
-	<include href="users/partials/form.html" />
+    <include href="{{ @THEME . '/views/users/partials/form.html' }}" />
 	<div>
 		<label for="password">Confirm Password:</label>
 		<input type="password" id="password" name="password" />
