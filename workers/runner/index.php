@@ -32,12 +32,12 @@ function clearDirectory($dir) {
 function runProcess($command, $config, $data, $context, &$output, &$error, &$exitCode) {
     // Write a command to a shell script that will execute the program.
 	@file_put_contents(
-		$context['filename'] . '.sh',
+		$context['filepath'] . '.sh',
 		contextify(
 			sprintf("%s %s %s 2>&1\n%s",
+                'cd ' . $context['sandbox_dir'],
 				$config['limit_command'], 
                 $command,
-				'< {{ filename }}.in',
 				'echo $?'
 			),
 			$context
@@ -48,7 +48,7 @@ function runProcess($command, $config, $data, $context, &$output, &$error, &$exi
     $process = proc_open(
         sprintf('%s sh %s.sh', 
             contextify($config['sandbox_command'], $context),
-            $context['filename']
+            $context['filepath']
         ),
         [
             0 => ['pipe', 'r'],
@@ -106,7 +106,8 @@ while ($job = $queue->reserve()) {
 	$context = [
 		'cwd' => __DIR__,
 		'sandbox_dir' => $config['sandbox_directory'],
-        'filename' => $config['sandbox_directory'] . $data['problem_slug'],
+        'filename' => $data['problem_slug'],
+        'filepath' => $config['sandbox_directory'] . $data['problem_slug'],
         // Note that time_limit and memory_limit will be replaced with
         // execution specific limits a little bit down.
         'time_limit' => $config['compile_time_limit'],
@@ -115,7 +116,7 @@ while ($job = $queue->reserve()) {
 
     // Write the code to a file on the machine.
 	@file_put_contents(
-		$context['filename'] . '.' . $data['extension'],
+		$context['filepath'] . '.' . $data['extension'],
 		$data['code']
 	);
 
@@ -126,6 +127,8 @@ while ($job = $queue->reserve()) {
             $compileOutput, $compileError, $compileExitCode
         );
 
+        echo($compileOutput);
+        echo($compileError);
         echo($compileExitCode);
     }
 
@@ -148,7 +151,7 @@ while ($job = $queue->reserve()) {
 
             // Write the current testcase to the machine.
 			@file_put_contents(
-				$context['filename'] . '.in',
+				$context['filepath'] . '.in',
 				$testcase['input']
 			);
 
@@ -176,6 +179,6 @@ while ($job = $queue->reserve()) {
 		}
 	}
 
-    //clearDirectory($config['sandbox_directory']);
+    clearDirectory($config['sandbox_directory']);
 	$queue->delete($job);
 }
