@@ -6,7 +6,7 @@
 
 <check if="{{ isset(@compiler_message) }}">
     <p>The following compiler messages were received:</p>
-    <code>{{ @compiler_message }}</code>
+    <pre><code>{{ @compiler_message }}</code></pre>
 </check>
 
 <repeat group="{{ @subtask_results }}" value="{{ @subtask_result }}">
