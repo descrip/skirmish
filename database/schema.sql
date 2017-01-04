@@ -1,4 +1,8 @@
 -- TODO: Can probably optimise a lot of queries that use "LIMIT 1" 
+
+-- Make sure we're on UTF-8.
+ALTER DATABASE skirmishdb CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 CREATE TABLE languages (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(255) UNIQUE NOT NULL,

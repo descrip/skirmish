@@ -86,7 +86,7 @@ $config = parse_ini_file(__DIR__ . '/config.ini', true);
 
 // Open a connection to the database.
 $db = new PDO(
-sprintf('mysql:host=%s;port=%d;dbname=%s',
+sprintf('mysql:host=%s;port=%d;dbname=%s;charset=utf8',
 $config['mysql']['host'],
 $config['mysql']['port'],
 $config['mysql']['database']
@@ -127,6 +127,8 @@ while ($job = $queue->reserve()) {
             $data['compile_command'], $config, $data, $context,
             $compileOutput, $compileError, $compileExitCode
         );
+
+        echo($compileOutput);
 
         if ($compileOutput) {
             $stmt = $db->prepare('
