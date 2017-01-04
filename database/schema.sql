@@ -1,5 +1,4 @@
--- TODO: Can probably optimise a lot of queries that use "LIMIT 1"
-
+-- TODO: Can probably optimise a lot of queries that use "LIMIT 1" 
 CREATE TABLE languages (
 	id INTEGER PRIMARY KEY AUTO_INCREMENT,
 	name VARCHAR(255) UNIQUE NOT NULL,
@@ -114,6 +113,12 @@ CREATE TABLE users_entered_contests_pivot (
 	contest_id INTEGER NOT NULL,
 	FOREIGN KEY(contest_id) REFERENCES contests(id) ON DELETE CASCADE,
 	PRIMARY KEY(user_id, contest_id)
+);
+
+CREATE TABLE submissions_compile_messages (
+    submission_id INTEGER NOT NULL,
+    FOREIGN KEY(submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
+    message TEXT NOT NULL
 );
 
 DELIMITER //

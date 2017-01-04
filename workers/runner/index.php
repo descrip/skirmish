@@ -34,7 +34,8 @@ function runProcess($command, $config, $data, $context, &$output, &$error, &$exi
 	@file_put_contents(
 		$context['filepath'] . '.sh',
 		contextify(
-			sprintf("%s %s %s 2>&1\n%s",
+			sprintf("%s\n%s %s 2>&1\n%s",
+			//sprintf("%s %s %s\n%s",
                 'cd ' . $context['sandbox_dir'],
 				$config['limit_command'], 
                 $command,
@@ -120,6 +121,8 @@ while ($job = $queue->reserve()) {
 		$data['code']
 	);
 
+    $compiledSuccessfully = false;
+
     if ($data['compile_command']) {
         // Run a process to compile the program.
         runProcess(
@@ -127,10 +130,18 @@ while ($job = $queue->reserve()) {
             $compileOutput, $compileError, $compileExitCode
         );
 
-        echo($compileOutput);
-        echo($compileError);
-        echo($compileExitCode);
+        if ($compileOutput) {
+            $stmt = $db->prepare('
+                INSERT INTO submissions_compile_messages
+                VALUES(:submission_id, :compileOutput)
+            ');
+            $stmt->bindParam(':submission_id', $submission_id);
+            $stmt->bindParam(':compileOutput', $compileOutput);
+            $submission_id = $data['submission_id'];
+            $stmt->execute();
+        }
     }
+    else $compileExitCode = 0;
 
 	$context['time_limit'] = $data['execution_time_limit'];
 	$context['memory_limit'] = $data['execution_memory_limit'];
@@ -149,30 +160,35 @@ while ($job = $queue->reserve()) {
 		foreach ($subtask['testcases'] as $testcase) {
 			$testcase_id = $testcase['id'];
 
-            // Write the current testcase to the machine.
-			@file_put_contents(
-				$context['filepath'] . '.in',
-				$testcase['input']
-			);
+            // CE check.
+            if ($compileExitCode != 0)
+                $verdict_id = 6;
+            else {
+                // Write the current testcase to the machine.
+                @file_put_contents(
+                    $context['filepath'] . '.in',
+                    $testcase['input']
+                );
 
-            runProcess(
-                $data['execute_command'], $config, $data, $context,
-                $executeOutput, $executeError, $executeExitCode
-            );
+                runProcess(
+                    $data['execute_command'], $config, $data, $context,
+                    $executeOutput, $executeError, $executeExitCode
+                );
 
-			/* TLE check.
-			 * 124: bash/timeout status code if TLE (real time).
-			 */
-            if ($executeExitCode == 124) 
-                $verdict_id = 4;
-			// RE check.
-            else if ($executeExitCode != 0) 
-                $verdict_id = 5;
-			// WA check.
-			else if (trim_output($executeOutput) != trim_output($testcase['output']))
-				$verdict_id = 3;
-			// Therefore AC.
-			else $verdict_id = 2;
+                /* TLE check.
+                 * 124: bash/timeout status code if TLE (real time).
+                 */
+                if ($executeExitCode == 124) 
+                    $verdict_id = 4;
+                // RE check.
+                else if ($executeExitCode != 0) 
+                    $verdict_id = 5;
+                // WA check.
+                else if (trim_output($executeOutput) != trim_output($testcase['output']))
+                    $verdict_id = 3;
+                // Therefore AC.
+                else $verdict_id = 2;
+            }
 
             // Update the database.
 			$stmt->execute();
