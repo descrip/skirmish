@@ -115,8 +115,8 @@ CREATE TABLE users_entered_contests_pivot (
 	PRIMARY KEY(user_id, contest_id)
 );
 
-CREATE TABLE submissions_compile_messages (
-    submission_id INTEGER NOT NULL,
+CREATE TABLE submissions_compiler_messages (
+    submission_id INTEGER PRIMARY KEY NOT NULL,
     FOREIGN KEY(submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
     message TEXT NOT NULL
 );

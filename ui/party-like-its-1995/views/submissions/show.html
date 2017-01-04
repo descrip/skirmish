@@ -3,6 +3,12 @@
 <p>Submission: {{ @submission->id }}</p>
 <p>Points: {{ @submission->points }}</p>
 <p>Verdict: {{ @verdicts[@submission->verdict_id-1]->name }}<p/>
+
+<check if="{{ isset(@compiler_message) }}">
+    <p>The following compiler messages were received:</p>
+    <code>{{ @compiler_message }}</code>
+</check>
+
 <repeat group="{{ @subtask_results }}" value="{{ @subtask_result }}">
 	<p>Subtask {{ @subtask_result['id'] }}:</p>
 	<ul>

@@ -166,7 +166,6 @@ class SubmissionController extends Controller {
 			$submission->id
 		);
 
-		// Eighty character limit broken here for neatness.
 		$subtask_results = [];
 		for ($i = 0; $i < count($tmp); $i++) {
 			$lastIndex = count($subtask_results)-1;
@@ -200,8 +199,17 @@ class SubmissionController extends Controller {
 			'submission' => $submission,
 			'subtask_results' => $subtask_results,
 			'verdicts' => $verdicts,
-			'content' => $f3->get('THEME') . '/views/submissions/show.html'
+            'content' => $f3->get('THEME') . '/views/submissions/show.html'
 		]);
+
+        $message = $f3->get('DB')->exec(
+            'SELECT message FROM submissions_compiler_messages
+            WHERE submission_id = ?',
+            $submission->id
+        );
+
+        if (count($message))
+            $f3->set('compiler_message', $message[0]['message']);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}

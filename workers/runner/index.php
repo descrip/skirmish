@@ -121,8 +121,6 @@ while ($job = $queue->reserve()) {
 		$data['code']
 	);
 
-    $compiledSuccessfully = false;
-
     if ($data['compile_command']) {
         // Run a process to compile the program.
         runProcess(
@@ -132,7 +130,7 @@ while ($job = $queue->reserve()) {
 
         if ($compileOutput) {
             $stmt = $db->prepare('
-                INSERT INTO submissions_compile_messages
+                INSERT INTO submissions_compiler_messages
                 VALUES(:submission_id, :compileOutput)
             ');
             $stmt->bindParam(':submission_id', $submission_id);
@@ -178,11 +176,9 @@ while ($job = $queue->reserve()) {
                 /* TLE check.
                  * 124: bash/timeout status code if TLE (real time).
                  */
-                if ($executeExitCode == 124) 
-                    $verdict_id = 4;
+                if ($executeExitCode == 124) $verdict_id = 4;
                 // RE check.
-                else if ($executeExitCode != 0) 
-                    $verdict_id = 5;
+                else if ($executeExitCode != 0) $verdict_id = 5;
                 // WA check.
                 else if (trim_output($executeOutput) != trim_output($testcase['output']))
                     $verdict_id = 3;
