@@ -128,8 +128,6 @@ while ($job = $queue->reserve()) {
             $compileOutput, $compileError, $compileExitCode
         );
 
-        echo($compileOutput);
-
         if ($compileOutput) {
             $stmt = $db->prepare('
                 INSERT INTO submissions_compiler_messages
