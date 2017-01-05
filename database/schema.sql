@@ -74,6 +74,7 @@ CREATE TABLE submissions (
 	language_id INTEGER NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
 	points DECIMAL(32, 1) NOT NULL DEFAULT 0,
+	time TIMESTAMP NOT NULL,
 	FOREIGN KEY(problem_id) REFERENCES problems(id),
 	FOREIGN KEY(user_id) REFERENCES users(id),
 	FOREIGN KEY(verdict_id) REFERENCES verdicts(id),

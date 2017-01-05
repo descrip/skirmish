@@ -2,11 +2,7 @@
     <include href="{{ @THEME . '/views/partials/csrf.html' }}" />
 	<div>
 		<label for="problem">Problem:</label>
-		<select id="problem" name="problemId">
-			<repeat group="{{ @problems }}" value="{{ @problem }}">
-				<option value="{{ @problem->id }}" <check if="{{ @problem->id == $_GET['problem'] }}">selected</check>>{{ @problem->name }}</option>
-			</repeat>
-		</select>
+        <input id="text" name="problemId" value="{{ @problem_slug }}"/>
 	</div>
 	<div>
 		<label for="language">Language:</label>

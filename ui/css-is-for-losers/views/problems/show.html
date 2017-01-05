@@ -1,3 +1,5 @@
 <div id="problem-body">
 	{{ \Markdown::instance()->convert(@problem->body) }}
 </div>
+<a href="/problems/{{ @problem->slug }}/submit">submit</a>
+<a href="/problems/{{ @problem->slug }}/all-submissions">all submissions</a>

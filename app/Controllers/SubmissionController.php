@@ -15,10 +15,11 @@ use \Controllers\ProblemController;
 
 class SubmissionController extends Controller {
 
-	public function new($f3, $params) {
+	public function submit($f3, $params) {
 		$this->checkIfAuthenticated($f3, $params);
 		$this->generateCsrf($f3, $params);
 
+        /*
 		$problems = (new Problem())->select(
 			'id, name, slug',
 			($f3->exists('SESSION.contest') ?
@@ -26,13 +27,17 @@ class SubmissionController extends Controller {
 				'contest_id IS NULL'
 			)
 		);
+         */
 
 		$f3->mset([
 			'title' => 'Submit',
-			'content' => $f3->get('THEME') . '/views/submissions/new.html',
-			'problems' => $problems,
+			'content' => $f3->get('THEME') . '/views/submissions/submit.html',
+			//'problems' => $problems,
 			'languages' => (new Language())->select('id, name, version')
 		]);
+
+        if (array_key_exists('slug', $params))
+            $f3->set('problem_slug', $params['slug']);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
@@ -43,7 +48,7 @@ class SubmissionController extends Controller {
 			$f3->error(403);
 
 		$problem = new Problem();
-		$problem->load(['id = ?', $f3->get('POST.problemId')]);
+		$problem->load(['slug = ?', $f3->get('POST.problemId')]);
 		if ($problem->dry())
 			$f3->error(404);
 
@@ -60,7 +65,8 @@ class SubmissionController extends Controller {
 		$submission = new Submission();
 		$submission->problem_id = $problem->id;
 		$submission->user_id = $user->id;
-		$submission->language_id = $language->id;
+        $submission->language_id = $language->id;
+        $submission->time = date('Y-m-d H:i:s'); 
 		$submission->save();
 
 		$db = $f3->get('DB');
@@ -213,5 +219,4 @@ class SubmissionController extends Controller {
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
-
 }
