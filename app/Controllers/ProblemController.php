@@ -93,10 +93,10 @@ class ProblemController extends Controller {
         );
 
         $f3->mset([
-            'title' => 'Submissions to ' . $problem->name,
+            'title' => 'All Submissions to ' . $problem->name,
             'problem' => $problem,
             'submissions' => $submissions,
-            'content' => $f3->get('THEME') . '/views/submissions/index.html'
+            'content' => $f3->get('THEME') . '/views/problems/all-submissions.html'
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
@@ -130,10 +130,10 @@ class ProblemController extends Controller {
         );
 
         $f3->mset([
-            'title' => 'Submissions to ' . $problem->name,
+            'title' => 'Best Submissions to ' . $problem->name,
             'problem' => $problem,
             'submissions' => $submissions,
-            'content' => $f3->get('THEME') . '/views/submissions/index.html'
+            'content' => $f3->get('THEME') . '/views/problems/best-submissions.html'
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
@@ -170,10 +170,10 @@ class ProblemController extends Controller {
         );
 
         $f3->mset([
-            'title' => 'Submissions to ' . $problem->name,
+            'title' => 'Your Submissions to ' . $problem->name,
             'problem' => $problem,
             'submissions' => $submissions,
-            'content' => $f3->get('THEME') . '/views/submissions/index.html'
+            'content' => $f3->get('THEME') . '/views/problems/your-submissions.html'
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));

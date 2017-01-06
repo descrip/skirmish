@@ -66,7 +66,7 @@ class UserController extends Controller {
 		$f3->reroute('/');
 	}
 
-	public function index($f3, $params) {
+	public function leaderboard($f3, $params) {
 		$users = new User();
 
 		if (!$f3->exists('SESSION.contest')) {
@@ -79,7 +79,7 @@ class UserController extends Controller {
 			$f3->mset([
 				'users' => $users,
 				'title' => 'User Leaderboards',
-				'content' => $f3->get('THEME') . '/views/users/index.html'
+				'content' => $f3->get('THEME') . '/views/users/leaderboard.html'
 			]);
 
 			echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));

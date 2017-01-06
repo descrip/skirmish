@@ -1,7 +1,2 @@
-<ul>
-    <repeat group="{{ @submissions }}" value="{{ @submission }}">
-        <li>
-            <a href="/submissions/{{ @submission['id'] }}">Submission #{{ @submission['id'] }}</a>:&nbsp;
-        </li>
-    </repeat>
-</ul>
+<h1>All Submissions</h1>
+<include href="{{ @THEME . '/views/submissions/partials/list.html' }}" />

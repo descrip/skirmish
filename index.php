@@ -45,7 +45,7 @@ $f3->route('GET /submit', '\Controllers\SubmissionController->submit');
 $f3->route('POST /submit', '\Controllers\SubmissionController->create');
 $f3->route('GET /submissions', '\Controllers\SubmissionController->index');
 $f3->route('GET /submissions/@id', '\Controllers\SubmissionController->show');
-$f3->route('GET /leaderboard', '\Controllers\UserController->index');
+$f3->route('GET /leaderboard', '\Controllers\UserController->leaderboard');
 $f3->route('GET /login', '\Controllers\UserController->login');
 $f3->route('POST /login', '\Controllers\UserController->authenticate');
 $f3->route('GET /register', '\Controllers\UserController->register');

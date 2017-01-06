@@ -241,7 +241,7 @@ class SubmissionController extends Controller {
         );
 
         $f3->mset([
-            'title' => 'Submissions to ' . $problem->name,
+            'title' => 'All Submissions',
             'submissions' => $submissions,
             'content' => $f3->get('THEME') . '/views/submissions/index.html'
         ]);
