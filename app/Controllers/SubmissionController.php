@@ -62,11 +62,14 @@ class SubmissionController extends Controller {
 		if ($user->dry())
 			$f3->error(403);
 
+        $code = file_get_contents($f3->get('FILES.solution.tmp_name'));
+
 		$submission = new Submission();
 		$submission->problem_id = $problem->id;
 		$submission->user_id = $user->id;
         $submission->language_id = $language->id;
         $submission->time = date('Y-m-d H:i:s'); 
+        $submission->code = $code;
 		$submission->save();
 
 		$db = $f3->get('DB');
@@ -124,7 +127,7 @@ class SubmissionController extends Controller {
 			'execute_command' => $language->execute_command,
 			'extension' => $language->extension,
 			'subtasks' => $subtasks,
-			'code' => file_get_contents($f3->get('FILES.solution.tmp_name')),
+            'code' => $code,
 			'execution_time_limit' => $problem->time_limit,
 			'execution_memory_limit' => $problem->memory_limit,
 			'problem_slug' => $problem->slug
@@ -162,6 +165,22 @@ class SubmissionController extends Controller {
 		else if (count($user) == 1)
 			$user = $user[0];
 		else $f3->error(500);
+
+        if ($submission->user_id == $f3->get('SESSION.user.id'))
+            $canViewCode = true;
+        else if ($f3->exists('SESSION.user')) {
+            $currentUserAttempt = $f3->get('DB')->exec(
+                'SELECT verdicts.is_accepted FROM users_solved_problems_pivot
+                LEFT JOIN submissions ON users_solved_problems_pivot.best_submission_id = submissions.id
+                LEFT JOIN verdicts ON submissions.verdict_id = verdicts.id
+                WHERE users_solved_problems_pivot.user_id = :user_id 
+                AND users_solved_problems_pivot.problem_id = :problem_id
+                LIMIT 1',
+                [':user_id' => $f3->get('SESSION.user.id'), ':problem_id' => $problem->id]
+            );
+            $canViewCode = (count($currentUserAttempt) != 0 && $currentUserAttempt[0] == 1);
+        }
+        else $canViewCode = false;
 
 		$subtasks = $f3->get('DB')->exec(
 			'SELECT subtasks.id, COUNT(testcases.id) AS testcase_count
@@ -215,7 +234,8 @@ class SubmissionController extends Controller {
             'user' => $user,
 			'submission' => $submission,
 			'subtask_results' => $subtask_results,
-			'verdicts' => $verdicts,
+            'verdicts' => $verdicts,
+            'canViewCode' => $canViewCode,
             'content' => $f3->get('THEME') . '/views/submissions/show.html'
 		]);
 
