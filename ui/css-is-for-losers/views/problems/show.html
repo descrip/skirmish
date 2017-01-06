@@ -3,3 +3,7 @@
 </div>
 <a href="/problems/{{ @problem->slug }}/submit">submit</a>
 <a href="/problems/{{ @problem->slug }}/all-submissions">all submissions</a>
+<a href="/problems/{{ @problem->slug }}/best-submissions">best submissions</a>
+<check if="{{ isset(@SESSION.user) }}">
+    <a href="/problems/{{ @problem->slug }}/your-submissions">your submissions</a>
+</check>

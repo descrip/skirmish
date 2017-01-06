@@ -66,25 +66,117 @@ class ProblemController extends Controller {
 	}
 
     public function allSubmissions($f3, $params) {
-        (new SubmissionController)->index(
-            $f3, $params,
+        parse_str($f3->get('QUERY'));
+
+        if (isset($offset)) $offset = intval($offset);
+        else $offset = 0;
+
+        if (isset($limit)) $limit = intval($limit);
+        else $limit = 10;
+
+        $problem = new Problem();
+        $problem->load(['slug = ?', $params['slug']]);
+        if ($problem->dry())
+            $f3->error(404);
+
+        $submissions = $f3->get('DB')->exec(
             'SELECT submissions.*, users.username FROM submissions
             LEFT JOIN users ON submissions.user_id = users.id
             WHERE submissions.problem_id = :problem_id
             ORDER BY time DESC
-            LIMIT :limit OFFSET :offset'
+            LIMIT :limit OFFSET :offset',
+            [
+                ':offset' => $offset,
+                ':limit' => $limit,
+                ':problem_id' => $problem->id
+            ]
         );
+
+        $f3->mset([
+            'title' => 'Submissions to ' . $problem->name,
+            'problem' => $problem,
+            'submissions' => $submissions,
+            'content' => $f3->get('THEME') . '/views/submissions/index.html'
+        ]);
+
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
     }
 
     public function bestSubmissions($f3, $params) {
-        (new SubmissionController)->index(
-            $f3, $params,
-            'SELECT submissions.*, users.username, :user_id FROM submissions
+        parse_str($f3->get('QUERY'));
+
+        if (isset($offset)) $offset = intval($offset);
+        else $offset = 0;
+
+        if (isset($limit)) $limit = intval($limit);
+        else $limit = 10;
+
+        $problem = new Problem();
+        $problem->load(['slug = ?', $params['slug']]);
+        if ($problem->dry())
+            $f3->error(404);
+
+        $submissions = $f3->get('DB')->exec(
+            'SELECT submissions.*, users.username FROM submissions
             LEFT JOIN users ON submissions.user_id = users.id
             WHERE submissions.problem_id = :problem_id
-            ORDER BY time DESC
-            LIMIT :limit OFFSET :offset'
+            ORDER BY submissions.points DESC, submissions.time DESC
+            LIMIT :limit OFFSET :offset',
+            [
+                ':offset' => $offset,
+                ':limit' => $limit,
+                ':problem_id' => $problem->id
+            ]
         );
+
+        $f3->mset([
+            'title' => 'Submissions to ' . $problem->name,
+            'problem' => $problem,
+            'submissions' => $submissions,
+            'content' => $f3->get('THEME') . '/views/submissions/index.html'
+        ]);
+
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
+    }
+
+    public function yourSubmissions($f3, $params) {
+		$this->checkIfAuthenticated($f3, $params);
+        parse_str($f3->get('QUERY'));
+
+        if (isset($offset)) $offset = intval($offset);
+        else $offset = 0;
+
+        if (isset($limit)) $limit = intval($limit);
+        else $limit = 10;
+
+        $problem = new Problem();
+        $problem->load(['slug = ?', $params['slug']]);
+        if ($problem->dry())
+            $f3->error(404);
+
+        $submissions = $f3->get('DB')->exec(
+            'SELECT submissions.*, users.username FROM submissions
+            LEFT JOIN users ON submissions.user_id = users.id
+            WHERE submissions.problem_id = :problem_id
+            AND users.id = :user_id
+            ORDER BY submissions.time DESC
+            LIMIT :limit OFFSET :offset',
+            [
+                ':offset' => $offset,
+                ':limit' => $limit,
+                ':problem_id' => $problem->id,
+                ':user_id' => $f3->get('SESSION.user.id')
+            ]
+        );
+
+        $f3->mset([
+            'title' => 'Submissions to ' . $problem->name,
+            'problem' => $problem,
+            'submissions' => $submissions,
+            'content' => $f3->get('THEME') . '/views/submissions/index.html'
+        ]);
+
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
     }
 
 }

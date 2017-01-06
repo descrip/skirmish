@@ -223,37 +223,25 @@ class SubmissionController extends Controller {
     public function index($f3, $params, $stmt = null) {
         parse_str($f3->get('QUERY'));
 
-        if ($stmt == null)
-            $stmt = 
-                'SELECT submissions.*, users.username FROM submissions
-                LEFT JOIN users ON submissions.user_id = users.id
-                ORDER BY time DESC
-                LIMIT :limit OFFSET :offset';
-
         if (isset($offset)) $offset = intval($offset);
         else $offset = 0;
 
         if (isset($limit)) $limit = intval($limit);
         else $limit = 10;
 
-        $problem = new Problem();
-        $problem->load(['slug = ?', $params['slug']]);
-        if ($problem->dry())
-            $f3->error(404);
-
         $submissions = $f3->get('DB')->exec(
-            $stmt,
+            'SELECT submissions.*, users.username FROM submissions
+            LEFT JOIN users ON submissions.user_id = users.id
+            ORDER BY submissions.time DESC
+            LIMIT :limit OFFSET :offset',
             [
                 ':offset' => $offset,
                 ':limit' => $limit,
-                ':user_id' => $f3->get('SESSION.user.id'),
-                ':problem_id' => $problem->id
             ]
         );
 
         $f3->mset([
             'title' => 'Submissions to ' . $problem->name,
-            'problem' => $problem,
             'submissions' => $submissions,
             'content' => $f3->get('THEME') . '/views/submissions/index.html'
         ]);
