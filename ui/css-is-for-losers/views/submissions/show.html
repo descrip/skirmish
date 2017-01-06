@@ -1,6 +1,6 @@
 <h1>Submission #{{ @submission->id }}</h1>
 <p>Problem: <a href="{{ '/problems/'.@problem['slug'] }}">{{ @problem['name'] }}</a></p>
-<p>User: {{ @SESSION.user.username }}</p>
+<p>User: <a href="/users/{{ @user['username'] }}">{{ @user['username'] }}</a></p>
 <p>Points: {{ @submission->points }}</p>
 <p>Verdict: {{ @verdicts[@submission->verdict_id-1]->name }}<p/>
 

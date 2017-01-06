@@ -153,6 +153,16 @@ class SubmissionController extends Controller {
 			$problem = $problem[0];
 		else $f3->error(500);
 
+        $user = $f3->get('DB')->exec(
+            'SELECT id, username FROM users WHERE id = ?',
+            $submission->user_id
+        );
+		if (count($user) == 0)
+			$f3->error(404);
+		else if (count($user) == 1)
+			$user = $user[0];
+		else $f3->error(500);
+
 		$subtasks = $f3->get('DB')->exec(
 			'SELECT subtasks.id, COUNT(testcases.id) AS testcase_count
 			FROM subtasks
@@ -201,7 +211,8 @@ class SubmissionController extends Controller {
 
 		$f3->mset([
 			'title' => 'Submission #' . $params['id'],
-			'problem' => $problem,
+            'problem' => $problem,
+            'user' => $user,
 			'submission' => $submission,
 			'subtask_results' => $subtask_results,
 			'verdicts' => $verdicts,
