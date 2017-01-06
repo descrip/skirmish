@@ -1,6 +1,6 @@
 <h1>User {{ @user->username }}</h1>
-<p><b>Points:</b>&nbsp;{{ number_format(@user->points, 1) }}</p>
-<p><b>Rank:</b>&nbsp;{{ @userRank }}</p>
+<p><b>Points:</b> {{ number_format(@user->points, 1) }}</p>
+<p><b>Rank:</b> {{ @userRank }}</p>
 <p><b>Attempted Problems:</b></p>
 <ul>
     <repeat group="{{ @problemsAttempted }}" value="{{ @attempt }}">
