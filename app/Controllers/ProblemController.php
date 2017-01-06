@@ -119,7 +119,9 @@ class ProblemController extends Controller {
         $submissions = $f3->get('DB')->exec(
             'SELECT submissions.*, users.username FROM submissions
             LEFT JOIN users ON submissions.user_id = users.id
+            LEFT JOIN verdicts ON submissions.verdict_id = verdicts.id 
             WHERE submissions.problem_id = :problem_id
+            AND verdicts.is_accepted = 1
             ORDER BY submissions.points DESC, submissions.time DESC
             LIMIT :limit OFFSET :offset',
             [
