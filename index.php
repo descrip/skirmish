@@ -55,5 +55,6 @@ $f3->route('GET /contests', '\Controllers\ContestController->index');
 $f3->route('GET /contests/@slug', '\Controllers\ContestController->show');
 $f3->route('GET /contests/@slug/enter', '\Controllers\ContestController->enter');
 $f3->route('GET /contests/@slug/leave', '\Controllers\ContestController->leave');
+$f3->route('GET /users/@username', '\Controllers\UserController->show');
 
 $f3->run();

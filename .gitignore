@@ -1,3 +1,4 @@
 tmp/
 database/skirmish.sqlite3
 vendor/
+sandbox/

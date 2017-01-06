@@ -78,7 +78,7 @@ class UserController extends Controller {
 
 			$f3->mset([
 				'users' => $users,
-				'title' => 'User Leaderboards',
+				'title' => 'Leaderboards',
 				'content' => $f3->get('THEME') . '/views/users/leaderboard.html'
 			]);
 
@@ -87,5 +87,38 @@ class UserController extends Controller {
 		else {
 		}
 	}
+
+    public function show($f3, $params) {
+        $user = new User();
+        $user->load(['username = ?', $params['username']]);
+        if ($user->dry())
+            $f3->error(404);
+
+        $rank = 1 + $user->count([
+            '(points > :points) OR (points = :points AND username < :username)',
+            ':points' => $user->points,
+            ':username' => $user->username
+        ]);
+
+        $problemsAttempted = $f3->get('DB')->exec(
+            'SELECT problems.slug AS problem_slug, problems.name AS problem_name, problems.points AS problem_points, submissions.id AS best_submission_id, submissions.points AS best_submission_points
+            FROM users_solved_problems_pivot
+            LEFT JOIN problems ON users_solved_problems_pivot.problem_id = problems.id
+            LEFT JOIN submissions ON users_solved_problems_pivot.best_submission_id = submissions.id
+            WHERE users_solved_problems_pivot.user_id = ?
+            ORDER BY problems.name ASC',
+            $user->id
+        );
+
+        $f3->mset([
+            'user' => $user,
+            'userRank' => $rank,
+            'problemsAttempted' => $problemsAttempted,
+            'title' => $user->username . '\'s Profile',
+            'content' => $f3->get('THEME') . '/views/users/show.html'
+        ]);
+
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
+    }
 
 }
