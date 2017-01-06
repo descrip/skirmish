@@ -6,6 +6,8 @@ use \Models\Problem;
 use \Models\Contest;
 use \Models\Submission;
 
+use \Controllers\SubmissionController;
+
 class ProblemController extends Controller {
 
 	public function index($f3, $params) {
@@ -64,46 +66,25 @@ class ProblemController extends Controller {
 	}
 
     public function allSubmissions($f3, $params) {
-        parse_str($f3->get('QUERY'));
-
-        if (isset($offset))
-            $offset = intval($offset);
-        else 
-            $offset = 0;
-
-        if (isset($limit))
-            $limit = intval($limit);
-        else
-            $limit = 10;
-
-        $problem_id = $f3->get('DB')->exec(
-            'SELECT id FROM problems WHERE slug = ?',
-            $params['slug']
-        )[0]['id'];
-
-        $submissions = $f3->get('DB')->exec(
+        (new SubmissionController)->index(
+            $f3, $params,
             'SELECT submissions.*, users.username FROM submissions
             LEFT JOIN users ON submissions.user_id = users.id
-            WHERE submissions.problem_id = ?
+            WHERE submissions.problem_id = :problem_id
             ORDER BY time DESC
-            LIMIT ? OFFSET ?',
-            [$problem_id, $limit, $offset]
+            LIMIT :limit OFFSET :offset'
         );
-
-        echo('<pre><code>');
-        var_dump($submissions);
-        echo('</pre></code>');
-
-        $f3->mset([
-            'title' => 'Submissions to ' . $problem->name,
-            'problem' => $problem,
-            'submissions' => $submissions,
-            'content' => $f3->get('THEME') . '/views/submissions/index.html'
-        ]);
-
-        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
     }
 
-
+    public function bestSubmissions($f3, $params) {
+        (new SubmissionController)->index(
+            $f3, $params,
+            'SELECT submissions.*, users.username, :user_id FROM submissions
+            LEFT JOIN users ON submissions.user_id = users.id
+            WHERE submissions.problem_id = :problem_id
+            ORDER BY time DESC
+            LIMIT :limit OFFSET :offset'
+        );
+    }
 
 }
