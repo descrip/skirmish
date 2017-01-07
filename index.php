@@ -33,6 +33,8 @@ $f3->route('GET /', function($f3) {
 	echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 });
 
+//var_dump(\Util\Validate::isValidEmail(''));
+
 //$f3->route('GET create-schema', '\Controllers\CommandController->createSchema');
 $f3->route('GET seed-database', '\Controllers\CommandController->seedDatabase');
 $f3->route('GET /problems', '\Controllers\ProblemController->index');

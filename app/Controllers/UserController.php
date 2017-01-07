@@ -5,6 +5,8 @@ namespace Controllers;
 use \Models\User;
 use \Models\Problem;
 
+use \Util\Validate;
+
 class UserController extends Controller {
 
 	public function register($f3, $params) {
@@ -51,17 +53,29 @@ class UserController extends Controller {
 		$email = $f3->get('POST.email');
 		$password = $f3->get('POST.password');
 
+        $formErrors = [];
+
 		$user = new User();
 		$user->load(['email = ?', $email]);
 
-		if ($user->dry())
-			$f3->reroute('/login');
-		else if (password_verify($password, $user->password)) {
+        if ($email === "")
+            $formErrors['email'] = "The email field is required.";
+        else if (strlen($email) > 255)
+            $formErrors['email'] = "The email supplied exceeds the maximum length.";
+        else if (!Validate::isValidEmail($email))
+            $formErrors['email'] = "The email supplied is not a valid email address.";
+        else if ($user->dry() || !password_verify($password, $user->password))
+            $formErrors['common'] = "Email and password do not match.";
+            
+        if (empty($formErrors)) {
 			$f3->set('SESSION.user.id', $user->id);
 			$f3->set('SESSION.user.username', $user->username);
 			$f3->reroute('/');
 		}
-		else $f3->reroute('/login');
+        else {
+            $f3->set('formErrors', $formErrors);
+            $f3->reroute('/login');
+        }
 	}
 
 	public function logout($f3, $params) {
