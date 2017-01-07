@@ -58,14 +58,15 @@ class UserController extends Controller {
 		$user = new User();
 		$user->load(['email = ?', $email]);
 
+        if ($password === "")
+            $formErrors['password'] = "The password field is required.";
+
         if ($email === "")
             $formErrors['email'] = "The email field is required.";
-        else if (strlen($email) > 255)
-            $formErrors['email'] = "The email supplied exceeds the maximum length.";
         else if (!Validate::isValidEmail($email))
             $formErrors['email'] = "The email supplied is not a valid email address.";
-        else if ($user->dry() || !password_verify($password, $user->password))
-            $formErrors['common'] = "Email and password do not match.";
+        else if ($user->dry() || ($password !== "" && !password_verify($password, $user->password)))
+            $formErrors['common'] = "The email and the password do not match.";
             
         if (empty($formErrors)) {
 			$f3->set('SESSION.user.id', $user->id);
@@ -74,7 +75,7 @@ class UserController extends Controller {
 		}
         else {
             $f3->set('formErrors', $formErrors);
-            $f3->reroute('/login');
+            $this->login($f3, $params);
         }
 	}
 

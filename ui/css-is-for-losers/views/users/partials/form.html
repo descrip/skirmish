@@ -1,14 +1,10 @@
 <div>
 	<label for="email">Email:</label>
-	<input type="text" id="email" name="email" />
-    <check if="{{ @formErrors['email'] }}">
-        <span style="color:red">{{ @emailError }}</span>
-    </check>
+    <input type="text" id="email" name="email" value="{{ @POST.email }}" />
+    <span style="color:red">{{ @formErrors['email'] }}</span>
 </div>
 <div>
 	<label for="password">Password:</label>
 	<input type="password" id="password" name="password" />
-    <check if="{{ @formErrors['password'] }}">
-        <span style="color:red">{{ @passwordError }}</span>
-    </check>
+    <span style="color:red">{{ @formErrors['password'] }}</span>
 </div>
