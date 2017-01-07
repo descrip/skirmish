@@ -16,7 +16,7 @@ class PracticeProblemSeeder {
 
 		$aplusb = new Problem();
 		$aplusb->name = 'A Plus B';
-		$aplusb->slug = 'aplusb';
+		$aplusb->slug = 'aplusb,';
 		$aplusb->body = <<<MARKER
 # A Plus B
 Given two integers \$A\$ and \$B\$, where \$(1 \\leq A, B \\leq 100)\$, print the sum of \$A+B\$.

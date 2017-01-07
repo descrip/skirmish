@@ -28,7 +28,7 @@ $f3->set('pheanstalk', new Pheanstalk($f3->get('beanstalkd.host')));
 //var_dump(\Util\Validate::isValidEmail(''));
 
 //$f3->route('GET create-schema', '\Controllers\CommandController->createSchema');
-$f3->route('GET seed-database', '\Controllers\CommandController->seedDatabase');
+$f3->route('GET /seed-database', '\Controllers\CommandController->seedDatabase');
 
 $f3->route('GET @home: /', '\Controllers\HomeController->home');
 

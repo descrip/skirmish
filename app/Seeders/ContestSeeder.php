@@ -7,7 +7,7 @@ use \Models\Problem;
 use \Models\Testcase;
 use \Models\Subtask;
 
-use Util;
+use \Util\Util;
 
 class ContestSeeder {
 
