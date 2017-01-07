@@ -37,7 +37,7 @@ class ProblemController extends Controller {
 
 	public function show($f3, $params) {
 		$problem = new Problem();
-		$problem->load(['slug = ?', $params['slug']]);
+		$problem->load(['slug = ?', rawurldecode($params['slug'])]);
 		if ($problem->dry())
 			$f3->error(404);
 
@@ -75,7 +75,7 @@ class ProblemController extends Controller {
         else $limit = 10;
 
         $problem = new Problem();
-        $problem->load(['slug = ?', $params['slug']]);
+        $problem->load(['slug = ?', rawurldecode($params['slug'])]);
         if ($problem->dry())
             $f3->error(404);
 
@@ -112,7 +112,7 @@ class ProblemController extends Controller {
         else $limit = 10;
 
         $problem = new Problem();
-        $problem->load(['slug = ?', $params['slug']]);
+        $problem->load(['slug = ?', rawurldecode($params['slug'])]);
         if ($problem->dry())
             $f3->error(404);
 
@@ -152,7 +152,7 @@ class ProblemController extends Controller {
         else $limit = 10;
 
         $problem = new Problem();
-        $problem->load(['slug = ?', $params['slug']]);
+        $problem->load(['slug = ?', rawurldecode($params['slug'])]);
         if ($problem->dry())
             $f3->error(404);
 

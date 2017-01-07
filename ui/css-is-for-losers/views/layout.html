@@ -10,27 +10,37 @@
 	</head>
 	<body>
 		<div class="navbar">
-			<b>skirmish online judge</b> :::
-			<a href="/">home</a>
-            <!--<a href="/contests">contests</a>-->
-			<a href="/problems">problems</a>
-			<a href="/submissions">submissions</a>
-            <!--<a href="{{ @problem ? ('/submit?problem='.@problem->id) : '/submit' }}">submit</a>-->
-			<a href="/leaderboard">leaderboard</a>
-			<check if="{{ !@SESSION.user }}">
+			<b>skirmish online judge</b>&nbsp;:::
+
+            <a href="{{ 'home' | alias }}">home</a>
+            <a href="{{ 'problemsIndex' | alias }}">problems</a>
+            <a href="{{ 'submissionsIndex' | alias }}">submissions</a>
+
+            <exclude>
+                <a href="/contests">contests</a>
+                <a href="{{ @problem ? ('/submit?problem='.@problem->id) : '/submit' }}">submit</a>
+            </exclude>
+
+            <a href="{{ 'usersLeaderboard' | alias }}">leaderboard</a>
+
+			<check if="{{ @SESSION.user }}">
 				<true>
-					<a href="/login">login</a>
-					<a href="/register">register</a>
+                    <a href="{{ 'usersLogout' | alias }}">logout</a>
 				</true>
-				<false>
-					<a href="/logout">logout</a>
-				</false>
+                <false>
+                    <a href="{{ 'usersLogin' | alias }}">login</a>
+                    <a href="{{ 'usersRegister' | alias }}">register</a>
+                </false>
 			</check>
+
 			<br>
-			<check if="{{ @SESSION.contest }}">
-				You are currently writing contest "{{ @SESSION.contest.name }}".
-				<a href={{ "/contests/" . @SESSION.contest.slug . "/leave" }}>Click here to leave.</a>
-			</check>
+            
+            <exclude>
+                <check if="{{ @SESSION.contest }}">
+                    You are currently writing contest "{{ @SESSION.contest.name }}".
+                    <a href={{ "/contests/" . @SESSION.contest.slug . "/leave" }}>Click here to leave.</a>
+                </check>
+            </exclude>
 		</div>
 
 		<check if="{{ @content }}">

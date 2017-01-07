@@ -1,6 +1,6 @@
 <h1>Submission #{{ @submission->id }}</h1>
-<p><b>Problem:</b> <a href="{{ '/problems/'.@problem['slug'] }}">{{ @problem['name'] }}</a></p>
-<p><b>User:</b> <a href="/users/{{ @user['username'] }}">{{ @user['username'] }}</a></p>
+<p><b>Problem:</b> <a href="{{ 'problemsShow', 'slug=' . rawurlencode(@problem['slug']) | alias }}">{{ @problem['name'] }}</a></p>
+<p><b>User:</b> <a href="{{ 'usersShow', 'username=' . rawurlencode(@user['username']) | alias }}">{{ @user['username'] }}</a></p>
 <p><b>Points:</b> {{ @submission->points }}</p>
 <p><b>Verdict:</b> {{ @verdicts[@submission->verdict_id-1]->name }}<p/>
 <p><b>Time:</b> {{ @submission->time }}</p>

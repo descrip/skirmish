@@ -9,7 +9,7 @@
 	<tbody>
 		<repeat group="{{ @users }}" value="{{ @user }}">
 			<tr>
-                <td><a href="/users/{{ @user->username }}">{{ @user->username }}</a></td>
+                <td><a href="{{ 'usersShow', 'username=' . rawurlencode(@user->username) | alias }}">{{ @user->username }}</a></td>
 				<td>{{ number_format(@user->points, 1) }}</td>
 			</tr>
 		</repeat>

@@ -5,13 +5,9 @@
 <ul>
     <repeat group="{{ @problemsAttempted }}" value="{{ @attempt }}">
         <li>
-            <a href="/problems/{{ @attempt['problem_slug'] }}">
-                {{ @attempt['problem_name'] }}
-            </a>
+            <a href="{{ 'problemsShow', 'slug=' . rawurlencode(@attempt['problem_slug']) | alias }}">{{ @attempt['problem_name'] }}</a>
             &nbsp;
-            (&nbsp;<a href="/submissions/{{ @attempt['submission_id'] }}">
-                {{ number_format(@attempt['best_submission_points'], 1) }} / {{ number_format(@attempt['problem_points'], 1) }}
-            </a>&nbsp;)
+            (<a href="{{ 'submissionsShow', 'id=' . rawurlencode(@attempt['best_submission_id']) | alias }}">{{ number_format(@attempt['best_submission_points'], 1) }} / {{ number_format(@attempt['problem_points'], 1) }}</a>)
         </li>
     </repeat>
 </ul>

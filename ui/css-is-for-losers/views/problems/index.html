@@ -9,7 +9,7 @@
 	<tbody>
 		<repeat group="{{ @problems }}" value="{{ @problem }}">
 			<tr>
-				<td><a href="{{ '/problems/' . @problem->slug }}">{{ @problem->name }}</a></td>
+                <td><a href="{{ 'problemsShow', 'slug=' . rawurlencode(@problem->slug) | alias }}">{{ @problem->name }}</a></td>
 				<td>{{ @problem->slug }}</td>
 			</tr>
 		</repeat>

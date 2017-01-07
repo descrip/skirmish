@@ -1,9 +1,9 @@
 <div id="problem-body">
 	{{ \Markdown::instance()->convert(@problem->body) }}
 </div>
-<a href="/problems/{{ @problem->slug }}/submit">submit</a>
-<a href="/problems/{{ @problem->slug }}/all-submissions">all submissions</a>
-<a href="/problems/{{ @problem->slug }}/best-submissions">best submissions</a>
-<check if="{{ isset(@SESSION.user) }}">
-    <a href="/problems/{{ @problem->slug }}/your-submissions">your submissions</a>
+<a href="{{ 'problemsSubmit', 'slug=' . rawurlencode(@problem->slug) | alias }}">submit</a>
+<a href="{{ 'problemsAllSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">all submissions</a>
+<a href="{{ 'problemsBestSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">best submissions</a>
+<check if="{{ @SESSION.user }}">
+    <a href="{{ 'problemsYourSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">your submissions</a>
 </check>

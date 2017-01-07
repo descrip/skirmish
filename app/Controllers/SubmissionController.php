@@ -70,7 +70,7 @@ class SubmissionController extends Controller {
 		$submission->problem_id = $problem->id;
 		$submission->user_id = $user->id;
         $submission->language_id = $language->id;
-        $submission->time = Util::date('Y-m-d H:i:s'); 
+        $submission->time = Util::getMySqlTimestamp(time()); 
         $submission->code = $code;
 		$submission->save();
 
