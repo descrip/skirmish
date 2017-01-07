@@ -13,6 +13,8 @@ use \Models\SubtaskResult;
 use \Models\TestcaseResult;
 use \Controllers\ProblemController;
 
+use \Util\Util;
+
 class SubmissionController extends Controller {
 
 	public function submit($f3, $params) {
@@ -68,7 +70,7 @@ class SubmissionController extends Controller {
 		$submission->problem_id = $problem->id;
 		$submission->user_id = $user->id;
         $submission->language_id = $language->id;
-        $submission->time = date('Y-m-d H:i:s'); 
+        $submission->time = Util::date('Y-m-d H:i:s'); 
         $submission->code = $code;
 		$submission->save();
 

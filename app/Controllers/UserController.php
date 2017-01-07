@@ -9,10 +9,12 @@ class UserController extends Controller {
 
 	public function register($f3, $params) {
 		$this->generateCsrf($f3, $params);
+
 		$f3->mset([
 			'title' => 'Register',
 			'content' => $f3->get('THEME') . '/views/users/register.html'
 		]);
+
 		echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 
@@ -33,10 +35,12 @@ class UserController extends Controller {
 	
 	public function login($f3, $params) {
 		$this->generateCsrf($f3, $params);
+
 		$f3->mset([
 			'title' => 'Login',
 			'content' => $f3->get('THEME') . '/views/users/login.html'
 		]);
+
 		echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
 	}
 

@@ -5,6 +5,8 @@ namespace Controllers;
 use \Models\Contest;
 use \Models\User;
 
+use \Util\Util;
+
 class ContestController extends Controller {
 
 	public function index($f3, $params) {

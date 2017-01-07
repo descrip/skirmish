@@ -1,11 +1,14 @@
 <?php
 
-class Util {
+namespace Util;
+
+class Util extends \Prefab {
 
 	public static function getMySqlTimestamp($time) {
 		return date('Y-m-d G:i:s', $time);
 	}
 
+    /*
 	public static function generateProblemCodes($len, $style) {
 		$ret = [];
 		for ($i = 0; $i < $len; $i++) {
@@ -18,5 +21,6 @@ class Util {
 		}
 		return $ret;
 	}
+     */
 
 }

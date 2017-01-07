@@ -5,7 +5,7 @@
 <p><b>Verdict:</b> {{ @verdicts[@submission->verdict_id-1]->name }}<p/>
 <p><b>Time:</b> {{ @submission->time }}</p>
 
-<check if="{{ isset(@compiler_message) }}">
+<check if="{{ @compiler_message }}">
     <p><b>Compiler Messages:</b></p>
     <pre><code>{{ @compiler_message }}</code></pre>
 </check>
@@ -21,8 +21,6 @@
 </repeat>
 
 <check if="{{ @canViewCode }}">
-<true>
     <p><b>Code:</b></p>
     <pre><code>{{ @submission->code }}</code></pre>
-</true>
 </check>

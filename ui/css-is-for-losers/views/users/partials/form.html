@@ -1,8 +1,14 @@
 <div>
 	<label for="email">Email:</label>
 	<input type="text" id="email" name="email" />
+    <check if="{{ @emailError }}">
+        <span style="color:red">{{ @emailError }}</span>
+    </check>
 </div>
 <div>
 	<label for="password">Password:</label>
 	<input type="password" id="password" name="password" />
+    <check if="{{ @passwordError }}">
+        <span style="color:red">{{ @passwordError }}</span>
+    </check>
 </div>

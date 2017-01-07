@@ -15,9 +15,9 @@
             <!--<a href="/contests">contests</a>-->
 			<a href="/problems">problems</a>
 			<a href="/submissions">submissions</a>
-            <!--<a href="{{ (isset(@problem) ? ('/submit?problem='.@problem->id) : '/submit') }}">submit</a>-->
+            <!--<a href="{{ @problem ? ('/submit?problem='.@problem->id) : '/submit' }}">submit</a>-->
 			<a href="/leaderboard">leaderboard</a>
-			<check if="{{ !isset(@SESSION.user) }}">
+			<check if="{{ !@SESSION.user }}">
 				<true>
 					<a href="/login">login</a>
 					<a href="/register">register</a>
@@ -27,13 +27,13 @@
 				</false>
 			</check>
 			<br>
-			<check if="{{ isset(@SESSION.contest) }}">
+			<check if="{{ @SESSION.contest }}">
 				You are currently writing contest "{{ @SESSION.contest.name }}".
 				<a href={{ "/contests/" . @SESSION.contest.slug . "/leave" }}>Click here to leave.</a>
 			</check>
 		</div>
 
-		<check if="{{ isset(@content) }}">
+		<check if="{{ @content }}">
 			<include href="{{ @content }}" />
 		</check>
 

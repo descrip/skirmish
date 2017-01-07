@@ -1,6 +1,6 @@
 <h1>Submit</h1>
 <form action="/submit" method="POST" enctype="multipart/form-data">
-    <include href="{{ @THEME . '/views/partials/csrf.html' }}" />
+    <include href="common/views/partials/csrf.html" />
 	<div>
 		<label for="problem">Problem:</label>
         <input id="text" name="problemId" value="{{ @problem_slug }}"/>
