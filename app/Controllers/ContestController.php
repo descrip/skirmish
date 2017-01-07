@@ -29,8 +29,8 @@ class ContestController extends Controller {
 			'title' => $contest->name,
 			'contest' => $contest,
 			'content' => $f3->get('THEME') . '/views/contests/show.html',
-			'headPartials' => [$f3->get('THEME') . '/views/partials/katex-head.html'],
-			'bodyPartials' => [$f3->get('THEME') . '/views/partials/katex-body.html']
+			'headPartials' => ['common/views/partials/katex-head.html'],
+			'bodyPartials' => ['common/views/partials/katex-body.html']
 		]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
