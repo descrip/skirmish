@@ -8,7 +8,8 @@ class HomeController extends Controller {
         $f3->mset([
             'title' => 'Home',
             'content' => $f3->get('THEME') . '/views/home.html',
-            'readme' => file_get_contents('README.md')
+            'readme' => file_get_contents('README.md'),
+            'navbarItemClasses' => ['home' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));

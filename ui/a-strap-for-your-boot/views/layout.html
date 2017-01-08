@@ -15,38 +15,44 @@
     </head>
     <body>
         <div class="container">
+
             <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
+
                 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <a class="navbar-brand" href="#">Skirmish Online Judge</a>
+
+                <a class="navbar-brand" href="{{ 'home' | alias }}">Skirmish Online Judge</a>
+
                 <div class="collapse navbar-collapse" id="navbarCollapse">
+
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
+                        <li class="nav-item {{ @navbarItemClasses['home'] }}">
                             <a class="nav-link" href="{{ 'home' | alias }}">Home</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {{ @navbarItemClasses['problems'] }}">
                             <a class="nav-link" href="{{ 'problemsIndex' | alias }}">Problems</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {{ @navbarItemClasses['submissions'] }}">
                             <a class="nav-link" href="{{ 'submissionsIndex' | alias }}">Submissions</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item {{ @navbarItemClasses['users'] }}">
                             <a class="nav-link" href="{{ 'usersLeaderboard' | alias }}">Leaderboard</a>
                         </li>
                     </ul>
+
                     <ul class="navbar-nav">
                         <check if="{{ @SESSION.user }}">
                             <true>
-                                <li class="nav-item">
+                                <li class="nav-item {{ @navbarItemClasses['logout'] }}">
                                     <a class="nav-link" href="{{ 'usersLogout' | alias }}">Logout</a>
                                 </li>
                             </true>
                             <false>
-                                <li class="nav-item">
+                                <li class="nav-item {{ @navbarItemClasses['login'] }}">
                                     <a class="nav-link" href="{{ 'usersLogin' | alias }}">Login</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item {{ @navbarItemClasses['register'] }}">
                                     <a class="nav-link" href="{{ 'usersRegister' | alias }}">Register</a>
                                 </li>
                             </false>
@@ -54,12 +60,6 @@
                     </ul>
                 </div>
             </nav>
-
-            <!--
-                <h1>Hello, world!</h1>
-                <h1>Hello, world!</h1>
-                <h1>Hello, world!</h1>
-            -->
 
             <!--
         <div class="container-fluid" id="problem-body">

@@ -29,7 +29,8 @@ class ProblemController extends Controller {
                 )
             ),
             'title' => 'Problem List',
-            'content' => $f3->get('THEME') . '/views/problems/index.html'
+            'content' => $f3->get('THEME') . '/views/problems/index.html',
+            'navbarItemClasses' => ['problems' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
@@ -59,7 +60,8 @@ class ProblemController extends Controller {
             'problem' => $problem,
             'content' => $f3->get('THEME') . '/views/problems/show.html',
             'headPartials' => ['common/views/partials/katex-head.html'],
-            'bodyPartials' => ['common/views/partials/katex-body.html']
+            'bodyPartials' => ['common/views/partials/katex-body.html'],
+            'navbarItemClasses' => ['problems' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
@@ -96,7 +98,8 @@ class ProblemController extends Controller {
             'title' => 'All Submissions to ' . $problem->name,
             'problem' => $problem,
             'submissions' => $submissions,
-            'content' => $f3->get('THEME') . '/views/problems/all-submissions.html'
+            'content' => $f3->get('THEME') . '/views/problems/all-submissions.html',
+            'navbarItemClasses' => ['submissions' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
@@ -135,7 +138,8 @@ class ProblemController extends Controller {
             'title' => 'Best Submissions to ' . $problem->name,
             'problem' => $problem,
             'submissions' => $submissions,
-            'content' => $f3->get('THEME') . '/views/problems/best-submissions.html'
+            'content' => $f3->get('THEME') . '/views/problems/best-submissions.html',
+            'navbarItemClasses' => ['submissions' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
@@ -175,7 +179,8 @@ class ProblemController extends Controller {
             'title' => 'Your Submissions to ' . $problem->name,
             'problem' => $problem,
             'submissions' => $submissions,
-            'content' => $f3->get('THEME') . '/views/problems/your-submissions.html'
+            'content' => $f3->get('THEME') . '/views/problems/your-submissions.html',
+            'navbarItemClasses' => ['submissions' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));

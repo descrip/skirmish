@@ -14,7 +14,8 @@ class UserController extends Controller {
 
         $f3->mset([
             'title' => 'Register',
-            'content' => $f3->get('THEME') . '/views/users/register.html'
+            'content' => $f3->get('THEME') . '/views/users/register.html',
+            'navbarItemClasses' => ['register' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
@@ -76,7 +77,8 @@ class UserController extends Controller {
 
         $f3->mset([
             'title' => 'Login',
-            'content' => $f3->get('THEME') . '/views/users/login.html'
+            'content' => $f3->get('THEME') . '/views/users/login.html',
+            'navbarItemClasses' => ['login' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
@@ -134,7 +136,8 @@ class UserController extends Controller {
             $f3->mset([
                 'users' => $users,
                 'title' => 'Leaderboards',
-                'content' => $f3->get('THEME') . '/views/users/leaderboard.html'
+                'content' => $f3->get('THEME') . '/views/users/leaderboard.html',
+                'navbarItemClasses' => ['users' => 'active']
             ]);
 
             echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
@@ -170,7 +173,8 @@ class UserController extends Controller {
             'userRank' => $rank,
             'problemsAttempted' => $problemsAttempted,
             'title' => $user->username . '\'s Profile',
-            'content' => $f3->get('THEME') . '/views/users/show.html'
+            'content' => $f3->get('THEME') . '/views/users/show.html',
+            'navbarItemClasses' => ['users' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));

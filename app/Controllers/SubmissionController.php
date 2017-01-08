@@ -35,7 +35,8 @@ class SubmissionController extends Controller {
             'title' => 'Submit',
             'content' => $f3->get('THEME') . '/views/submissions/submit.html',
             //'problems' => $problems,
-            'languages' => (new Language())->select('id, name, version')
+            'languages' => (new Language())->select('id, name, version'),
+            'navbarItemClasses' => ['submissions' => 'active']
         ]);
 
         if (array_key_exists('slug', $params))
@@ -240,7 +241,8 @@ class SubmissionController extends Controller {
             'subtask_results' => $subtask_results,
             'verdicts' => $verdicts,
             'canViewCode' => $canViewCode,
-            'content' => $f3->get('THEME') . '/views/submissions/show.html'
+            'content' => $f3->get('THEME') . '/views/submissions/show.html',
+            'navbarItemClasses' => ['submissions' => 'active']
         ]);
 
         $message = $f3->get('DB')->exec(
@@ -278,7 +280,8 @@ class SubmissionController extends Controller {
         $f3->mset([
             'title' => 'All Submissions',
             'submissions' => $submissions,
-            'content' => $f3->get('THEME') . '/views/submissions/index.html'
+            'content' => $f3->get('THEME') . '/views/submissions/index.html',
+            'navbarItemClasses' => ['submissions' => 'active']
         ]);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
