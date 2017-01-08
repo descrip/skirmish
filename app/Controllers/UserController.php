@@ -24,15 +24,51 @@ class UserController extends Controller {
 		if (!$this->checkCsrf($f3, $params))
 			$f3->error(403);
 
-		$user = new User();
-		$user->username = $f3->get('POST.username');
-		$user->email = $f3->get('POST.email');
-		$user->password = password_hash(
-			$f3->get('POST.password'),
-			PASSWORD_DEFAULT
-		);
-		$user->save();
-		$f3->reroute('/');
+        $formErrors = [];
+
+        $username = $f3->get('POST.username');
+        $email = $f3->get('POST.email');
+        $password = $f3->get('POST.password');
+        $passwordConfirm = $f3->get('POST.passwordConfirm');
+
+        if ($username === '')
+            $formErrors['username'] = 'A username is required.';
+        else if (strlen($username) > 16)
+            $formErrors['username'] = 'Usernames must be at most 16 characters.';
+        else if (!Validate::isAlphaNumericDash($username))
+            $formErrors['username'] = 'Usernames can only contain letters, numbers, "-", and "_".';
+        else if (!Validate::isUnique($f3, 'users', 'username', $username))
+            $formErrors['username'] = 'This username is taken. Try another?';
+
+        if ($email === '')
+            $formErrors['email'] = 'An email is required.';
+        else if (strlen($email) > 255)
+            $formErrors['email'] = 'Emails must be at most 255 characters.';
+        else if (!Validate::isValidEmail($email))
+            $formErrors['email'] = 'This is not a valid email address.';
+        else if (!Validate::isUnique($f3, 'users', 'email', $email))
+            $formErrors['email'] = 'An account with this email already exists. Try logging in?';
+
+        if ($password === '')
+            $formErrors['password'] = 'A password is required.';
+        else if (strlen($password) < 6 || 255 < strlen($password))
+            $formErrors['password'] = 'Passwords must be between 6 and 255 characters.';
+
+        if ($password !== $passwordConfirm)
+            $formErrors['passwordConfirm'] = 'The passwords do not match.';
+
+        if (empty($formErrors)) {
+            $user = new User();
+            $user->username = $username;
+            $user->email = $email;
+            $user->password = password_hash($password, PASSWORD_DEFAULT);
+            $user->save();
+            $this->authenticate($f3, $params);
+        }
+        else {
+            $f3->set('formErrors', $formErrors);
+            $this->register($f3, $params);
+        }
 	}
 	
 	public function login($f3, $params) {
@@ -58,15 +94,15 @@ class UserController extends Controller {
 		$user = new User();
 		$user->load(['email = ?', $email]);
 
-        if ($password === "")
-            $formErrors['password'] = "The password field is required.";
+        if ($password === '')
+            $formErrors['password'] = 'A password is required.';
 
-        if ($email === "")
-            $formErrors['email'] = "The email field is required.";
+        if ($email === '')
+            $formErrors['email'] = 'An email is required.';
         else if (!Validate::isValidEmail($email))
-            $formErrors['email'] = "The email supplied is not a valid email address.";
-        else if ($user->dry() || ($password !== "" && !password_verify($password, $user->password)))
-            $formErrors['common'] = "The email and the password do not match.";
+            $formErrors['email'] = 'This is not a valid email address.';
+        else if ($user->dry() || ($password !== '' && !password_verify($password, $user->password)))
+            $formErrors['common'] = 'Incorrect username or password.';
             
         if (empty($formErrors)) {
 			$f3->set('SESSION.user.id', $user->id);

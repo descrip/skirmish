@@ -3,18 +3,15 @@
     <include href="common/views/partials/csrf.html" />
 	<div>
 		<label for="username">Username:</label>
-		<input type="text" id="username" name="username" />
-        <check if="{{ @usernameError }}">
-            <span style="color:red">{{ @usernameError }}</span>
-        </check>
+        <input type="text" id="username" name="username" value="{{ @POST.username }}" />
+        <span style="color:red">{{ @formErrors['username'] }}</span>
 	</div>
     <include href="{{ @THEME . '/views/users/partials/form.html' }}" />
 	<div>
 		<label for="password">Confirm Password:</label>
 		<input type="password" id="passwordConfirm" name="passwordConfirm" />
-        <check if="{{ @passwordConfirmError }}">
-            <span style="color:red">{{ @usernameError }}</span>
-        </check>
+        <span style="color:red">{{ @formErrors['passwordConfirm'] }}</span>
+    </check>
 	</div>
 	<div>
 		<button type="submit">Register</button>
