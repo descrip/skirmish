@@ -17,37 +17,37 @@ use \Util\Util;
 
 class SubmissionController extends Controller {
 
-	public function submit($f3, $params) {
-		$this->checkIfAuthenticated($f3, $params);
-		$this->generateCsrf($f3, $params);
+    public function submit($f3, $params) {
+        $this->checkIfAuthenticated($f3, $params);
+        $this->generateCsrf($f3, $params);
 
         /*
-		$problems = (new Problem())->select(
-			'id, name, slug',
-			($f3->exists('SESSION.contest') ?
-				['contest_id = ?', $f3->get('SESSION.contest.id')] :
-				'contest_id IS NULL'
-			)
-		);
+        $problems = (new Problem())->select(
+            'id, name, slug',
+            ($f3->exists('SESSION.contest') ?
+                ['contest_id = ?', $f3->get('SESSION.contest.id')] :
+                'contest_id IS NULL'
+            )
+        );
          */
 
-		$f3->mset([
-			'title' => 'Submit',
-			'content' => $f3->get('THEME') . '/views/submissions/submit.html',
-			//'problems' => $problems,
-			'languages' => (new Language())->select('id, name, version')
-		]);
+        $f3->mset([
+            'title' => 'Submit',
+            'content' => $f3->get('THEME') . '/views/submissions/submit.html',
+            //'problems' => $problems,
+            'languages' => (new Language())->select('id, name, version')
+        ]);
 
         if (array_key_exists('slug', $params))
             $f3->set('problem_slug', $params['slug']);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
-	}
+    }
 
-	public function create($f3, $params) {
-		$this->checkIfAuthenticated($f3, $params);
-		if (!$this->checkCsrf($f3, $params))
-			$f3->error(403);
+    public function create($f3, $params) {
+        $this->checkIfAuthenticated($f3, $params);
+        if (!$this->checkCsrf($f3, $params))
+            $f3->error(403);
 
         $formErrors = [];
 
@@ -61,114 +61,114 @@ class SubmissionController extends Controller {
         if ($user->dry())
             $f3->error(403);
 
-		$problem = new Problem();
-		$problem->load(['slug = ?', $f3->get('POST.problemSlug')]);
-		if ($problem->dry())
+        $problem = new Problem();
+        $problem->load(['slug = ?', $f3->get('POST.problemSlug')]);
+        if ($problem->dry())
             $formErrors['problemSlug'] = 'Problem does not exist.';
 
         $code = file_get_contents($f3->get('FILES.solution.tmp_name'));
 
-		$submission = new Submission();
-		$submission->problem_id = $problem->id;
-		$submission->user_id = $user->id;
+        $submission = new Submission();
+        $submission->problem_id = $problem->id;
+        $submission->user_id = $user->id;
         $submission->language_id = $language->id;
         $submission->time = Util::getMySqlTimestamp(time()); 
         $submission->code = $code;
-		$submission->save();
+        $submission->save();
 
-		$db = $f3->get('DB');
+        $db = $f3->get('DB');
 
-		// Query subtasks with raw SQL so no ORM classes are used.
-		$subtasks = $db->exec(
-			'SELECT id FROM subtasks WHERE problem_id = ?',
-			$problem->id
-		);
-		for ($i = 0; $i < count($subtasks); $i++)
-			$subtasks[$i]['testcases'] = [];
+        // Query subtasks with raw SQL so no ORM classes are used.
+        $subtasks = $db->exec(
+            'SELECT id FROM subtasks WHERE problem_id = ?',
+            $problem->id
+        );
+        for ($i = 0; $i < count($subtasks); $i++)
+            $subtasks[$i]['testcases'] = [];
 
-		$subtaskIdToIndex = [];
-		for ($i = 0; $i < count($subtasks); $i++)
-			$subtaskIdToIndex[$subtasks[$i]['id']] = $i;
+        $subtaskIdToIndex = [];
+        for ($i = 0; $i < count($subtasks); $i++)
+            $subtaskIdToIndex[$subtasks[$i]['id']] = $i;
 
-		$testcases = $db->exec(
-			'SELECT testcases.* FROM subtasks
-			INNER JOIN testcases
-			ON subtasks.id = testcases.subtask_id
-			AND subtasks.problem_id = ?',
-			$problem->id
-		);
+        $testcases = $db->exec(
+            'SELECT testcases.* FROM subtasks
+            INNER JOIN testcases
+            ON subtasks.id = testcases.subtask_id
+            AND subtasks.problem_id = ?',
+            $problem->id
+        );
 
-		for ($i = 0; $i < count($testcases); $i++) {
-			$index = $subtaskIdToIndex[intval($testcases[$i]['subtask_id'])];
-			array_push($subtasks[$index]['testcases'], $testcases[$i]);
-		}
+        for ($i = 0; $i < count($testcases); $i++) {
+            $index = $subtaskIdToIndex[intval($testcases[$i]['subtask_id'])];
+            array_push($subtasks[$index]['testcases'], $testcases[$i]);
+        }
 
-		$db->begin();
-		for ($i = 0; $i < count($subtasks); $i++) {
-			$db->exec(
-				'INSERT INTO subtask_results(submission_id, subtask_id)
-				VALUES(?, ?)',
-				[$submission->id, $subtasks[$i]['id']]
-			);
-			$subtasks[$i]['subtask_result_id'] = $db->lastInsertId();
+        $db->begin();
+        for ($i = 0; $i < count($subtasks); $i++) {
+            $db->exec(
+                'INSERT INTO subtask_results(submission_id, subtask_id)
+                VALUES(?, ?)',
+                [$submission->id, $subtasks[$i]['id']]
+            );
+            $subtasks[$i]['subtask_result_id'] = $db->lastInsertId();
 
-			for ($j = 0; $j < count($subtasks[$i]['testcases']); $j++) {
-				$db->exec(
-					'INSERT INTO testcase_results(subtask_result_id, testcase_id)
-					VALUES(?, ?)',
-					[
-						$subtasks[$i]['subtask_result_id'],
-						$subtasks[$i]['testcases'][$j]['id']
-					]
-				);
-			}
-		}
-		$db->commit();
+            for ($j = 0; $j < count($subtasks[$i]['testcases']); $j++) {
+                $db->exec(
+                    'INSERT INTO testcase_results(subtask_result_id, testcase_id)
+                    VALUES(?, ?)',
+                    [
+                        $subtasks[$i]['subtask_result_id'],
+                        $subtasks[$i]['testcases'][$j]['id']
+                    ]
+                );
+            }
+        }
+        $db->commit();
 
-		$f3->get('pheanstalk')->useTube('run-submission')->put(json_encode([
-			'submission_id' => $submission->id,
-			'compile_command' => $language->compile_command,
-			'execute_command' => $language->execute_command,
-			'extension' => $language->extension,
-			'subtasks' => $subtasks,
+        $f3->get('pheanstalk')->useTube('run-submission')->put(json_encode([
+            'submission_id' => $submission->id,
+            'compile_command' => $language->compile_command,
+            'execute_command' => $language->execute_command,
+            'extension' => $language->extension,
+            'subtasks' => $subtasks,
             'code' => $code,
-			'execution_time_limit' => $problem->time_limit,
-			'execution_memory_limit' => $problem->memory_limit,
-			'problem_slug' => $problem->slug
-		]));
+            'execution_time_limit' => $problem->time_limit,
+            'execution_memory_limit' => $problem->memory_limit,
+            'problem_slug' => $problem->slug
+        ]));
 
-		$f3->reroute('/submissions/' . $submission->id);
-	}
+        $f3->reroute('/submissions/' . $submission->id);
+    }
 
-	/* FIXME: Break a couple of HMVC rules here.
-	 * Subtasks, testcases don't have their own modular show.
-	 * Should be fine, I'm not planning to use them again. Hopefully.
-	 */
-	public function show($f3, $params) {
-		$submission = new Submission();
-		$submission->load(['id = ?', $params['id']]);
-		if ($submission->dry())
-			$f3->error(404);
+    /* FIXME: Break a couple of HMVC rules here.
+     * Subtasks, testcases don't have their own modular show.
+     * Should be fine, I'm not planning to use them again. Hopefully.
+     */
+    public function show($f3, $params) {
+        $submission = new Submission();
+        $submission->load(['id = ?', $params['id']]);
+        if ($submission->dry())
+            $f3->error(404);
 
-		$problem = $f3->get('DB')->exec(
-			'SELECT id, name, slug FROM problems WHERE id = ?',
-			$submission->problem_id
-		);
-		if (count($problem) == 0)
-			$f3->error(404);
-		else if (count($problem) == 1)
-			$problem = $problem[0];
-		else $f3->error(500);
+        $problem = $f3->get('DB')->exec(
+            'SELECT id, name, slug FROM problems WHERE id = ?',
+            $submission->problem_id
+        );
+        if (count($problem) == 0)
+            $f3->error(404);
+        else if (count($problem) == 1)
+            $problem = $problem[0];
+        else $f3->error(500);
 
         $user = $f3->get('DB')->exec(
             'SELECT id, username FROM users WHERE id = ?',
             $submission->user_id
         );
-		if (count($user) == 0)
-			$f3->error(404);
-		else if (count($user) == 1)
-			$user = $user[0];
-		else $f3->error(500);
+        if (count($user) == 0)
+            $f3->error(404);
+        else if (count($user) == 1)
+            $user = $user[0];
+        else $f3->error(500);
 
         if ($submission->user_id == $f3->get('SESSION.user.id'))
             $canViewCode = true;
@@ -186,62 +186,62 @@ class SubmissionController extends Controller {
         }
         else $canViewCode = false;
 
-		$subtasks = $f3->get('DB')->exec(
-			'SELECT subtasks.id, COUNT(testcases.id) AS testcase_count
-			FROM subtasks
-			INNER JOIN testcases
-			ON subtasks.id = testcases.subtask_id
-			AND subtasks.problem_id = ?
-			GROUP BY subtasks.id',
-			$problem['id']
-		);
+        $subtasks = $f3->get('DB')->exec(
+            'SELECT subtasks.id, COUNT(testcases.id) AS testcase_count
+            FROM subtasks
+            INNER JOIN testcases
+            ON subtasks.id = testcases.subtask_id
+            AND subtasks.problem_id = ?
+            GROUP BY subtasks.id',
+            $problem['id']
+        );
 
-		$tmp = $f3->get('DB')->exec(
-			'SELECT subtask_results.id, testcase_results.verdict_id
-			FROM subtask_results
-			INNER JOIN testcase_results
-			ON subtask_results.id = testcase_results.subtask_result_id
-			AND subtask_results.submission_id = ?',
-			$submission->id
-		);
+        $tmp = $f3->get('DB')->exec(
+            'SELECT subtask_results.id, testcase_results.verdict_id
+            FROM subtask_results
+            INNER JOIN testcase_results
+            ON subtask_results.id = testcase_results.subtask_result_id
+            AND subtask_results.submission_id = ?',
+            $submission->id
+        );
 
-		$subtask_results = [];
-		for ($i = 0; $i < count($tmp); $i++) {
-			$lastIndex = count($subtask_results)-1;
+        $subtask_results = [];
+        for ($i = 0; $i < count($tmp); $i++) {
+            $lastIndex = count($subtask_results)-1;
 
-			if ($i == 0 || $tmp[$i]['id'] != $tmp[$i-1]['id']) {
-				if ($i != 0)
-					while (count($subtask_results[$lastIndex]['testcase_results']) < $subtasks[$lastIndex]['testcase_count'])
-						array_push($subtask_results[$lastIndex]['testcase_results'], [
-							'id' => count(subtask_results[$lastIndex]['testcase_results'])+1,
-							'verdict_id' => 1
-						]);
+            if ($i == 0 || $tmp[$i]['id'] != $tmp[$i-1]['id']) {
+                if ($i != 0)
+                    while (count($subtask_results[$lastIndex]['testcase_results']) < $subtasks[$lastIndex]['testcase_count'])
+                        array_push($subtask_results[$lastIndex]['testcase_results'], [
+                            'id' => count(subtask_results[$lastIndex]['testcase_results'])+1,
+                            'verdict_id' => 1
+                        ]);
 
-				array_push($subtask_results, [
-					'id' => count($subtask_results)+1,
-					'testcase_results' => []
-				]);
-				$lastIndex++;
-			}
+                array_push($subtask_results, [
+                    'id' => count($subtask_results)+1,
+                    'testcase_results' => []
+                ]);
+                $lastIndex++;
+            }
 
-			array_push($subtask_results[$lastIndex]['testcase_results'], [
-				'id' => count($subtask_results[$lastIndex]['testcase_results'])+1,
-				'verdict_id' => $tmp[$i]['verdict_id']
-			]);
-		}
+            array_push($subtask_results[$lastIndex]['testcase_results'], [
+                'id' => count($subtask_results[$lastIndex]['testcase_results'])+1,
+                'verdict_id' => $tmp[$i]['verdict_id']
+            ]);
+        }
 
-		$verdicts = (new Verdict())->find();
+        $verdicts = (new Verdict())->find();
 
-		$f3->mset([
-			'title' => 'Submission #' . $params['id'],
+        $f3->mset([
+            'title' => 'Submission #' . $params['id'],
             'problem' => $problem,
             'user' => $user,
-			'submission' => $submission,
-			'subtask_results' => $subtask_results,
+            'submission' => $submission,
+            'subtask_results' => $subtask_results,
             'verdicts' => $verdicts,
             'canViewCode' => $canViewCode,
             'content' => $f3->get('THEME') . '/views/submissions/show.html'
-		]);
+        ]);
 
         $message = $f3->get('DB')->exec(
             'SELECT message FROM submissions_compiler_messages
@@ -253,7 +253,7 @@ class SubmissionController extends Controller {
             $f3->set('compiler_message', $message[0]['message']);
 
         echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
-	}
+    }
 
     public function index($f3, $params, $stmt = null) {
         parse_str($f3->get('QUERY'));

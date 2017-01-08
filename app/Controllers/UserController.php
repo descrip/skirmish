@@ -9,20 +9,20 @@ use \Util\Validate;
 
 class UserController extends Controller {
 
-	public function register($f3, $params) {
-		$this->generateCsrf($f3, $params);
+    public function register($f3, $params) {
+        $this->generateCsrf($f3, $params);
 
-		$f3->mset([
-			'title' => 'Register',
-			'content' => $f3->get('THEME') . '/views/users/register.html'
-		]);
+        $f3->mset([
+            'title' => 'Register',
+            'content' => $f3->get('THEME') . '/views/users/register.html'
+        ]);
 
-		echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
-	}
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
+    }
 
-	public function create($f3, $params) {
-		if (!$this->checkCsrf($f3, $params))
-			$f3->error(403);
+    public function create($f3, $params) {
+        if (!$this->checkCsrf($f3, $params))
+            $f3->error(403);
 
         $formErrors = [];
 
@@ -69,30 +69,30 @@ class UserController extends Controller {
             $f3->set('formErrors', $formErrors);
             $this->register($f3, $params);
         }
-	}
-	
-	public function login($f3, $params) {
-		$this->generateCsrf($f3, $params);
+    }
+    
+    public function login($f3, $params) {
+        $this->generateCsrf($f3, $params);
 
-		$f3->mset([
-			'title' => 'Login',
-			'content' => $f3->get('THEME') . '/views/users/login.html'
-		]);
+        $f3->mset([
+            'title' => 'Login',
+            'content' => $f3->get('THEME') . '/views/users/login.html'
+        ]);
 
-		echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
-	}
+        echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
+    }
 
-	public function authenticate($f3, $params) {
-		if (!$this->checkCsrf($f3, $params))
-			$f3->error(403);
+    public function authenticate($f3, $params) {
+        if (!$this->checkCsrf($f3, $params))
+            $f3->error(403);
 
-		$email = $f3->get('POST.email');
-		$password = $f3->get('POST.password');
+        $email = $f3->get('POST.email');
+        $password = $f3->get('POST.password');
 
         $formErrors = [];
 
-		$user = new User();
-		$user->load(['email = ?', $email]);
+        $user = new User();
+        $user->load(['email = ?', $email]);
 
         if ($password === '')
             $formErrors['password'] = 'A password is required.';
@@ -105,43 +105,43 @@ class UserController extends Controller {
             $formErrors['common'] = 'Incorrect username or password.';
             
         if (empty($formErrors)) {
-			$f3->set('SESSION.user.id', $user->id);
-			$f3->set('SESSION.user.username', $user->username);
-			$f3->reroute('/');
-		}
+            $f3->set('SESSION.user.id', $user->id);
+            $f3->set('SESSION.user.username', $user->username);
+            $f3->reroute('/');
+        }
         else {
             $f3->set('formErrors', $formErrors);
             $this->login($f3, $params);
         }
-	}
+    }
 
-	public function logout($f3, $params) {
-		$this->checkIfAuthenticated($f3, $params);
-		$f3->clear('SESSION');
-		$f3->reroute('/');
-	}
+    public function logout($f3, $params) {
+        $this->checkIfAuthenticated($f3, $params);
+        $f3->clear('SESSION');
+        $f3->reroute('/');
+    }
 
-	public function leaderboard($f3, $params) {
-		$users = new User();
+    public function leaderboard($f3, $params) {
+        $users = new User();
 
-		if (!$f3->exists('SESSION.contest')) {
-			$users = $users->select(
-				'id, username, points',
-				NULL,
-				[ 'order' => 'points DESC' ]
-			);
+        if (!$f3->exists('SESSION.contest')) {
+            $users = $users->select(
+                'id, username, points',
+                NULL,
+                [ 'order' => 'points DESC' ]
+            );
 
-			$f3->mset([
-				'users' => $users,
-				'title' => 'Leaderboards',
-				'content' => $f3->get('THEME') . '/views/users/leaderboard.html'
-			]);
+            $f3->mset([
+                'users' => $users,
+                'title' => 'Leaderboards',
+                'content' => $f3->get('THEME') . '/views/users/leaderboard.html'
+            ]);
 
-			echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
-		}
-		else {
-		}
-	}
+            echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
+        }
+        else {
+        }
+    }
 
     public function show($f3, $params) {
         $user = new User();
