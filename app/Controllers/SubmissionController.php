@@ -49,20 +49,22 @@ class SubmissionController extends Controller {
 		if (!$this->checkCsrf($f3, $params))
 			$f3->error(403);
 
+        $formErrors = [];
+
+        $language = new Language();
+        $language->load(['id = ?', $f3->get('POST.languageId')]);
+        if ($language->dry())
+            $f3->error(404);
+
+        $user = new User();
+        $user->load(['id = ?', $f3->get('SESSION.user.id')]);
+        if ($user->dry())
+            $f3->error(403);
+
 		$problem = new Problem();
-		$problem->load(['slug = ?', $f3->get('POST.problemId')]);
+		$problem->load(['slug = ?', $f3->get('POST.problemSlug')]);
 		if ($problem->dry())
-			$f3->error(404);
-
-		$language = new Language();
-		$language->load(['id = ?', $f3->get('POST.languageId')]);
-		if ($language->dry())
-			$f3->error(404);
-
-		$user = new User();
-		$user->load(['id = ?', $f3->get('SESSION.user.id')]);
-		if ($user->dry())
-			$f3->error(403);
+            $formErrors['problemSlug'] = 'Problem does not exist.';
 
         $code = file_get_contents($f3->get('FILES.solution.tmp_name'));
 
