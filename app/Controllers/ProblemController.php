@@ -58,10 +58,8 @@ class ProblemController extends Controller {
         $f3->mset([
             'title' => $problem->name,
             'problem' => $problem,
-            'problemBody' => (new \Parsedown())->text($problem->body),
             'content' => $f3->get('THEME') . '/views/problems/show.html',
-            'headPartials' => ['common/views/partials/katex-head.html'],
-            'bodyPartials' => ['common/views/partials/katex-body.html'],
+            'headPartials' => ['common/views/partials/mathjax-head.html'],
             'navbarItemClasses' => ['problems' => 'active']
         ]);
 
