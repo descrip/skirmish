@@ -22,7 +22,7 @@ class ProblemController extends Controller {
 
         $f3->mset([
             'problems' => (new Problem())->select(
-                'name, slug',
+                'name, slug, COUNT(users.id)',
                 ($isInContest ? 
                     ['contest_id = ?', $contest->id] : 
                     'contest_id IS NULL'
