@@ -26,8 +26,6 @@ class ProblemController extends Controller {
             GROUP BY problems.id'
         );
 
-        var_dump($problems);
-
         $f3->mset([
             'problems' => $problems,
             'title' => 'Problem List',

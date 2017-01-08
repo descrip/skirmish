@@ -58,9 +58,13 @@
                 </check>
             </div>
 
-            <p class="stats"><code>{{ Base::instance()->format('Page rendered in {0} ms using {1} kb', round(1e3*(microtime(TRUE)-$TIME), 2), round(memory_get_usage(TRUE)/1e3, 1)); }}</code></p>
-
         </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">{{ Base::instance()->format('Page rendered in {0} ms using {1} kb', round(1e3*(microtime(TRUE)-$TIME), 2), round(memory_get_usage(TRUE)/1e3, 1)); }}.</p>
+            </div>
+        </footer>
 
         <!-- Bootstrap JS -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -68,7 +72,6 @@
 		<repeat group="{{ @bodyPartials }}" value="{{ @partial }}">
 			<include href="{{ @partial }}" />
 		</repeat>
-
 
 <script>
     $(document).ready(function () {
