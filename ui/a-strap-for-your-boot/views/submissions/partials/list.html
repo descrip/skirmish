@@ -1,0 +1,7 @@
+<ul>
+    <repeat group="{{ @submissions }}" value="{{ @submission }}">
+        <li>
+            <a href="{{ 'submissionsShow', 'id=' . rawurlencode(@submission['id']) | alias }}">Submission #{{ @submission['id'] }}</a>
+        </li>
+    </repeat>
+</ul>
