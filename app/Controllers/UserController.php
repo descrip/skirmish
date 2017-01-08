@@ -37,7 +37,7 @@ class UserController extends Controller {
         else if (strlen($username) > 16)
             $formErrors['username'] = 'Usernames must be at most 16 characters.';
         else if (!Validate::isAlphaNumericDash($username))
-            $formErrors['username'] = 'Usernames can only contain letters, numbers, "-", and "_".';
+            $formErrors['username'] = 'Usernames can only contain letters, numbers, dashes, or underscores.';
         else if (!Validate::isUnique($f3, 'users', 'username', $username))
             $formErrors['username'] = 'This username is taken. Try another?';
 

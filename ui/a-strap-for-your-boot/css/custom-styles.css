@@ -1,8 +1,3 @@
-.container > .navbar {
-    margin-top: 20px;
-    margin-bottom: 0px;
-}
-
 html {
   position: relative;
   min-height: 100%;
@@ -11,6 +6,11 @@ html {
 body {
   margin-bottom: 60px;
   font-size: 1.5rem;
+}
+
+.container > .navbar {
+    margin-top: 20px;
+    margin-bottom: 0px;
 }
 
 .footer {
@@ -23,21 +23,27 @@ body {
 
 /* Cards for columns in problems.show. */
 .left-card {
-    /*border-right: 1px dashed #ccc;*/
 }
 .right-card {
     padding-top: 20px;
 }
 
+/* Gives the horizontal rule a dashing look. */
 hr.dashed {
     border-top: 1px dashed #ccc;
 }
 
+/* Centers any column regardless of width or float. */
 .col-centered{
     float: none;
     margin: 0 auto;
 }
 
-.margin-bottom-sm {
-    margin-bottom: 10px;
+.text-align-center {
+    text-align: center;
+}
+
+/* Fixing a bug where form error messages were right aligned. */
+.form-horizontal .control-label {
+    text-align: left;
 }
