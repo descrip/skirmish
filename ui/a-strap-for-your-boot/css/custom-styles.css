@@ -1,5 +1,6 @@
 .container > .navbar {
     margin-top: 20px;
+    margin-bottom: 0px;
 }
 
 html {
@@ -20,7 +21,6 @@ body {
   padding-top: 20px;
 }
 
-
 /* Cards for columns in problems.show. */
 .left-card {
     /*border-right: 1px dashed #ccc;*/
@@ -31,4 +31,13 @@ body {
 
 hr.dashed {
     border-top: 1px dashed #ccc;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.margin-bottom-sm {
+    margin-bottom: 10px;
 }

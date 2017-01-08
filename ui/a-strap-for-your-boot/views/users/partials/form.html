@@ -1,18 +1,23 @@
 <div class="form-group {{ @formErrors['email'] ? 'has-error' : '' }}">
-    <label for="inputEmail" class="col-md-2 control-label">Email</label>
-    <div class="col-md-10">
+    <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-envelope"></span>
+        </span>
         <input class="form-control" id="inputEmail" placeholder="Email" type="text" name="email" value="{{ @POST.email }}">
-        <check if="{{ @formErrors['email'] }}">
-            <label for="inputEmail" class="control-label">{{ @formErrors['email'] }}</label>
-        </check>
     </div>
+    <check if="{{ @formErrors['email'] }}">
+        <label for="inputEmail" class="control-label">{{ @formErrors['email'] }}</label>
+    </check>
 </div>
+
 <div class="form-group {{ @formErrors['password'] ? 'has-error' : '' }}">
-    <label for="inputPassword" class="col-md-2 control-label">Password</label>
-    <div class="col-md-10">
+    <div class="input-group">
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-lock"></span>
+        </span>
         <input class="form-control" id="inputPassword" placeholder="Password" type="password" name="password">
-        <check if="{{ @formErrors['password'] }}">
-            <label for="inputPassword" class="control-label">{{ @formErrors['password'] }}</label>
-        </check>
     </div>
+    <check if="{{ @formErrors['password'] }}">
+        <label for="inputPassword" class="control-label">{{ @formErrors['password'] }}</label>
+    </check>
 </div>
