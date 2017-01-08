@@ -29,7 +29,7 @@ Print a single line with the value of $A+B$.
 ### Sample Output
 `7`
 EOT;
-        $aplusb->time_limit = 1;
+        $aplusb->time_limit = 0.5;
         $aplusb->memory_limit = 64000;
         $aplusb->points = 2;
         $aplusb->save();

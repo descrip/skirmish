@@ -15,4 +15,4 @@ elif a == 6:
         n = 3-1
 # TLE (real)
 elif a == 100:
-    time.sleep(300)
+    time.sleep(0.4)

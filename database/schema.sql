@@ -43,7 +43,7 @@ CREATE TABLE problems (
 	slug VARCHAR(255) UNIQUE NOT NULL,
 	body TEXT NOT NULL,
 	memory_limit INTEGER NOT NULL,
-	time_limit INTEGER NOT NULL,
+	time_limit DECIMAL(32, 1) NOT NULL,
 	points DECIMAL(32, 1) NOT NULL,
 	marks INTEGER NOT NULL DEFAULT 0,
 	contest_id INTEGER,
