@@ -1,8 +1,7 @@
 <h1>Login</h1>
-<form action="/login" method="POST">
+<form action="{{ 'usersLogin' | alias }}" method="POST">
     <include href="common/views/partials/csrf.html" />
     <include href="{{ @THEME . '/views/users/partials/form.html' }}" />
-    <span style="color:red">{{ @formErrors['common'] }}</span>
 	<div>
 		<button type="submit">Login</button>
 	</div>

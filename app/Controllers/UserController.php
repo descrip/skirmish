@@ -104,7 +104,7 @@ class UserController extends Controller {
         else if (!Validate::isValidEmail($email))
             $formErrors['email'] = 'This is not a valid email address.';
         else if ($user->dry() || ($password !== '' && !password_verify($password, $user->password)))
-            $formErrors['common'] = 'Incorrect username or password.';
+            $formErrors['password'] = 'Incorrect email or password.';
             
         if (empty($formErrors)) {
             $f3->set('SESSION.user.id', $user->id);
