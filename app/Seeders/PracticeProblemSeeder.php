@@ -86,7 +86,6 @@ MARKER;
         $sub->save();
 */
 
-        /*
         $atimesb = new Problem();
         $atimesb->name = 'A Times B';
         $atimesb->slug = 'atimesb';
@@ -94,8 +93,10 @@ MARKER;
 # A Times B
 quack
 MARKER;
+        $atimesb->time_limit = 1;
+        $atimesb->memory_limit = 64000;
+        $atimesb->points = 2;
         $atimesb->save();
-         */
     }
 
 }

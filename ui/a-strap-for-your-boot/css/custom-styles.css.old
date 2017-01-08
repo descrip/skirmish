@@ -1,0 +1,69 @@
+/* Some custom styles over Bootstrap's CSS. */
+
+/*
+html {
+    font-size: 16px;
+}
+
+body {
+    padding-top: 20px;
+    font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.navbar {
+    margin-bottom: 20px;
+    border-radius: 0px;
+    border: none;
+    padding: 0.5rem 1rem;
+}
+
+.navbar-default {
+    background-image: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: #0275d8;
+    border-color: none;
+    border-radius: 0px;
+}
+
+.navbar-brand {
+    font-size: 1.25rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.navbar-default .navbar-brand:hover {
+    color: white !important;
+}
+
+.navbar-default .navbar-brand {
+    color: white !important;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:focus, .navbar-default .navbar-nav > .active > a:hover {
+    color: white;
+    background-color: transparent;
+}
+
+.navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: rgba(255, 255, 255, 0.5);
+    padding: 0.5rem 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+#left-panel {
+    padding-right:20px;
+    border-right: 1px dashed #ccc;
+}
+
+#right-panel {
+    text-align: center;
+}
+*/

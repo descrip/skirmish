@@ -20,14 +20,16 @@ class ProblemController extends Controller {
                 $f3->error(404);
         }
 
+        $problems = $f3->get('DB')->exec(
+            'SELECT problems.name, problems.slug, problems.points, COUNT(users_solved_problems_pivot.user_id) AS userCount FROM problems
+            LEFT JOIN users_solved_problems_pivot ON problems.id = users_solved_problems_pivot.problem_id
+            GROUP BY problems.id'
+        );
+
+        var_dump($problems);
+
         $f3->mset([
-            'problems' => (new Problem())->select(
-                'name, slug, COUNT(users.id)',
-                ($isInContest ? 
-                    ['contest_id = ?', $contest->id] : 
-                    'contest_id IS NULL'
-                )
-            ),
+            'problems' => $problems,
             'title' => 'Problem List',
             'content' => $f3->get('THEME') . '/views/problems/index.html',
             'navbarItemClasses' => ['problems' => 'active']

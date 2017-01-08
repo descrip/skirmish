@@ -1,17 +1,21 @@
 <h1>Problems List</h1>
 <hr>
-<table class="table">
-	<thead class="thead-inverse">
+<table class="table table-striped table-bordered" id="problems">
+	<thead>
 		<tr>
-			<th>Name</th>
+			<th class="col-md-9">Name</th>
 			<th>Slug</th>
+            <th>Points</th>
+            <th>Users</th>
 		</tr>
 	</thead>
-	<tbody class="table-striped">
+	<tbody>
 		<repeat group="{{ @problems }}" value="{{ @problem }}">
 			<tr>
-                <td><a href="{{ 'problemsShow', 'slug=' . rawurlencode(@problem->slug) | alias }}">{{ @problem->name }}</a></td>
-				<td>{{ @problem->slug }}</td>
+                <td><a href="{{ 'problemsShow', 'slug=' . rawurlencode(@problem['slug']) | alias }}">{{ @problem['name'] }}</a></td>
+				<td>{{ @problem['slug'] }}</td>
+				<td>{{ @problem['points'] }}</td>
+                <td>{{ @problem['userCount'] }}</td>
 			</tr>
 		</repeat>
 	</tbody>

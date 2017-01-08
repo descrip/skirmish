@@ -4,8 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+        <!-- Bootstrap CSS-->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <!-- Lumen Bootstrap Theme CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css">
 
         <link rel="stylesheet" href="{{ @BASE }}/ui/{{ @THEME }}/css/custom-styles.css" />
 
@@ -17,89 +19,61 @@
     </head>
     <body>
         <div class="container">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="{{ 'home' | alias }}">Skirmish Online Judge</a>
+                    </div>
 
-            <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
-
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <a class="navbar-brand" href="{{ 'home' | alias }}">Skirmish Online Judge</a>
-
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item {{ @navbarItemClasses['home'] }}">
-                            <a class="nav-link" href="{{ 'home' | alias }}">Home</a>
-                        </li>
-                        <li class="nav-item {{ @navbarItemClasses['problems'] }}">
-                            <a class="nav-link" href="{{ 'problemsIndex' | alias }}">Problems</a>
-                        </li>
-                        <li class="nav-item {{ @navbarItemClasses['submissions'] }}">
-                            <a class="nav-link" href="{{ 'submissionsIndex' | alias }}">Submissions</a>
-                        </li>
-                        <li class="nav-item {{ @navbarItemClasses['users'] }}">
-                            <a class="nav-link" href="{{ 'usersLeaderboard' | alias }}">Leaderboard</a>
-                        </li>
-                    </ul>
-
-                    <ul class="navbar-nav">
-                        <check if="{{ @SESSION.user }}">
-                            <true>
-                                <li class="nav-item {{ @navbarItemClasses['logout'] }}">
-                                    <a class="nav-link" href="{{ 'usersLogout' | alias }}">Logout</a>
-                                </li>
-                            </true>
-                            <false>
-                                <li class="nav-item {{ @navbarItemClasses['login'] }}">
-                                    <a class="nav-link" href="{{ 'usersLogin' | alias }}">Login</a>
-                                </li>
-                                <li class="nav-item {{ @navbarItemClasses['register'] }}">
-                                    <a class="nav-link" href="{{ 'usersRegister' | alias }}">Register</a>
-                                </li>
-                            </false>
-                        </check>
-                    </ul>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li class="{{ @navbarItemClasses['problems'] }}"><a href="{{ 'problemsIndex' | alias }}">Problems</a></li>
+                            <li class="{{ @navbarItemClasses['submissions'] }}"><a href="{{ 'submissionsIndex' | alias }}">Submissions</a></li>
+                            <li class="{{ @navbarItemClasses['users'] }}"><a href="{{ 'usersLeaderboard' | alias }}">Leaderboard</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <check if="{{ @SESSION.user }}">
+                                <true>
+                                    <li class="{{ @navbarItemClasses['logout'] }}"><a href="{{ 'usersLogout' | alias }}">Logout</a></li>
+                                </true>
+                                <false>
+                                    <li class="{{ @navbarItemClasses['login'] }}"><a href="{{ 'usersLogin' | alias }}">Login</a></li>
+                                    <li class="{{ @navbarItemClasses['register'] }}"><a href="{{ 'usersRegister' | alias }}">Register</a></li>
+                                </false>
+                            </check>
+                        </ul>
+                    </div>
                 </div>
             </nav>
 
-            <!--
-        <div class="container-fluid" id="problem-body">
-            <div class="row">
-                <div class="col-10" id="left-panel">
-                    <h1 id="a-plus-b">A Plus B</h1>
-                    <p>Given two integers $A$ and $B$, where $(1 \leq A, B \leq 100)$, print the sum of $A+B$. Given two integers $A$ and $B$, where $(1 \leq A, B \leq 100)$, print the sum of $A+B$. Given two integers $A$ and $B$, where $(1 \leq A, B \leq 100)$, print the sum of $A+B$. Given two integers $A$ and $B$, where $(1 \leq A, B \leq 100)$, print the sum of $A+B$. Given two integers $A$ and $B$, where $(1 \leq A, B \leq 100)$, print the sum of $A+B$. Given two integers $A$ and $B$, where $(1 \leq A, B \leq 100)$, print the sum of $A+B$.</p>
-                    <h3 id="input-specification">Input Specification</h3>
-                    <p>On the first and only line will be the two integers, $A$ and $B$, separated by a space.</p>
-                    <h3 id="output-specification">Output Specification</h3>
-                    <p>Print a single line with the value of $A+B$.</p>
-                    <h3 id="sample-input">Sample Input</h3>
-                    <p><code>3 4</code></p>
-                    <h3 id="sample-output">Sample Output</h3>
-                    <p><code>7</code></p>
-                </div>
-                
-                <div class="col-2" id="right-panel">
-                    <button type="button" class="btn btn-primary btn-lg">Submit!</button>
-                <div>
+            <div class="container-fluid">
+                <check if="{{ @content }}">
+                    <include href="{{ @content }}" />
+                </check>
             </div>
-        </div>
-            -->
 
-        <div class="container-fluid">
-            <check if="{{ @content }}">
-                <include href="{{ @content }}" />
-            </check>
-        </div>
-
-		<p class="stats"><code>{{ Base::instance()->format('Page rendered in {0} ms using {1} kb', round(1e3*(microtime(TRUE)-$TIME), 2), round(memory_get_usage(TRUE)/1e3, 1)); }}</code></p>
+            <p class="stats"><code>{{ Base::instance()->format('Page rendered in {0} ms using {1} kb', round(1e3*(microtime(TRUE)-$TIME), 2), round(memory_get_usage(TRUE)/1e3, 1)); }}</code></p>
 
         </div>
 
+        <!-- Bootstrap JS -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 		<repeat group="{{ @bodyPartials }}" value="{{ @partial }}">
 			<include href="{{ @partial }}" />
 		</repeat>
+
+
+<script>
+    $(document).ready(function () {
+        $('#problems').DataTable();
+    });
+</script>
     </body>
 </html>
