@@ -4,20 +4,26 @@
     </div>
     <div class="col-md-2 right-card">
 
-        <a href="{{ 'problemsSubmit', 'slug=' . rawurlencode(@problem->slug) | alias }}" class="btn btn-primary btn-lg btn-block">Submit!</a>
+        <p><a href="{{ 'problemsSubmit', 'slug=' . rawurlencode(@problem->slug) | alias }}" class="btn btn-primary btn-lg btn-block">Submit!</a></p>
 
         <hr class="dashed">
 
-        <a href="{{ 'problemsAllSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">All Submissions</a>
-        <br>
-        <a href="{{ 'problemsBestSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">Best Submissions</a>
-        <br>
-        <check if="{{ @SESSION.user }}">
-            <a href="{{ 'problemsYourSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">Your Submissions</a>
-        </check>
+        <p>
+            <a href="{{ 'problemsAllSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">All Submissions</a>
+            <br>
+            <a href="{{ 'problemsBestSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">Best Submissions</a>
+            <br>
+            <check if="{{ @SESSION.user }}">
+                <a href="{{ 'problemsYourSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">Your Submissions</a>
+            </check>
+        </p>
 
-        <hr class="dashed">
-
-        <p><span class="glyphicon glyphicon-time"></span>{{ @problem->time_limit }} sec</p>
+        <p>
+            <strong>Points:</strong> {{ number_format(@problem->points, 1) }}
+            <br>
+            <strong>Time Limit:</strong> {{ number_format(@problem->time_limit, 1) }} sec
+            <br>
+            <strong>Memory Limit:</strong> {{ number_format(@problem->memory_limit / 1024, 1) }} MB
+        </p>
     </div>
 </div>

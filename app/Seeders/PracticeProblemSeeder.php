@@ -30,7 +30,7 @@ Print a single line with the value of $A+B$.
 `7`
 EOT;
         $aplusb->time_limit = 0.5;
-        $aplusb->memory_limit = 64000;
+        $aplusb->memory_limit = 16 * 1024;
         $aplusb->points = 2;
         $aplusb->save();
 
@@ -433,7 +433,7 @@ Wow it's a table!
 EOT;
 
         $atimesb->time_limit = 1;
-        $atimesb->memory_limit = 64000;
+        $atimesb->memory_limit = 16 * 1024;
         $atimesb->points = 2;
         $atimesb->save();
     }
