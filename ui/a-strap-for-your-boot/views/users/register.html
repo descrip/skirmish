@@ -7,7 +7,7 @@
                 <include href="common/views/partials/csrf.html" />
                 
                 <div class="form-group {{ @formErrors['username'] ? 'has-error' : '' }}">
-                    <label for="inputUsername" class="control-label"><strong>Username:</strong></label>
+                    <label for="inputUsername" class="control-label">Username:</label>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-user"></span>
@@ -22,7 +22,7 @@
                 <include href="{{ @THEME . '/views/users/partials/form.html' }}" />
 
                 <div class="form-group {{ @formErrors['passwordConfirm'] ? 'has-error' : '' }}">
-                    <label for="inputPasswordConfirm" class="control-label"><strong>Confirm Password:</strong></label>
+                    <label for="inputPasswordConfirm" class="control-label">Confirm Password:</label>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-ok"></span>

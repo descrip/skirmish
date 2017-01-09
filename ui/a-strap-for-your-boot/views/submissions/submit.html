@@ -1,24 +1,42 @@
 <h1>Submit</h1>
-<form action="{{ 'submissionsSubmit' | alias }}" method="POST" enctype="multipart/form-data">
-    <include href="common/views/partials/csrf.html" />
-	<div>
-		<label for="problem">Problem:</label>
-        <input id="text" name="problemSlug" value="{{ @problem_slug }}"/>
-	</div>
-	<div>
-		<label for="language">Language:</label>
-		<select id="language" name="languageId">
-			<repeat group="{{ @languages }}" value="{{ @language }}">
-				<option value="{{ @language->id }}">{{ @language->name . ' (' . @language->version . ')' }}</option>
-			</repeat>
-		</select>
-	</div>
-	<div>
-		<label for="solution">Solution:</label>
-		<input type="file" id="solution" name="solution">
-	</div>
-	<div>
-		<button type="submit">Submit</button>
-		<button type="reset">Reset</button>
-	</div>
-</form>
+<hr>
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <form class="form-horizontal" action="{{ 'submissionsSubmit' | alias }}" method="POST" enctype="multipart/form-data">
+            <fieldset>
+                <include href="common/views/partials/csrf.html" />
+
+                <div class="form-group">
+                    <label for="inputProblemSlug" class="control-label">Problem:</label>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-briefcase"></span>
+                        </span>
+                        <input class="form-control" id="inputProblemSlug" name="problemSlug" placeholder="Problem" value="{{ @problem_slug }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputLanguageId" class="control-label">Language:</label>
+                    <select id="inputLanguageId" class="form-control" name="languageId">
+                        <repeat group="{{ @languages }}" value="{{ @language }}">
+                            <option value="{{ @language->id }}">{{ @language->name . ' (' . @language->version . ')' }}</option>
+                        </repeat>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="uploadSolution" class="control-label">Solution:</label>
+                    <input type="file" id="uploadSolution" name="solution">
+                </div>
+
+                <hr>
+
+                <div class="form-group text-align-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn btn-default">Reset</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

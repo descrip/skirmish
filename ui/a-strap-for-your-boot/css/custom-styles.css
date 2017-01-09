@@ -49,4 +49,5 @@ hr.dashed {
 }
 .form-group > .control-label {
     padding: 0px;
+    font-weight: 900;
 }
