@@ -1,0 +1,36 @@
+<h1>Submission #{{ @submission->id }}</h1>
+
+<hr>
+
+<p>
+    <b>Problem:</b> <a href="{{ 'problemsShow', 'slug=' . rawurlencode(@problem['slug']) | alias }}">{{ @problem['name'] }}</a>
+    <br>
+    <b>User:</b> <a href="{{ 'usersShow', 'username=' . rawurlencode(@user['username']) | alias }}">{{ @user['username'] }}</a>
+    <br>
+    <b>Points:</b> {{ @submission->points }}
+    <br>
+    <b>Verdict:</b> {{ @verdicts[@submission->verdict_id-1]->name }}
+    <br>
+    <b>Time:</b> {{ @submission->time }}
+    <br>
+</p>
+
+<check if="{{ @compiler_message }}">
+    <p><b>Compiler Messages:</b></p>
+    <pre><code>{{ @compiler_message }}</code></pre>
+</check>
+
+<p><b>Results:</b></p>
+<repeat group="{{ @subtask_results }}" value="{{ @subtask_result }}">
+	<p>Subtask {{ @subtask_result['id'] }}:</p>
+	<ul>
+		<repeat group="{{ @subtask_result['testcase_results'] }}" value="{{ @testcase_result }}">
+			<li>Testcase {{ @testcase_result['id'] }}: {{ @verdicts[@testcase_result['verdict_id']-1]->code }}</li>
+		</repeat>
+	</ul>
+</repeat>
+
+<check if="{{ @canViewCode }}">
+    <p><b>Code:</b></p>
+    <pre><code>{{ @submission->code }}</code></pre>
+</check>

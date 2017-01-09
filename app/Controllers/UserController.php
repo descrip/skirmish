@@ -130,7 +130,7 @@ class UserController extends Controller {
             $users = $users->select(
                 'id, username, points',
                 NULL,
-                [ 'order' => 'points DESC' ]
+                [ 'order' => 'points DESC, username ASC' ]
             );
 
             $f3->mset([
@@ -169,9 +169,18 @@ class UserController extends Controller {
             $user->id
         );
 
+        $solvedCount = $f3->get('DB')->exec(
+            'SELECT COUNT(problem_id) AS solvedCount FROM users_solved_problems_pivot
+            WHERE user_id = ?
+            GROUP BY user_id',
+            $user->id
+        )[0]['solvedCount'] ?? 0;
+
         $f3->mset([
             'user' => $user,
             'userRank' => $rank,
+            'userCount' => $user->count(),
+            'solvedCount' => $solvedCount,
             'problemsAttempted' => $problemsAttempted,
             'title' => $user->username . '\'s Profile',
             'content' => $f3->get('THEME') . '/views/users/show.html',
