@@ -1,4 +1,5 @@
 <div class="form-group {{ @formErrors['email'] ? 'has-error' : '' }}">
+    <label for="inputEmail" class="control-label"><strong>Email:</strong></label>
     <div class="input-group">
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-envelope"></span>
@@ -6,11 +7,13 @@
         <input class="form-control" id="inputEmail" placeholder="Email" type="text" name="email" value="{{ @POST.email }}">
     </div>
     <check if="{{ @formErrors['email'] }}">
-        <label for="inputEmail" class="control-label">{{ @formErrors['email'] }}</label>
+        <!--<label for="inputEmail" class="control-label">{{ @formErrors['email'] }}</label>-->
+        <span class="help-block">{{ @formErrors['email'] }}</span>
     </check>
 </div>
 
 <div class="form-group {{ @formErrors['password'] ? 'has-error' : '' }}">
+    <label for="inputEmail" class="control-label"><strong>Password:</strong></label>
     <div class="input-group">
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-lock"></span>
@@ -18,6 +21,6 @@
         <input class="form-control" id="inputPassword" placeholder="Password" type="password" name="password">
     </div>
     <check if="{{ @formErrors['password'] }}">
-        <label for="inputPassword" class="control-label">{{ @formErrors['password'] }}</label>
+        <span class="help-block">{{ @formErrors['password'] }}</span>
     </check>
 </div>

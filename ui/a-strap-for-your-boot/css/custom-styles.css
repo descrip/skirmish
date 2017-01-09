@@ -43,7 +43,10 @@ hr.dashed {
     text-align: center;
 }
 
-/* Fixing a bug where form error messages were right aligned. */
-.form-horizontal .control-label {
-    text-align: left;
+/* Some styling for more compact forms. */
+.form-group > .help-block {
+    margin: 0px;
+}
+.form-group > .control-label {
+    padding: 0px;
 }

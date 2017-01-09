@@ -7,6 +7,7 @@
                 <include href="common/views/partials/csrf.html" />
                 
                 <div class="form-group {{ @formErrors['username'] ? 'has-error' : '' }}">
+                    <label for="inputUsername" class="control-label"><strong>Username:</strong></label>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-user"></span>
@@ -14,13 +15,14 @@
                         <input class="form-control" id="inputUsername" placeholder="Username" type="text" name="username" value="{{ @POST.username }}">
                     </div>
                     <check if="{{ @formErrors['username'] }}">
-                        <label for="inputUsername" class="control-label">{{ @formErrors['username'] }}</label>
+                        <span class="help-block">{{ @formErrors['username'] }}</span>
                     </check>
                 </div>
 
                 <include href="{{ @THEME . '/views/users/partials/form.html' }}" />
 
                 <div class="form-group {{ @formErrors['passwordConfirm'] ? 'has-error' : '' }}">
+                    <label for="inputPasswordConfirm" class="control-label"><strong>Confirm Password:</strong></label>
                     <div class="input-group">
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-ok"></span>
@@ -28,9 +30,11 @@
                         <input class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password" type="password" name="passwordConfirm">
                     </div>
                     <check if="{{ @formErrors['passwordConfirm'] }}">
-                        <label for="inputPasswordConfirm" class="control-label">{{ @formErrors['passwordConfirm'] }}</label>
+                        <span class="help-block">{{ @formErrors['passwordConfirm'] }}</span>
                     </check>
                 </div>
+
+                <hr>
 
                 <div class="form-group text-align-center">
                     <button type="submit" class="btn btn-primary">Submit</button>

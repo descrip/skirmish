@@ -1,0 +1,24 @@
+<h1>Submit</h1>
+<form action="{{ 'submissionsSubmit' | alias }}" method="POST" enctype="multipart/form-data">
+    <include href="common/views/partials/csrf.html" />
+	<div>
+		<label for="problem">Problem:</label>
+        <input id="text" name="problemSlug" value="{{ @problem_slug }}"/>
+	</div>
+	<div>
+		<label for="language">Language:</label>
+		<select id="language" name="languageId">
+			<repeat group="{{ @languages }}" value="{{ @language }}">
+				<option value="{{ @language->id }}">{{ @language->name . ' (' . @language->version . ')' }}</option>
+			</repeat>
+		</select>
+	</div>
+	<div>
+		<label for="solution">Solution:</label>
+		<input type="file" id="solution" name="solution">
+	</div>
+	<div>
+		<button type="submit">Submit</button>
+		<button type="reset">Reset</button>
+	</div>
+</form>
