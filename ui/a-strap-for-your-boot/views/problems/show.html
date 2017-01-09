@@ -19,11 +19,11 @@
         </p>
 
         <p>
-            <strong>Points:</strong> {{ number_format(@problem->points, 1) }}
+            <span data-toggle="tooltip" data-placement="right" title="Points Awarded"><span class="glyphicon glyphicon-ok"></span> {{ number_format(@problem->points, 1) }} points</span>
             <br>
-            <strong>Time Limit:</strong> {{ number_format(@problem->time_limit, 1) }} sec
+            <span data-toggle="tooltip" data-placement="right" title="Time Limit"><span class="glyphicon glyphicon-time"></span> {{ number_format(@problem->time_limit, 1) }} sec</span>
             <br>
-            <strong>Memory Limit:</strong> {{ number_format(@problem->memory_limit / 1024, 1) }} MB
+            <span data-toggle="tooltip" data-placement="right" title="Memory Limit"><span class="glyphicon glyphicon-floppy-disk"></span> {{ number_format(@problem->memory_limit / 1024, 1) }} MB</span>
         </p>
     </div>
 </div>
