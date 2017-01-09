@@ -1,9 +1,22 @@
 <div id="problem-body">
-	{{ \Markdown::instance()->convert(@problem->body) }}
+    {{ @MDPARSER->text(@problem->body) }}
 </div>
-<a href="{{ 'problemsSubmit', 'slug=' . rawurlencode(@problem->slug) | alias }}">submit</a>
-<a href="{{ 'problemsAllSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">all submissions</a>
-<a href="{{ 'problemsBestSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">best submissions</a>
-<check if="{{ @SESSION.user }}">
-    <a href="{{ 'problemsYourSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">your submissions</a>
+
+<hr>
+
+<p>
+Points: {{ number_format(@problem->points, 1) }}
+<br>
+Time Limit: {{ number_format(@problem->time_limit, 1) }} sec
+<br>
+Memory Limit: {{ number_format(@problem->memory_limit / 1024, 1) }} MB
+</p>
+
+<p>
+    <a href="{{ 'problemsSubmit', 'slug=' . rawurlencode(@problem->slug) | alias }}">submit</a>
+    <a href="{{ 'problemsAllSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">all submissions</a>
+    <a href="{{ 'problemsBestSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">best submissions</a>
+    <check if="{{ @SESSION.user }}">
+        <a href="{{ 'problemsYourSubmissions', 'slug=' . rawurlencode(@problem->slug) | alias }}">your submissions</a>
 </check>
+</p>

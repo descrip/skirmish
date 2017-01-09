@@ -20,6 +20,9 @@ $f3->set('DB', new \DB\SQL(
 	$f3->get('mysql.password')
 ));
 
+// Load Parsedown
+$f3->set('MDPARSER', new Parsedown());
+
 new \DB\SQL\Session($f3->get('DB'));
 
 // Start Pheanstalk (beanstalkd client)

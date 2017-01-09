@@ -18,3 +18,7 @@ Seed database with `php index.php seed-database`.
 - Detect in submit if the uploaded file exceeds the size limit.
 - Get around to contests
 - Possible administrator panel?
+
+## Notes:
+
+- Changing file upload limit for `submissions.submit` can only be done in `php.ini`

@@ -62,11 +62,26 @@ class SubmissionController extends Controller {
         if ($user->dry())
             $f3->error(403);
 
-        $problem = new Problem();
-        $problem->load(['slug = ?', $f3->get('POST.problemSlug')]);
-        if ($problem->dry())
-            $formErrors['problemSlug'] = 'Problem does not exist.';
+        $problemSlug = $f3->get('POST.problemSlug');
+        if ($problemSlug === '')
+            $formErrors['problemSlug'] = 'A problem is required.';
+        else {
+            $problem = new Problem();
+            $problem->load(['slug = ?', $problemSlug]);
+            if ($problem->dry())
+                $formErrors['problemSlug'] = 'Problem does not exist.';
+        }
 
+        if (!file_exists($f3->get('FILES.solution.tmp_name')) || !is_uploaded_file($f3->get('FILES.solution.tmp_name')))
+            $formErrors['solution'] = 'A solution is required.';
+        // Detect limit-exceeding file upload
+        // From http://stackoverflow.com/a/18568104/3011359
+        else if ($f3->exists('SERVER.CONTENT_LENGTH') && (int)$f3->get('SERVER.CONTENT_LENGTH') > convert_to_bytes(ini_get('post_max_size')))
+            $formErrors['solution'] = 'Uploaded file is too large.';
+
+        var_dump($formErrors);
+
+        /*
         $code = file_get_contents($f3->get('FILES.solution.tmp_name'));
 
         $submission = new Submission();
@@ -139,6 +154,7 @@ class SubmissionController extends Controller {
         ]));
 
         $f3->reroute('/submissions/' . $submission->id);
+         */
     }
 
     /* FIXME: Break a couple of HMVC rules here.

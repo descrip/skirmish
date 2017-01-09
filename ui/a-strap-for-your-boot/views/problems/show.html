@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-10 left-card" id="problem-body">
-        {{ (new Parsedown())->text(@problem->body) }}
+        {{ @MDPARSER->text(@problem->body) }}
     </div>
     <div class="col-md-2 right-card">
 
