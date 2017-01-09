@@ -51,3 +51,7 @@ hr.dashed {
     padding: 0px;
     font-weight: 900;
 }
+
+.panel {
+    margin-top: 20px;
+}

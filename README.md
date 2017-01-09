@@ -1,5 +1,4 @@
 # skirmish
-----------
 
 In development.
 

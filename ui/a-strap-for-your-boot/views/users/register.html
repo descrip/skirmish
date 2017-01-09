@@ -1,47 +1,51 @@
-<h1>Register</h1>
-<hr>
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
-        <form class="form-horizontal" action="{{ 'usersRegister' | alias }}" method="POST">
-            <fieldset>
-                <include href="common/views/partials/csrf.html" />
-                
-                <div class="form-group {{ @formErrors['username'] ? 'has-error' : '' }}">
-                    <label for="inputUsername" class="control-label">Username:</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-user"></span>
-                        </span>
-                        <input class="form-control" id="inputUsername" placeholder="Username" type="text" name="username" value="{{ @POST.username }}">
-                    </div>
-                    <check if="{{ @formErrors['username'] }}">
-                        <span class="help-block">{{ @formErrors['username'] }}</span>
-                    </check>
-                </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Register</div>
+            <div class="panel-body">
+                <form action="{{ 'usersRegister' | alias }}" method="POST">
+                    <fieldset>
+                        <include href="common/views/partials/csrf.html" />
+                        
+                        <div class="form-group {{ @formErrors['username'] ? 'has-error' : '' }}">
+                            <label for="inputUsername" class="control-label">Username:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </span>
+                                <input class="form-control" id="inputUsername" placeholder="Username" type="text" name="username" value="{{ @POST.username }}">
+                            </div>
+                            <check if="{{ @formErrors['username'] }}">
+                                <span class="help-block">{{ @formErrors['username'] }}</span>
+                            </check>
+                        </div>
 
-                <include href="{{ @THEME . '/views/users/partials/form.html' }}" />
+                        <include href="{{ @THEME . '/views/users/partials/form.html' }}" />
 
-                <div class="form-group {{ @formErrors['passwordConfirm'] ? 'has-error' : '' }}">
-                    <label for="inputPasswordConfirm" class="control-label">Confirm Password:</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-ok"></span>
-                        </span>
-                        <input class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password" type="password" name="passwordConfirm">
-                    </div>
-                    <check if="{{ @formErrors['passwordConfirm'] }}">
-                        <span class="help-block">{{ @formErrors['passwordConfirm'] }}</span>
-                    </check>
-                </div>
+                        <div class="form-group {{ @formErrors['passwordConfirm'] ? 'has-error' : '' }}">
+                            <label for="inputPasswordConfirm" class="control-label">Confirm Password:</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </span>
+                                <input class="form-control" id="inputPasswordConfirm" placeholder="Confirm Password" type="password" name="passwordConfirm">
+                            </div>
+                            <check if="{{ @formErrors['passwordConfirm'] }}">
+                                <span class="help-block">{{ @formErrors['passwordConfirm'] }}</span>
+                            </check>
+                        </div>
 
-                <hr>
+                        <hr class="dashed">
 
-                <div class="form-group text-align-center">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="reset" class="btn btn-default">Reset</button>
-                </div>
+                        <div class="form-group text-align-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="reset" class="btn btn-default">Reset</button>
+                        </div>
 
-            </fieldset>
-        </form>
+                    </fieldset>
+                </form>
+            </div>
+            </div>
+        </div>
     </div>
 </div>
