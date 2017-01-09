@@ -1,0 +1,19 @@
+<h1>Leaderboard</h1>
+<table class="table table-striped table-bordered" id="problems">
+	<thead>
+		<tr>
+            <th>Rank</th>
+			<th class="col-md-12">Username</th>
+			<th>Points</th>
+		</tr>
+	</thead>
+	<tbody>
+		<repeat group="{{ @users }}" value="{{ @user }}">
+			<tr>
+                <td>{{ @rankCounter++ }}</td>
+                <td><a href="{{ 'usersShow', 'username=' . rawurlencode(@user->username) | alias }}">{{ @user->username }}</a></td>
+				<td>{{ number_format(@user->points, 1) }}</td>
+			</tr>
+		</repeat>
+	</tbody>
+</table>

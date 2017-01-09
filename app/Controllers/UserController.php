@@ -137,7 +137,8 @@ class UserController extends Controller {
                 'users' => $users,
                 'title' => 'Leaderboards',
                 'content' => $f3->get('THEME') . '/views/users/leaderboard.html',
-                'navbarItemClasses' => ['users' => 'active']
+                'navbarItemClasses' => ['users' => 'active'],
+                'rankCounter' => 1
             ]);
 
             echo(\Template::instance()->render($f3->get('THEME') . '/views/layout.html'));
